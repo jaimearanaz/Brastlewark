@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F9AA1FC2DE85F13001841D7 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9AA1FB2DE85F13001841D7 /* Domain */; };
-		6F9AA1FF2DE85F2A001841D7 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9AA1FE2DE85F2A001841D7 /* Data */; };
-		6F9AA2022DE85F37001841D7 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9AA2012DE85F37001841D7 /* Presentation */; };
+		6FFF0F862DEA006A00621BE5 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6FFF0F852DEA006A00621BE5 /* Data */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F9AA1FF2DE85F2A001841D7 /* Data in Frameworks */,
-				6F9AA2022DE85F37001841D7 /* Presentation in Frameworks */,
-				6F9AA1FC2DE85F13001841D7 /* Domain in Frameworks */,
+				6FFF0F862DEA006A00621BE5 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +96,7 @@
 				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
 				6F8F7E582DE852000054CD0B /* NewBrastlewarkTests */,
 				6F8F7E622DE852000054CD0B /* NewBrastlewarkUITests */,
+				6FFF0F842DEA006A00621BE5 /* Frameworks */,
 				6F8F7E472DE851FF0054CD0B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +109,13 @@
 				6F8F7E5F2DE852000054CD0B /* NewBrastlewarkUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6FFF0F842DEA006A00621BE5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,9 +139,7 @@
 			);
 			name = NewBrastlewark;
 			packageProductDependencies = (
-				6F9AA1FB2DE85F13001841D7 /* Domain */,
-				6F9AA1FE2DE85F2A001841D7 /* Data */,
-				6F9AA2012DE85F37001841D7 /* Presentation */,
+				6FFF0F852DEA006A00621BE5 /* Data */,
 			);
 			productName = NewBrastlewark;
 			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
@@ -426,6 +428,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -433,6 +436,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -453,6 +457,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -460,6 +465,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -598,17 +604,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6F9AA1FB2DE85F13001841D7 /* Domain */ = {
+		6FFF0F852DEA006A00621BE5 /* Data */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Domain;
-		};
-		6F9AA1FE2DE85F2A001841D7 /* Data */ = {
-			isa = XCSwiftPackageProductDependency;
+			package = 6F9AA1FD2DE85F2A001841D7 /* XCLocalSwiftPackageReference "Packages/Data" */;
 			productName = Data;
-		};
-		6F9AA2012DE85F37001841D7 /* Presentation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Presentation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

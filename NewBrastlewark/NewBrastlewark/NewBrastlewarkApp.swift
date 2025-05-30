@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Domain
+import Data
 
 @main
 struct NewBrastlewarkApp: App {
@@ -29,5 +30,21 @@ struct NewBrastlewarkApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    init() {
+        print("App init") // Verifica ejecución
+        if let repository = DIContainer.shared.resolve(CharactersRepositoryProtocol.self) {
+            Task {
+                do {
+                    let characters = try await repository.getCharacters()
+                    print("Characters: \(characters)")
+                } catch {
+                    print("Error fetching characters: \(error)")
+                }
+            }
+        } else {
+            print("Could not resolve CharactersRepositoryProtocol")
+        }
     }
 }
