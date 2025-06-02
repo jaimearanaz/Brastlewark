@@ -13,7 +13,7 @@ final class GetAllCharactersUseCaseImpl: GetAllCharactersUseCase {
 
     func execute() async -> Result<[Character], Error> {
         do {
-            let characters = try await repository.getCharacters()
+            let characters = try await repository.getCharacters(forceUpdate: false)
             return .success(characters)
         } catch {
             return .failure(error)

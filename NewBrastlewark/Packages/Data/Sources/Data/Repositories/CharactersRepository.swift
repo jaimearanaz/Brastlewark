@@ -4,35 +4,35 @@ import Foundation
 
 class CharactersRepository: CharactersRepositoryProtocol {
     private let networkService: NetworkServiceProtocol?
+    private let cache: CharactersCache
 
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkServiceProtocol, cache: CharactersCache) {
         self.networkService = networkService
+        self.cache = cache
     }
 
-    func getCharacters() async throws -> [Character] {
-        try await withCheckedThrowingContinuation { continuation in
-            guard let networkService = networkService else {
-                continuation.resume(
-                    throwing: NSError(
-                        domain: "CharactersRepository",
-                        code: -1,
-                        userInfo: [NSLocalizedDescriptionKey: "NetworkService is nil"]
-                    )
-                )
-                return
-            }
+    func getCharacters(forceUpdate: Bool = false) async throws -> [Character] {
+        if !forceUpdate, cache.isValid(), let cached = cache.get() {
+            return cached.map { CharacterEntityMapper.map(entity: $0) }
+        }
 
+        guard let networkService = networkService else {
+            throw NSError(
+                domain: "CharactersRepository",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "NetworkService is nil"])
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
             var cancellable: AnyCancellable?
             cancellable = networkService.getCharacters()
                 .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
+                    if case let .failure(error) = completion {
                         continuation.resume(throwing: error)
-                    case .finished:
-                        break
                     }
                     cancellable = nil
                 }, receiveValue: { characterEntities in
+                    self.cache.save(characterEntities)
                     let characters = characterEntities.map { CharacterEntityMapper.map(entity: $0) }
                     continuation.resume(returning: characters)
                     cancellable = nil

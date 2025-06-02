@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol CharactersRepositoryProtocol {
-    func getCharacters() async throws -> [Character]
+    func getCharacters(forceUpdate: Bool) async throws -> [Character]
 }
