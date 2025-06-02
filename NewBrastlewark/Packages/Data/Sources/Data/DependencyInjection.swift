@@ -25,6 +25,9 @@ public enum DIContainer {
             }
             return CharactersRepository(networkService: networkService, cache: cache)
         }
+        container.register(FilterRepositoryProtocol.self) { r in
+            FilterRepository()
+        }
         return container
     }()
 }

@@ -23,7 +23,10 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Data",
-            dependencies: ["Domain", "Swinject"]),
+            dependencies: ["Domain", "Swinject"],
+            resources: [
+                .process("Resources") // o .process("Localizable.xcstrings") si no quieres crear carpeta
+            ]),
         .testTarget(
             name: "DataTests",
             dependencies: ["Data"]

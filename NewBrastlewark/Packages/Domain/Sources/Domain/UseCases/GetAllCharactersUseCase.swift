@@ -1,10 +1,10 @@
 import Foundation
 
-protocol GetAllCharactersUseCase {
+protocol GetAllCharactersUseCaseProtocol {
     func execute() async -> Result<[Character], Error>
 }
 
-final class GetAllCharactersUseCaseImpl: GetAllCharactersUseCase {
+final class GetAllCharactersUseCase: GetAllCharactersUseCaseProtocol {
     private let repository: CharactersRepositoryProtocol
 
     init(repository: CharactersRepositoryProtocol) {
