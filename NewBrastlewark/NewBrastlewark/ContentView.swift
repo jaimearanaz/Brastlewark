@@ -13,11 +13,15 @@ struct ContentView: View {
                 }
             }
             .padding()
-
-
             Button("Get characters") {
                 Task {
                     await viewModel.fetchCharacters(forceUpdate: false)
+                }
+            }
+            .padding()
+            Button("Filter characters") {
+                Task {
+                    await viewModel.filterCharacters()
                 }
             }
             .padding()

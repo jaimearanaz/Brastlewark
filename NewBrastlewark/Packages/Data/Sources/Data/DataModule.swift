@@ -1,11 +1,8 @@
-import Swinject
 import Domain
+import Swinject
 
-// TODO: this shouldn't be a main actor
-@MainActor
-public enum DIContainer {
-    public static let shared: Container = {
-        let container = Container()
+public struct DataModule {
+    public static func registerDependencies(inContainer container: Container) {
         container.register(NetworkStatusProtocol.self) { _ in NetworkStatus() }
         container.register(NetworkServiceProtocol.self) { r in
             guard let networkStatus = r.resolve(NetworkStatusProtocol.self) else {
@@ -28,6 +25,5 @@ public enum DIContainer {
         container.register(FilterRepositoryProtocol.self) { r in
             FilterRepository()
         }
-        return container
-    }()
+    }
 }

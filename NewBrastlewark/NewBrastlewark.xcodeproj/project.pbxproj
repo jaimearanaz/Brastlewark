@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6FFF0F862DEA006A00621BE5 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6FFF0F852DEA006A00621BE5 /* Data */; };
+		6F4550792DEF37A8008B4525 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6F4550782DEF37A8008B4525 /* Data */; };
+		6F45507C2DEF37B8008B4525 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6F45507B2DEF37B8008B4525 /* Domain */; };
+		6F45507F2DEF37C5008B4525 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6F45507E2DEF37C5008B4525 /* Presentation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FFF0F862DEA006A00621BE5 /* Data in Frameworks */,
+				6F45507C2DEF37B8008B4525 /* Domain in Frameworks */,
+				6F45507F2DEF37C5008B4525 /* Presentation in Frameworks */,
+				6F4550792DEF37A8008B4525 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +143,9 @@
 			);
 			name = NewBrastlewark;
 			packageProductDependencies = (
-				6FFF0F852DEA006A00621BE5 /* Data */,
+				6F4550782DEF37A8008B4525 /* Data */,
+				6F45507B2DEF37B8008B4525 /* Domain */,
+				6F45507E2DEF37C5008B4525 /* Presentation */,
 			);
 			productName = NewBrastlewark;
 			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
@@ -224,9 +230,9 @@
 			mainGroup = 6F8F7E3D2DE851FF0054CD0B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				6F9AA1FA2DE85F13001841D7 /* XCLocalSwiftPackageReference "Packages/Domain" */,
-				6F9AA1FD2DE85F2A001841D7 /* XCLocalSwiftPackageReference "Packages/Data" */,
-				6F9AA2002DE85F37001841D7 /* XCLocalSwiftPackageReference "Packages/Presentation" */,
+				6F4550772DEF37A8008B4525 /* XCLocalSwiftPackageReference "Packages/Data" */,
+				6F45507A2DEF37B8008B4525 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				6F45507D2DEF37C5008B4525 /* XCLocalSwiftPackageReference "Packages/Presentation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6F8F7E472DE851FF0054CD0B /* Products */;
@@ -589,25 +595,32 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		6F9AA1FA2DE85F13001841D7 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/Domain;
-		};
-		6F9AA1FD2DE85F2A001841D7 /* XCLocalSwiftPackageReference "Packages/Data" */ = {
+		6F4550772DEF37A8008B4525 /* XCLocalSwiftPackageReference "Packages/Data" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Data;
 		};
-		6F9AA2002DE85F37001841D7 /* XCLocalSwiftPackageReference "Packages/Presentation" */ = {
+		6F45507A2DEF37B8008B4525 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Domain;
+		};
+		6F45507D2DEF37C5008B4525 /* XCLocalSwiftPackageReference "Packages/Presentation" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Presentation;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6FFF0F852DEA006A00621BE5 /* Data */ = {
+		6F4550782DEF37A8008B4525 /* Data */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6F9AA1FD2DE85F2A001841D7 /* XCLocalSwiftPackageReference "Packages/Data" */;
 			productName = Data;
+		};
+		6F45507B2DEF37B8008B4525 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		6F45507E2DEF37C5008B4525 /* Presentation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Presentation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

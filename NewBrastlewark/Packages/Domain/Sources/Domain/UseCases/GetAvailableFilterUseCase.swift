@@ -8,8 +8,7 @@ final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol {
     private let charactersRepository: CharactersRepositoryProtocol
     private let filterRepository: FilterRepositoryProtocol
 
-    init(
-        charactersRepository: CharactersRepositoryProtocol,
+    init(charactersRepository: CharactersRepositoryProtocol,
         filterRepository: FilterRepositoryProtocol) {
         self.charactersRepository = charactersRepository
         self.filterRepository = filterRepository
