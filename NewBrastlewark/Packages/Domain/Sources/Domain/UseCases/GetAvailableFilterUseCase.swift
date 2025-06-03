@@ -16,7 +16,7 @@ final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol {
 
     func execute() async -> Result<Filter, Error> {
         do {
-            let characters = try await charactersRepository.getCharacters(forceUpdate: false)
+            let characters = try await charactersRepository.getAllCharacters(forceUpdate: false)
             let filter = try await filterRepository.getAvailableFilter(fromCharacters: characters)
             return .success(filter)
         } catch {

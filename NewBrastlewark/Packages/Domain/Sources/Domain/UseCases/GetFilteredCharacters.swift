@@ -21,7 +21,7 @@ public final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCasePro
 
     public func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], Error> {
         do {
-            let characters = try await repository.getCharacters(forceUpdate: false)
+            let characters = try await repository.getAllCharacters(forceUpdate: false)
             let filtered = filterCharacters(characters, withFilter: params.filter)
             return .success(filtered)
         } catch {

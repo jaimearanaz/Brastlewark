@@ -5,13 +5,15 @@ import Foundation
 class CharactersRepository: CharactersRepositoryProtocol {
     private let networkService: NetworkServiceProtocol?
     private let cache: CharactersCache
+    private var selectedCharacter: Character?
 
     init(networkService: NetworkServiceProtocol, cache: CharactersCache) {
         self.networkService = networkService
         self.cache = cache
+        self.selectedCharacter = nil
     }
 
-    func getCharacters(forceUpdate: Bool = false) async throws -> [Character] {
+    func getAllCharacters(forceUpdate: Bool = false) async throws -> [Character] {
         if !forceUpdate, cache.isValid(), let cached = cache.get() {
             return cached.map { CharacterEntityMapper.map(entity: $0) }
         }
@@ -38,5 +40,17 @@ class CharactersRepository: CharactersRepositoryProtocol {
                     cancellable = nil
                 })
         }
+    }
+
+    func saveSelectedCharacter(_ character: Character) async throws {
+        selectedCharacter = character
+    }
+
+    func getSelectedCharacter() async throws -> Character? {
+        return selectedCharacter
+    }
+
+    func deleteSelectedCharacter() async throws {
+        selectedCharacter = nil
     }
 }

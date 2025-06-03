@@ -23,7 +23,7 @@ class ContentViewModel: ObservableObject {
 
     func fetchCharacters(forceUpdate: Bool) async {
         do {
-            let characters = try await charactersRepository.getCharacters(forceUpdate: forceUpdate)
+            let characters = try await charactersRepository.getAllCharacters(forceUpdate: forceUpdate)
             self.characters = characters
             let filter = try await filterRepository.getAvailableFilter(fromCharacters: characters)
             self.errorMessage = nil
@@ -34,7 +34,7 @@ class ContentViewModel: ObservableObject {
 
     func filterCharacters() async {
         do {
-            let characters = try await charactersRepository.getCharacters(forceUpdate: false)
+            let characters = try await charactersRepository.getAllCharacters(forceUpdate: false)
             self.characters = characters
             let filterAvailable = try await filterRepository.getAvailableFilter(fromCharacters: characters)
             let filter = Filter(

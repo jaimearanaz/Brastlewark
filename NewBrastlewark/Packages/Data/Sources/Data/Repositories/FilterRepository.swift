@@ -1,6 +1,8 @@
 import Domain
 
 final class FilterRepository: FilterRepositoryProtocol {
+    private var activeFilter: Filter? = nil
+
     func getAvailableFilter(fromCharacters characters: [Character]) async -> Filter {
         var professions = Set<String>()
         var hairColors = Set<String>()
@@ -33,5 +35,17 @@ final class FilterRepository: FilterRepositoryProtocol {
                       hairColor: Set(hairColors),
                       profession: Set(professions),
                       friends: minFriends...maxFriends)
+    }
+
+    func saveActiveFilter(_ filter: Filter) async throws {
+        activeFilter = filter
+    }
+
+    func getActiveFilter() async throws -> Filter? {
+        activeFilter
+    }
+
+    func deleteActiveFilter() async throws {
+        activeFilter = nil
     }
 }
