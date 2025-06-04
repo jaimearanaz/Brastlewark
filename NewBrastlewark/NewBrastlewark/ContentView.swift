@@ -4,9 +4,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
+    @State private var searchText: String = ""
 
     var body: some View {
         VStack {
+            TextField("Search characters", text: $searchText)
+                .padding()
+                .onChange(of: searchText, { oldValue, newValue in
+                    Task {
+                        await viewModel.searchCharacters(text: newValue)
+                    }
+                })
             Button("Refresh characters") {
                 Task {
                     await viewModel.fetchCharacters(forceUpdate: true)

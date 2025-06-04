@@ -22,6 +22,9 @@ public struct DomainModule {
         container.register(DeleteSelectedCharacterUseCaseProtocol.self) { r in
             DeleteSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
         }
+        container.register(GetSearchedCharacterUseCaseProtocol.self) { r in
+            GetSearchedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        }
     }
 
     private static func registerFilterUseCases(in container: Container) {
