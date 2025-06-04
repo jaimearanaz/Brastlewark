@@ -11,7 +11,7 @@ public struct DataModule {
         container.register(CharactersRepositoryProtocol.self) { r in
             CharactersRepository(
                 networkService: resolveOrFail(r, NetworkServiceProtocol.self),
-                cache: resolveOrFail(r, CharactersCache.self))
+                cache: resolveOrFail(r, CharactersCacheProtocol.self))
         }
         container.register(FilterRepositoryProtocol.self) { r in
             FilterRepository()
@@ -25,8 +25,8 @@ public struct DataModule {
                 baseUrl: "https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json",
                 networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
         }
-        container.register(CharactersCache.self) { _ in
-            InMemoryCharactersCache()
+        container.register(CharactersCacheProtocol.self) { _ in
+            NonPersistentCharactersCache()
         }
     }
 

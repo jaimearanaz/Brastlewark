@@ -1,12 +1,12 @@
 import Foundation
 
-protocol CharactersCache {
+protocol CharactersCacheProtocol {
     func get() -> [CharacterEntity]?
     func save(_ characters: [CharacterEntity])
     func isValid() -> Bool
 }
 
-final class InMemoryCharactersCache: CharactersCache {
+final class NonPersistentCharactersCache: CharactersCacheProtocol {
     private var characters: [CharacterEntity]?
     private var timestamp: Date?
     private var cacheValidity: TimeInterval

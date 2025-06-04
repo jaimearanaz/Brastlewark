@@ -4,10 +4,10 @@ import Foundation
 
 class CharactersRepository: CharactersRepositoryProtocol {
     private let networkService: NetworkServiceProtocol?
-    private let cache: CharactersCache
+    private let cache: CharactersCacheProtocol
     private var selectedCharacter: Character?
 
-    init(networkService: NetworkServiceProtocol, cache: CharactersCache) {
+    init(networkService: NetworkServiceProtocol, cache: CharactersCacheProtocol) {
         self.networkService = networkService
         self.cache = cache
         self.selectedCharacter = nil
