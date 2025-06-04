@@ -1,6 +1,6 @@
 import Foundation
 
-protocol GetAvailableFilterUseCaseProtocol {
+public protocol GetAvailableFilterUseCaseProtocol {
     func execute() async -> Result<Filter, Error>
 }
 

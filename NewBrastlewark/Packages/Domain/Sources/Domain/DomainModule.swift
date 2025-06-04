@@ -2,28 +2,52 @@ import Swinject
 
 public struct DomainModule {
     public static func registerDependencies(inContainer container: Container) {
+        registerCharacterUseCases(in: container)
+        registerFilterUseCases(in: container)
+    }
+
+    private static func registerCharacterUseCases(in container: Container) {
         container.register(GetAllCharactersUseCaseProtocol.self) { r in
-            guard let repository = r.resolve(CharactersRepositoryProtocol.self) else {
-                fatalError("Dependency CharactersRepositoryProtocol not resolved")
-            }
-            return GetAllCharactersUseCase(repository: repository)
-        }
-        container.register(GetAvailableFilterUseCaseProtocol.self) { r in
-            guard let charactersRepository = r.resolve(CharactersRepositoryProtocol.self) else {
-                fatalError("Dependency CharactersRepositoryProtocol not resolved")
-            }
-            guard let filterRepository = r.resolve(FilterRepositoryProtocol.self) else {
-                fatalError("Dependency FilterRepositoryProtocol not resolved")
-            }
-            return GetAvailableFilterUseCase(
-                charactersRepository: charactersRepository,
-                filterRepository: filterRepository)
+            GetAllCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
         }
         container.register(GetFilteredCharactersUseCaseProtocol.self) { r in
-            guard let repository = r.resolve(CharactersRepositoryProtocol.self) else {
-                fatalError("Dependency CharactersRepositoryProtocol not resolved")
-            }
-            return GetFilteredCharactersUseCase(repository: repository)
+            GetFilteredCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
         }
+        container.register(SaveSelectedCharacterUseCaseProtocol.self) { r in
+            SaveSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        }
+        container.register(GetSelectedCharacterUseCaseProtocol.self) { r in
+            GetSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        }
+        container.register(DeleteSelectedCharacterUseCaseProtocol.self) { r in
+            DeleteSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        }
+    }
+
+    private static func registerFilterUseCases(in container: Container) {
+        container.register(GetAvailableFilterUseCaseProtocol.self) { r in
+            GetAvailableFilterUseCase(
+                charactersRepository: resolveOrFail(r, CharactersRepositoryProtocol.self),
+                filterRepository: resolveOrFail(r, FilterRepositoryProtocol.self)
+            )
+        }
+        container.register(SaveActiveFilterUseCaseProtocol.self) { r in
+            SaveActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        }
+        container.register(GetActiveFilterUseCaseProtocol.self) { r in
+            GetActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        }
+        container.register(DeleteActiveFilterUseCaseProtocol.self) { r in
+            DeleteActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        }
+    }
+
+    private static func resolveOrFail<Service>(
+        _ resolver: Resolver,
+        _ serviceType: Service.Type) -> Service {
+        guard let service = resolver.resolve(serviceType) else {
+            fatalError("Dependency \(serviceType) not resolved")
+        }
+        return service
     }
 }

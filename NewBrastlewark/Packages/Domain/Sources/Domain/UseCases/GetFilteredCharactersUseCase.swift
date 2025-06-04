@@ -12,14 +12,14 @@ public protocol GetFilteredCharactersUseCaseProtocol {
     func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], Error>
 }
 
-public final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol {
+final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol {
     private let repository: CharactersRepositoryProtocol
 
-    public init(repository: CharactersRepositoryProtocol) {
+    init(repository: CharactersRepositoryProtocol) {
         self.repository = repository
     }
 
-    public func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], Error> {
+    func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], Error> {
         do {
             let characters = try await repository.getAllCharacters(forceUpdate: false)
             let filtered = filterCharacters(characters, withFilter: params.filter)
