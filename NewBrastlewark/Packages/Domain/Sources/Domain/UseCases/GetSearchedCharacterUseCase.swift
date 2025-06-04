@@ -1,5 +1,3 @@
-import Foundation
-
 public struct GetSearchedCharacterUseCaseParams {
     let searchText: String
 

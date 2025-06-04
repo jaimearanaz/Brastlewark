@@ -1,6 +1,5 @@
-import Foundation
-import SystemConfiguration
 import CoreTelephony
+import SystemConfiguration
 
 protocol NetworkStatusProtocol {
     func isInternetAvailable() -> Bool

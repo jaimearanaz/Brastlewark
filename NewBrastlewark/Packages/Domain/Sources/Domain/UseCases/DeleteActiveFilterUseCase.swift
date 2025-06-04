@@ -1,5 +1,3 @@
-import Foundation
-
 public protocol DeleteActiveFilterUseCaseProtocol {
     func execute() async -> Result<Void, Error>
 }

@@ -1,5 +1,3 @@
-import Foundation
-
 public protocol GetActiveFilterUseCaseProtocol {
     func execute() async -> Result<Filter?, Error>
 }

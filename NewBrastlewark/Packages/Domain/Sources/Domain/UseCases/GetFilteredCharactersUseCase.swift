@@ -1,5 +1,3 @@
-import Foundation
-
 public struct GetFilteredCharactersUseCaseParams {
     let filter: Filter
 

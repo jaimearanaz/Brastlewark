@@ -1,5 +1,3 @@
-import Foundation
-
 public protocol DeleteSelectedCharacterUseCaseProtocol {
     func execute() async -> Result<Void, Error>
 }

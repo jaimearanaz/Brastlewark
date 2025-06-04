@@ -9,7 +9,16 @@ public struct Character: Codable, Sendable {
     public let professions: [String]
     public let friends: [String]
 
-    public init(id: Int, name: String, thumbnail: String, age: Int, weight: Double, height: Double, hairColor: String, professions: [String], friends: [String]) {
+    public init(
+        id: Int,
+        name: String,
+        thumbnail: String,
+        age: Int,
+        weight: Double,
+        height: Double,
+        hairColor: String,
+        professions: [String],
+        friends: [String]) {
         self.id = id
         self.name = name
         self.thumbnail = thumbnail

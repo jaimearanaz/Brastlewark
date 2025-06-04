@@ -1,5 +1,3 @@
-import Foundation
-
 public protocol GetSelectedCharacterUseCaseProtocol {
     func execute() async -> Result<Character?, Error>
 }

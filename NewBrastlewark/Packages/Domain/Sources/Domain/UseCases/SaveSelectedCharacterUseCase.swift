@@ -1,5 +1,3 @@
-import Foundation
-
 public struct SaveSelectedCharacterUseCaseParams {
     public let character: Character
     public init(character: Character) {

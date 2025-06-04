@@ -1,5 +1,3 @@
-import Foundation
-
 public struct SaveActiveFilterUseCaseParams {
     public let filter: Filter
 

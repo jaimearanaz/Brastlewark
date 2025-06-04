@@ -14,12 +14,6 @@ final class FilterRepository: FilterRepositoryProtocol {
             names.insert($0.name)
         })
 
-        professions.forEach { prof in
-            print(prof)
-        }
-
-        print("PROFESSION_NONE".localized)
-
         let minAge = characters.min { $0.age < $1.age }?.age ?? 0
         let maxAge = characters.max { $0.age < $1.age }?.age ?? 0
         let minWeight = Int(characters.min { $0.weight < $1.weight }?.weight ?? 0)

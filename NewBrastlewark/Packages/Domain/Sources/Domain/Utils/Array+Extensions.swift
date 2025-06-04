@@ -1,5 +1,3 @@
-import Foundation
-
 extension Array where Element: Any & Hashable {
     func containsOneOrMoreOfElements(in array: [Element]) -> Bool {
         let firstSet = Set(self)
