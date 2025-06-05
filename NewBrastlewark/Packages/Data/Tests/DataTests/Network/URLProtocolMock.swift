@@ -1,14 +1,19 @@
 import Foundation
 
-class URLProtocolMock: URLProtocol {
-    nonisolated(unsafe) static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
+final class URLProtocolMock: URLProtocol, @unchecked Sendable {
+    private static let queue = DispatchQueue(label: "URLProtocolMock.queue")
+    nonisolated(unsafe) private static var _requestHandler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?
+    nonisolated(unsafe) static var requestHandler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))? {
+        get { queue.sync { _requestHandler } }
+        set { queue.sync { _requestHandler = newValue } }
+    }
 
     override class func canInit(with request: URLRequest) -> Bool {
-        return true
+        true
     }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        return request
+        request
     }
 
     override func startLoading() {
@@ -17,11 +22,11 @@ class URLProtocolMock: URLProtocol {
         }
         do {
             let (response, data) = try handler(request)
-            self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            self.client?.urlProtocol(self, didLoad: data)
-            self.client?.urlProtocolDidFinishLoading(self)
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
         } catch {
-            self.client?.urlProtocol(self, didFailWithError: error)
+            client?.urlProtocol(self, didFailWithError: error)
         }
     }
 

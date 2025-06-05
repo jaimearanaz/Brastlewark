@@ -46,6 +46,7 @@ struct NetworkServiceTests {
         URLProtocolMock.requestHandler = { _ in
             throw URLError(.timedOut)
         }
+        defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
         let result = awaitResult(from: sut.getCharacters())
         var isFailure = false
@@ -68,6 +69,7 @@ struct NetworkServiceTests {
             let response = HTTPURLResponse(url: URL(string: "https://test.com")!, statusCode: 404, httpVersion: nil, headerFields: nil)!
             return (response, Data())
         }
+        defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
         let result = awaitResult(from: sut.getCharacters())
         var isFailure = false
@@ -91,6 +93,7 @@ struct NetworkServiceTests {
             let invalidJson = Data("not a json".utf8)
             return (response, invalidJson)
         }
+        defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
         let result = awaitResult(from: sut.getCharacters())
         var isFailure = false
@@ -130,19 +133,24 @@ struct NetworkServiceTests {
     }
 
     @Test
-    func given_networkFails_then_retriesExpectedNumberOfTimes() {
+    func given_networkFails_then_retriesExpectedNumberOfTimes() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
-        var callCount = 0
+        actor CallCounter {
+            private var count = 0
+            func increment() { count += 1 }
+            func value() -> Int { count }
+        }
+        let callCounter = CallCounter()
         URLProtocolMock.requestHandler = { _ in
-            callCount += 1
+            Task { await callCounter.increment() }
             throw URLError(.timedOut)
         }
         let retries = 2
         let sut = NetworkService(baseUrl: "https://test.com", retries: retries, networkStatus: networkStatus, urlSession: session)
         _ = awaitResult(from: sut.getCharacters())
-        // El número de llamadas es el inicial + número de reintentos
-        #expect(callCount == retries + 1)
+        let finalCount = await callCounter.value()
+        #expect(finalCount == retries + 1)
     }
 }
 
@@ -150,14 +158,19 @@ private extension NetworkServiceTests {
     func awaitResult<T: Publisher>(from publisher: T) -> Result<T.Output, T.Failure>? {
         let semaphore = DispatchSemaphore(value: 0)
         var result: Result<T.Output, T.Failure>?
+        var value: T.Output?
         let cancellable = publisher.sink(receiveCompletion: { completion in
-            if case .failure(let error) = completion {
+            switch completion {
+            case .failure(let error):
                 result = .failure(error)
+            case .finished:
+                if let v = value {
+                    result = .success(v)
+                }
             }
             semaphore.signal()
-        }, receiveValue: { value in
-            result = .success(value)
-            semaphore.signal()
+        }, receiveValue: { v in
+            value = v
         })
         semaphore.wait()
         _ = cancellable
