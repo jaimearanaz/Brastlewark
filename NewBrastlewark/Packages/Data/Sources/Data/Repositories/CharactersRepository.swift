@@ -7,7 +7,7 @@ class CharactersRepository: CharactersRepositoryProtocol {
     private let cache: CharactersCacheProtocol
     private var selectedCharacter: Character?
 
-    init(networkService: NetworkServiceProtocol, cache: CharactersCacheProtocol) {
+    init(networkService: NetworkServiceProtocol?, cache: CharactersCacheProtocol) {
         self.networkService = networkService
         self.cache = cache
         self.selectedCharacter = nil

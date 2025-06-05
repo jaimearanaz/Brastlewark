@@ -9,13 +9,16 @@ class NetworkService: NetworkServiceProtocol {
     var url: String
     var retries: Int
     var networkStatus: NetworkStatusProtocol
+    var urlSession: URLSession
 
     init(baseUrl: String,
-        retries: Int = 3,
-        networkStatus: NetworkStatusProtocol) {
+         retries: Int = 3,
+         networkStatus: NetworkStatusProtocol,
+         urlSession: URLSession = .shared) {
         self.url = baseUrl
         self.retries = retries
         self.networkStatus = networkStatus
+        self.urlSession = urlSession
     }
 
     func getCharacters() -> AnyPublisher<[CharacterEntity], Error> {
@@ -23,11 +26,11 @@ class NetworkService: NetworkServiceProtocol {
             return Fail(error: NetworkErrors.noNetwork).eraseToAnyPublisher()
         }
 
-        guard let url = URL(string: url) else {
+        guard url.isValidNetworkURL, let url = URL(string: url) else {
             return Fail(error: NetworkErrors.wrongUrl).eraseToAnyPublisher()
         }
 
-        return URLSession.shared
+        return urlSession
             .dataTaskPublisher(for: url)
             .mapError { error -> NetworkErrors in
                 if error.errorCode == -1001 {
