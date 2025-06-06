@@ -1,4 +1,4 @@
-public struct Character: Codable, Sendable {
+public struct Character: Codable, Sendable, Equatable {
     public let id: Int
     public let name: String
     public let thumbnail: String
@@ -28,5 +28,17 @@ public struct Character: Codable, Sendable {
         self.hairColor = hairColor
         self.professions = professions
         self.friends = friends
+    }
+
+    public static func == (lhs: Character, rhs: Character) -> Bool {
+        return lhs.id == rhs.id &&
+            lhs.name == rhs.name &&
+            lhs.thumbnail == rhs.thumbnail &&
+            lhs.age == rhs.age &&
+            lhs.weight == rhs.weight &&
+            lhs.height == rhs.height &&
+            lhs.hairColor == rhs.hairColor &&
+            lhs.professions == rhs.professions &&
+            lhs.friends == rhs.friends
     }
 }

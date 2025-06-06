@@ -30,13 +30,26 @@ final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol {
 
 private extension GetFilteredCharactersUseCase {
     private func filterCharacters(_ characters: [Character], withFilter filter: Filter) -> [Character] {
-        return characters
-            .filter { filter.age.contains($0.age) }
-            .filter { filter.weight.contains(Int($0.weight)) }
-            .filter { filter.height.contains(Int($0.height)) }
-            .filter { filter.hairColor.contains($0.hairColor) }
-            .filter { filter.profession.map{ $0.uppercased() }
+        var filtered = characters
+        if filter.age != 0...0 {
+            filtered = filtered.filter { filter.age.contains($0.age) }
+        }
+        if filter.weight != 0...0 {
+            filtered = filtered.filter { filter.weight.contains(Int($0.weight)) }
+        }
+        if filter.height != 0...0 {
+            filtered = filtered.filter { filter.height.contains(Int($0.height)) }
+        }
+        if !filter.hairColor.isEmpty {
+            filtered = filtered.filter { filter.hairColor.contains($0.hairColor) }
+        }
+        if !filter.profession.isEmpty {
+            filtered = filtered.filter { filter.profession.map{ $0.uppercased() }
                 .containsOneOrMoreOfElements(in: $0.professions.map{ $0.uppercased() }) }
-            .filter { filter.friends.contains($0.friends.count) }
+        }
+        if filter.friends != 0...0 {
+            filtered = filtered.filter { filter.friends.contains($0.friends.count) }
+        }
+        return filtered
     }
 }

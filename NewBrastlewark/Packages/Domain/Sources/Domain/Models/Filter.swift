@@ -16,12 +16,12 @@ public struct Filter: Equatable, Sendable {
     }
 
     public init(
-        age: ClosedRange<Int>,
-        weight: ClosedRange<Int>,
-        height: ClosedRange<Int>,
+        age: ClosedRange<Int> = 0...0,
+        weight: ClosedRange<Int> = 0...0,
+        height: ClosedRange<Int> = 0...0,
         hairColor: Set<String> = Set<String>(),
         profession: Set<String> = Set<String>(),
-        friends: ClosedRange<Int>) {
+        friends: ClosedRange<Int> = 0...0) {
         self.age = age
         self.weight = weight
         self.height = height

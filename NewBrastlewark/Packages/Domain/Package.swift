@@ -25,7 +25,10 @@ let package = Package(
             // dependencies: ["Swinject"]),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Domain"]
+            dependencies: ["Domain"],
+            resources: [
+                .copy("filter_characters.json")
+            ]
         ),
     ]
 )

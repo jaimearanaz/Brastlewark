@@ -1,0 +1,183 @@
+[
+    {
+      "id": 684,
+      "name": "Fizwood Switchwidget",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/velka/book-tunnel-11287160032j7BO.jpg",
+      "age": 20,
+      "weight": 37.49423,
+      "height": 103.53796,
+      "hairColor": "Green",
+      "professions": [
+        "Sculptor",
+        "Mechanic",
+        "Smelter"
+      ],
+      "friends": [
+        "Malbin Clanksrocket",
+        "Tinadette Voidweaver"
+      ]
+    },
+    {
+      "id": 833,
+      "name": "Modwell Bombtossle",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/velka/1-1213888416aeXz.jpg",
+      "age": 25,
+      "weight": 40.106903,
+      "height": 113.19055,
+      "hairColor": "Green",
+      "professions": [],
+      "friends": [
+        "Midwig Quickspackle"
+      ]
+    },
+    {
+      "id": 313,
+      "name": "Tobus Chromeratchet",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/velka/1-12445363126Swx.jpg",
+      "age": 50,
+      "weight": 41.42376,
+      "height": 93.07249,
+      "hairColor": "Red",
+      "professions": [
+        "Tinker",
+        "Potter"
+      ],
+      "friends": [
+        "Malbert Gimballauncher",
+        "Fizkin Clanksrocket"
+      ]
+    },
+    {
+      "id": 941,
+      "name": "Cogwitz Chillrocket",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/nahled/87-1275907843WDxT.jpg",
+      "age": 100,
+      "weight": 44.17776,
+      "height": 98.607506,
+      "hairColor": "Red",
+      "professions": [
+        "Tinker",
+        "Blacksmith",
+        "Metalworker"
+      ],
+      "friends": []
+    },
+    {
+      "id": 1218,
+      "name": "Kinthony Bitterspackle",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/velka/1-12445363126Swx.jpg",
+      "age": 110,
+      "weight": 39.362686,
+      "height": 114.98935,
+      "hairColor": "Green",
+      "professions": [
+        "Blacksmith",
+        "Baker",
+        "Tailor",
+        "Marble Carver",
+        "Medic",
+        "Woodcarver",
+        "Smelter"
+      ],
+      "friends": [
+        "Midwig Quickrocket",
+        "Sarabink Switchtorque"
+      ]
+    },
+    {
+      "id": 1243,
+      "name": "Emmadette Tinkslicer",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/nahled/zebra-head-11281366876AZ3M.jpg",
+      "age": 200,
+      "weight": 39.669765,
+      "height": 99.74799,
+      "hairColor": "Gray",
+      "professions": [
+        "Prospector",
+        "Cook",
+        "Woodcarver",
+        "Baker",
+        "Leatherworker",
+        "Smelter"
+      ],
+      "friends": [
+        "Fizkin Magnapower"
+      ]
+    },
+    {
+      "id": 170,
+      "name": "Ecki Tinktorque",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/20000/nahled/stingray.jpg",
+      "age": 205,
+      "weight": 44.749302,
+      "height": 122.46248,
+      "hairColor": "Gray",
+      "professions": [
+        "Leatherworker",
+        "Woodcarver",
+        "Tailor",
+        "Brewer"
+      ],
+      "friends": [
+        "Sarabink Gimballauncher",
+        "Malbert Chilltink",
+        "Libalia Clankstink"
+      ]
+    },
+    {
+      "id": 344,
+      "name": "Malbert Quickslicer",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/20000/nahled/snowy-owl-11294429170yBc.jpg",
+      "age": 250,
+      "weight": 36.6946,
+      "height": 92.56863,
+      "hairColor": "Red",
+      "professions": [
+        "Blacksmith"
+      ],
+      "friends": []
+    },
+    {
+      "id": 441,
+      "name": "Tobus Nozzletorque",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/10000/velka/1-1229281026TsmM.jpg",
+      "age": 275,
+      "weight": 38.506588,
+      "height": 102.89151,
+      "hairColor": "Green",
+      "professions": [
+        "Butcher",
+        "Leatherworker",
+        "Tinker",
+        "Blacksmith"
+      ],
+      "friends": [
+        "Ecki Magnarocket",
+        "Minabonk Gyroratchet",
+        "Modwell Mystrivet"
+      ]
+    },
+    {
+      "id": 860,
+      "name": "Tobus Chillslicer",
+      "thumbnail": "http://www.publicdomainpictures.net/pictures/50000/velka/white-lion-cub-1369509546XbK.jpg",
+      "age": 300,
+      "weight": 38.899654,
+      "height": 126.2482,
+      "hairColor": "Green",
+      "professions": [
+        "Tinker",
+        "Miner",
+        "Baker",
+        "Smelter",
+        "Woodcarver",
+        "Mason"
+      ],
+      "friends": [
+        "Fizwood Clankspiston",
+        "Libalia Gyropower",
+        "Twizzle Felpower",
+        "Malbin Chromepiston"
+      ]
+    }
+]
