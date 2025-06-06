@@ -1,0 +1,19 @@
+{
+  "brastlewark": [
+    {
+      "id": 1,
+      "name": "Test",
+      "thumbnail": "url",
+      "age": 30,
+      "weight": 70.0,
+      "height": 170.0,
+      "hair_color": "Brown",
+      "professions": [
+        "Farmer"
+      ],
+      "friends": [
+        "Friend1"
+      ]
+    }
+  ]
+}

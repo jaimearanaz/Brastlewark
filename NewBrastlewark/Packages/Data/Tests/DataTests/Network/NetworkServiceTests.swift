@@ -66,7 +66,11 @@ struct NetworkServiceTests {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         URLProtocolMock.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://test.com")!, statusCode: 404, httpVersion: nil, headerFields: nil)!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://test.com")!,
+                statusCode: 404,
+                httpVersion: nil,
+                headerFields: nil)!
             return (response, Data())
         }
         defer { URLProtocolMock.requestHandler = nil }
@@ -89,7 +93,11 @@ struct NetworkServiceTests {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         URLProtocolMock.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://test.com")!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil)!
             let invalidJson = Data("not a json".utf8)
             return (response, invalidJson)
         }
@@ -112,13 +120,14 @@ struct NetworkServiceTests {
     func given_validResponse_when_getCharacters_then_returnsCharacterEntities() {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
-        let validJson = """
-        { "brastlewark": [
-            { "id": 1, "name": "Test", "thumbnail": "url", "age": 30, "weight": 70.0, "height": 170.0, "hair_color": "Brown", "professions": ["Farmer"], "friends": ["Friend1"] }
-        ] }
-        """.data(using: .utf8)!
+        let jsonURL = Bundle.module.url(forResource: "valid_characters", withExtension: "json")!
+        let validJson = try! Data(contentsOf: jsonURL)
         URLProtocolMock.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://test.com")!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil)!
             return (response, validJson)
         }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
@@ -147,7 +156,11 @@ struct NetworkServiceTests {
             throw URLError(.timedOut)
         }
         let retries = 2
-        let sut = NetworkService(baseUrl: "https://test.com", retries: retries, networkStatus: networkStatus, urlSession: session)
+        let sut = NetworkService(
+            baseUrl: "https://test.com",
+            retries: retries,
+            networkStatus: networkStatus,
+            urlSession: session)
         _ = awaitResult(from: sut.getCharacters())
         let finalCount = await callCounter.value()
         #expect(finalCount == retries + 1)

@@ -30,7 +30,12 @@ let package = Package(
             ]),
         .testTarget(
             name: "DataTests",
-            dependencies: ["Data"]
+            dependencies: ["Data"],
+            resources: [
+                .copy("valid_characters.json"),
+                .copy("one_valid_character.json"),
+                .copy("empty_professions_character.json")
+            ]
         ),
     ]
 )
