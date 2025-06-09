@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F4550792DEF37A8008B4525 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6F4550782DEF37A8008B4525 /* Data */; };
-		6F45507C2DEF37B8008B4525 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6F45507B2DEF37B8008B4525 /* Domain */; };
-		6F45507F2DEF37C5008B4525 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6F45507E2DEF37C5008B4525 /* Presentation */; };
+		6FCB7FE42DF6ED6E00A8BF00 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCB7FE32DF6ED6E00A8BF00 /* Data */; };
+		6FCB7FE62DF6ED6E00A8BF00 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCB7FE52DF6ED6E00A8BF00 /* Domain */; };
+		6FCB7FE82DF6ED6E00A8BF00 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCB7FE72DF6ED6E00A8BF00 /* Presentation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F45507C2DEF37B8008B4525 /* Domain in Frameworks */,
-				6F45507F2DEF37C5008B4525 /* Presentation in Frameworks */,
-				6F4550792DEF37A8008B4525 /* Data in Frameworks */,
+				6FCB7FE62DF6ED6E00A8BF00 /* Domain in Frameworks */,
+				6FCB7FE82DF6ED6E00A8BF00 /* Presentation in Frameworks */,
+				6FCB7FE42DF6ED6E00A8BF00 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,9 +143,9 @@
 			);
 			name = NewBrastlewark;
 			packageProductDependencies = (
-				6F4550782DEF37A8008B4525 /* Data */,
-				6F45507B2DEF37B8008B4525 /* Domain */,
-				6F45507E2DEF37C5008B4525 /* Presentation */,
+				6FCB7FE32DF6ED6E00A8BF00 /* Data */,
+				6FCB7FE52DF6ED6E00A8BF00 /* Domain */,
+				6FCB7FE72DF6ED6E00A8BF00 /* Presentation */,
 			);
 			productName = NewBrastlewark;
 			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
@@ -610,16 +610,19 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6F4550782DEF37A8008B4525 /* Data */ = {
+		6FCB7FE32DF6ED6E00A8BF00 /* Data */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 6F4550772DEF37A8008B4525 /* XCLocalSwiftPackageReference "Packages/Data" */;
 			productName = Data;
 		};
-		6F45507B2DEF37B8008B4525 /* Domain */ = {
+		6FCB7FE52DF6ED6E00A8BF00 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 6F45507A2DEF37B8008B4525 /* XCLocalSwiftPackageReference "Packages/Domain" */;
 			productName = Domain;
 		};
-		6F45507E2DEF37C5008B4525 /* Presentation */ = {
+		6FCB7FE72DF6ED6E00A8BF00 /* Presentation */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 6F45507D2DEF37C5008B4525 /* XCLocalSwiftPackageReference "Packages/Presentation" */;
 			productName = Presentation;
 		};
 /* End XCSwiftPackageProductDependency section */

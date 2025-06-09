@@ -2,7 +2,7 @@ import Combine
 
 @testable import Data
 
-class MockNetworkService: NetworkServiceProtocol {
+class NetworkServiceMock: NetworkServiceProtocol {
     var result: Result<[CharacterEntity], Error>?
     func getCharacters() -> AnyPublisher<[CharacterEntity], Error> {
         if let result = result {

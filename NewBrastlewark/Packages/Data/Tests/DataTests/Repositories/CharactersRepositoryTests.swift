@@ -12,7 +12,7 @@ final class CharactersRepositoryTests {
         let entity = CharacterEntity.mock(id: 1, name: "Cached")
         cache.characters = [entity]
         cache.valid = true
-        let repo = CharactersRepository(networkService: MockNetworkService(), cache: cache)
+        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
         let result = try await repo.getAllCharacters()
         #expect(result.count == 1)
         #expect(result.first?.id == 1)
@@ -24,7 +24,7 @@ final class CharactersRepositoryTests {
         let cache = MockCache()
         cache.valid = false
         let entity = CharacterEntity.mock(id: 2, name: "Network")
-        let network = MockNetworkService()
+        let network = NetworkServiceMock()
         network.result = .success([entity])
         let repo = CharactersRepository(networkService: network, cache: cache)
         let result = try await repo.getAllCharacters()
@@ -38,7 +38,7 @@ final class CharactersRepositoryTests {
     func given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsError() async {
         let cache = MockCache()
         cache.valid = false
-        let network = MockNetworkService()
+        let network = NetworkServiceMock()
         network.result = .failure(NetworkErrors.noNetwork)
         let repo = CharactersRepository(networkService: network, cache: cache)
         do {
@@ -68,7 +68,7 @@ final class CharactersRepositoryTests {
     @Test
     func when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacter() async throws {
         let cache = MockCache()
-        let repo = CharactersRepository(networkService: MockNetworkService(), cache: cache)
+        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
         let character = Character(id: 1, name: "Test", thumbnail: "url", age: 10, weight: 20, height: 30, hairColor: "Brown", professions: [], friends: [])
         try await repo.saveSelectedCharacter(character)
         let selected = try await repo.getSelectedCharacter()
@@ -79,7 +79,7 @@ final class CharactersRepositoryTests {
     @Test
     func when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
         let cache = MockCache()
-        let repo = CharactersRepository(networkService: MockNetworkService(), cache: cache)
+        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
         let character = Character(id: 1, name: "Test", thumbnail: "url", age: 10, weight: 20, height: 30, hairColor: "Brown", professions: [], friends: [])
         try await repo.saveSelectedCharacter(character)
         try await repo.deleteSelectedCharacter()
