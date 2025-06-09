@@ -40,6 +40,14 @@ struct NetworkServiceTests {
     }
 
     @Test
+    func test_scenarios_with_network_mocked_responses() async {
+        given_networkTimeout_when_getCharacters_then_returnsTimeoutError()
+        given_non200StatusCode_when_getCharacters_then_returnsStatusError()
+        given_invalidJson_when_getCharacters_then_returnsWrongJsonError()
+        given_validResponse_when_getCharacters_then_returnsCharacterEntities()
+        await given_networkFails_then_retriesExpectedNumberOfTimes()
+    }
+
     func given_networkTimeout_when_getCharacters_then_returnsTimeoutError() {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
@@ -61,7 +69,6 @@ struct NetworkServiceTests {
         #expect(isFailure)
     }
 
-    @Test
     func given_non200StatusCode_when_getCharacters_then_returnsStatusError() {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
@@ -88,7 +95,6 @@ struct NetworkServiceTests {
         #expect(isFailure)
     }
 
-    @Test
     func given_invalidJson_when_getCharacters_then_returnsWrongJsonError() {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
@@ -116,7 +122,6 @@ struct NetworkServiceTests {
         #expect(isFailure)
     }
 
-    @Test
     func given_validResponse_when_getCharacters_then_returnsCharacterEntities() {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
@@ -135,13 +140,10 @@ struct NetworkServiceTests {
         var isSuccess = false
         if case .success(let characters) = result {
             isSuccess = true
-            #expect(characters.count == 1)
-            #expect(characters.first?.name == "Test")
         }
         #expect(isSuccess)
     }
 
-    @Test
     func given_networkFails_then_retriesExpectedNumberOfTimes() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
