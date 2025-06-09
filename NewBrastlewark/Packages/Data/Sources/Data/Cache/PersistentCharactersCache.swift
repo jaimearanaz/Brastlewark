@@ -16,7 +16,6 @@ final class PersistentCharactersCache: CharactersAsyncCacheProtocol {
         set { UserDefaults.standard.set(newValue, forKey: "characters_cache_timestamp") }
     }
 
-    // Permite inyectar un ModelContainer personalizado (por ejemplo, en memoria para tests)
     init(cacheValidityInSeconds: TimeInterval = 10, modelContainer: ModelContainer? = nil) {
         self.cacheValidity = cacheValidityInSeconds
         if let modelContainer = modelContainer {
@@ -70,7 +69,6 @@ final class PersistentCharactersCache: CharactersAsyncCacheProtocol {
     func isValid() async -> Bool {
         guard let timestamp = timestamp else { return false }
         let isTimeValid = Date().timeIntervalSince(timestamp) < cacheValidity
-        // Comprueba que la caché no esté vacía
         return await MainActor.run { [weak modelContainer] in
             let context = modelContainer?.mainContext
             let fetchDescriptor = FetchDescriptor<CharacterModel>()
