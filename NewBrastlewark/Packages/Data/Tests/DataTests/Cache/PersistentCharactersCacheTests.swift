@@ -4,14 +4,6 @@ import SwiftData
 @testable import Data
 
 struct PersistentCharactersCacheTests {
-    func makeInMemoryCache() -> PersistentCharactersCache {
-        let inMemoryContainer = try! ModelContainer(
-            for: CharacterModel.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-        )
-        return PersistentCharactersCache(cacheValidityInSeconds: 10, modelContainer: inMemoryContainer)
-    }
-    
     @Test
     func given_emptyCache_when_get_then_returnsNil() async {
         let cache = makeInMemoryCache()
@@ -86,5 +78,15 @@ struct PersistentCharactersCacheTests {
         UserDefaults.standard.set(oldDate, forKey: "characters_cache_timestamp")
         let valid = await cache.isValid()
         #expect(valid == false)
+    }
+}
+
+private extension PersistentCharactersCacheTests {
+    func makeInMemoryCache() -> PersistentCharactersCache {
+        let inMemoryContainer = try! ModelContainer(
+            for: CharacterModel.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        return PersistentCharactersCache(cacheValidityInSeconds: 10, modelContainer: inMemoryContainer)
     }
 }
