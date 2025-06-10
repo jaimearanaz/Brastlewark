@@ -1,5 +1,5 @@
 public protocol DeleteActiveFilterUseCaseProtocol {
-    func execute() async -> Result<Void, Error>
+    func execute() async -> Result<Void, FilterRepositoryError>
 }
 
 final class DeleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol {
@@ -8,13 +8,15 @@ final class DeleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol {
     init(repository: FilterRepositoryProtocol) {
         self.repository = repository
     }
-    
-    func execute() async -> Result<Void, Error> {
+
+    func execute() async -> Result<Void, FilterRepositoryError> {
         do {
             try await repository.deleteActiveFilter()
             return .success(())
-        } catch {
+        } catch let error as FilterRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToDeleteFilter)
         }
     }
 }

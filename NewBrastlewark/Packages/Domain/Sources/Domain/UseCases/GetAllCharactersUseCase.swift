@@ -7,7 +7,7 @@ public struct GetAllCharactersUseCaseParams {
 }
 
 public protocol GetAllCharactersUseCaseProtocol {
-    func execute(params: GetAllCharactersUseCaseParams) async -> Result<[Character], Error>
+    func execute(params: GetAllCharactersUseCaseParams) async -> Result<[Character], CharactersRepositoryError>
 }
 
 final class GetAllCharactersUseCase: GetAllCharactersUseCaseProtocol {
@@ -17,12 +17,14 @@ final class GetAllCharactersUseCase: GetAllCharactersUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute(params: GetAllCharactersUseCaseParams) async -> Result<[Character], Error> {
+    func execute(params: GetAllCharactersUseCaseParams) async -> Result<[Character], CharactersRepositoryError> {
         do {
             let characters = try await repository.getAllCharacters(forceUpdate: params.forceUpdate)
             return .success(characters)
-        } catch {
+        } catch let error as CharactersRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToFetchCharacters)
         }
     }
 }

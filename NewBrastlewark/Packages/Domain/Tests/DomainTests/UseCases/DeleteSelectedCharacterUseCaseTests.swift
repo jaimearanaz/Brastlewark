@@ -1,43 +1,44 @@
 import Testing
-
 @testable import Domain
 
 struct DeleteSelectedCharacterUseCaseTests {
     @Test
-    func given_repositorySucceeds_when_execute_then_returnsSuccess() async throws {
+    static func given_repositoryDeletesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
-        let repositoryMock = CharactersRepositoryMock()
-        let useCase = DeleteSelectedCharacterUseCase(repository: repositoryMock)
-
+        let repository = CharactersRepositoryMock()
+        repository.deleteSelectedCharacterError = nil
+        let useCase = DeleteSelectedCharacterUseCase(repository: repository)
+        
         // when
         let result = await useCase.execute()
-
+        
         // then
         switch result {
         case .success:
-            #expect(Bool(true))
-        case .failure:
+            #expect(true)
+        default:
             #expect(Bool(false))
         }
+        #expect(Bool(repository.deleteSelectedCharacterCalled))
     }
 
     @Test
-    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        enum TestError: Error { case someError }
-        let repositoryMock = CharactersRepositoryMock()
-        repositoryMock.deleteSelectedCharacterError = TestError.someError
-        let useCase = DeleteSelectedCharacterUseCase(repository: repositoryMock)
-
+        let repository = CharactersRepositoryMock()
+        repository.deleteSelectedCharacterError = CharactersRepositoryError.unableToDeleteSelectedCharacter
+        let useCase = DeleteSelectedCharacterUseCase(repository: repository)
+        
         // when
         let result = await useCase.execute()
-
+        
         // then
         switch result {
-        case .success:
-            #expect(Bool(false))
         case .failure(let error):
-            #expect(error is TestError)
+            #expect(error == .unableToDeleteSelectedCharacter)
+        default:
+            #expect(Bool(false))
         }
+        #expect(Bool(repository.deleteSelectedCharacterCalled))
     }
 }

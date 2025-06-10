@@ -1,5 +1,5 @@
 public protocol GetSelectedCharacterUseCaseProtocol {
-    func execute() async -> Result<Character?, Error>
+    func execute() async -> Result<Character?, CharactersRepositoryError>
 }
 
 final class GetSelectedCharacterUseCase: GetSelectedCharacterUseCaseProtocol {
@@ -8,13 +8,15 @@ final class GetSelectedCharacterUseCase: GetSelectedCharacterUseCaseProtocol {
     init(repository: CharactersRepositoryProtocol) {
         self.repository = repository
     }
-    
-    func execute() async -> Result<Character?, Error> {
+
+    func execute() async -> Result<Character?, CharactersRepositoryError> {
         do {
             let character = try await repository.getSelectedCharacter()
             return .success(character)
-        } catch {
+        } catch let error as CharactersRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToGetSelectedCharacter)
         }
     }
 }

@@ -14,15 +14,15 @@ let package = Package(
             name: "Domain",
             targets: ["Domain"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
-    ],
+//    dependencies: [
+//        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+//    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Domain",
-            dependencies: ["Swinject"]),
+            name: "Domain"),
+//            dependencies: ["Swinject"]),
         .testTarget(
             name: "DomainTests",
             dependencies: ["Domain"],

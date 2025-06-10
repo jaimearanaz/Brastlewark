@@ -7,7 +7,7 @@ public struct SaveActiveFilterUseCaseParams {
 }
 
 public protocol SaveActiveFilterUseCaseProtocol {
-    func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, Error>
+    func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, FilterRepositoryError>
 }
 
 final class SaveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol {
@@ -16,13 +16,15 @@ final class SaveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol {
     init(repository: FilterRepositoryProtocol) {
         self.repository = repository
     }
-    
-    func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, Error> {
+
+    func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, FilterRepositoryError> {
         do {
             try await repository.saveActiveFilter(params.filter)
             return .success(())
-        } catch {
+        } catch let error as FilterRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToSaveFilter)
         }
     }
 }

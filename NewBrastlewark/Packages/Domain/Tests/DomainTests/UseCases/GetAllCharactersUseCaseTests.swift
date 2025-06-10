@@ -1,54 +1,69 @@
 import Testing
-
 @testable import Domain
 
 struct GetAllCharactersUseCaseTests {
     @Test
-    func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
+    static func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
         // given
-        let expectedCharacters = [Character(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 1,
-            weight: 2,
-            height: 3,
-            hairColor: "red",
-            professions: [],
-            friends: [])]
-        let repositoryMock = CharactersRepositoryMock()
-        repositoryMock.getAllCharactersResult = expectedCharacters
-        let useCase = GetAllCharactersUseCase(repository: repositoryMock)
-
+        let repository = CharactersRepositoryMock()
+        let expectedCharacters = [
+            Character(
+                id: 1,
+                name: "Test1",
+                thumbnail: "thumb1",
+                age: 20,
+                weight: 70.0,
+                height: 170.0,
+                hairColor: "Red",
+                professions: ["Baker"],
+                friends: ["Test2"]),
+            Character(
+                id: 2,
+                name: "Test2",
+                thumbnail: "thumb2",
+                age: 25,
+                weight: 80.0,
+                height: 180.0,
+                hairColor: "Blue",
+                professions: ["Tinker"],
+                friends: ["Test1"])
+        ]
+        repository.getAllCharactersResult = expectedCharacters
+        repository.getAllCharactersError = nil
+        let useCase = GetAllCharactersUseCase(repository: repository)
+        let params = GetAllCharactersUseCaseParams(forceUpdate: false)
+        
         // when
-        let result = await useCase.execute(params: .init(forceUpdate: false))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
         case .success(let characters):
             #expect(characters == expectedCharacters)
-        case .failure:
+        default:
             #expect(Bool(false))
         }
+        #expect(Bool(repository.getAllCharactersCalled))
     }
 
     @Test
-    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        enum TestError: Error { case someError }
-        let repositoryMock = CharactersRepositoryMock()
-        repositoryMock.getAllCharactersError = TestError.someError
-        let useCase = GetAllCharactersUseCase(repository: repositoryMock)
-
+        let repository = CharactersRepositoryMock()
+        repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
+        let useCase = GetAllCharactersUseCase(repository: repository)
+        let params = GetAllCharactersUseCaseParams(forceUpdate: true)
+        
         // when
-        let result = await useCase.execute(params: .init(forceUpdate: false))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
-        case .success:
-            #expect(Bool(false))
         case .failure(let error):
-            #expect(error is TestError)
+            #expect(error == .unableToFetchCharacters)
+        default:
+            #expect(Bool(false))
         }
+        #expect(Bool(repository.getAllCharactersCalled))
     }
 }

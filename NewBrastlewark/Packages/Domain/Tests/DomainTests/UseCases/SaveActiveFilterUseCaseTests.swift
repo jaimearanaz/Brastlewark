@@ -1,45 +1,49 @@
 import Testing
-
 @testable import Domain
 
 struct SaveActiveFilterUseCaseTests {
     @Test
-    func given_repositorySucceeds_when_execute_then_returnsSuccess() async throws {
+    static func given_repositorySavesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
-        let repositoryMock = FilterRepositoryMock()
-        let filter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
-        let useCase = SaveActiveFilterUseCase(repository: repositoryMock)
-
+        let repository = FilterRepositoryMock()
+        repository.saveActiveFilterError = nil
+        let useCase = SaveActiveFilterUseCase(repository: repository)
+        let filter = Filter(age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"], friends: 1...5)
+        let params = SaveActiveFilterUseCaseParams(filter: filter)
+        
         // when
-        let result = await useCase.execute(params: .init(filter: filter))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
         case .success:
-            #expect(Bool(true))
-        case .failure:
+            #expect(true)
+        default:
             #expect(Bool(false))
         }
+        #expect(Bool(repository.saveActiveFilterCalled))
+        #expect(repository.savedActiveFilter == filter)
     }
 
     @Test
-    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        enum TestError: Error { case someError }
-        let repositoryMock = FilterRepositoryMock()
-        repositoryMock.saveActiveFilterError = TestError.someError
-        let filter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
-        let useCase = SaveActiveFilterUseCase(repository: repositoryMock)
-
+        let repository = FilterRepositoryMock()
+        repository.saveActiveFilterError = FilterRepositoryError.unableToSaveFilter
+        let useCase = SaveActiveFilterUseCase(repository: repository)
+        let filter = Filter(age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"], friends: 1...5)
+        let params = SaveActiveFilterUseCaseParams(filter: filter)
+        
         // when
-        let result = await useCase.execute(params: .init(filter: filter))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
-        case .success:
-            #expect(Bool(false))
         case .failure(let error):
-            #expect(error is TestError)
+            #expect(error == .unableToSaveFilter)
+        default:
+            #expect(Bool(false))
         }
+        #expect(Bool(repository.saveActiveFilterCalled))
     }
 }

@@ -1,56 +1,100 @@
 import Testing
-
 @testable import Domain
 
 struct GetSearchedCharacterUseCaseTests {
     @Test
-    func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
+    static func given_repositoryReturnsCharacters_when_executeWithMatchingName_then_returnsCharactersWithName() async throws {
         // given
-        let expectedCharacters = [Character(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 1,
-            weight: 2,
-            height: 3,
-            hairColor: "red",
-            professions: [],
-            friends: [])]
-        let repositoryMock = CharactersRepositoryMock()
-        repositoryMock.getAllCharactersResult = expectedCharacters
-        let useCase = GetSearchedCharacterUseCase(repository: repositoryMock)
-        let search = "Test"
-
+        let repository = CharactersRepositoryMock()
+        let characters = [
+            Character(id: 1, name: "Alice", thumbnail: "thumb1", age: 20, weight: 70.0, height: 170.0, hairColor: "Red", professions: ["Baker"], friends: ["Bob"]),
+            Character(id: 2, name: "Bob", thumbnail: "thumb2", age: 25, weight: 80.0, height: 180.0, hairColor: "Blue", professions: ["Tinker"], friends: ["Alice"])
+        ]
+        repository.getAllCharactersResult = characters
+        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        let params = GetSearchedCharacterUseCaseParams(searchText: "ali")
+        
         // when
-        let result = await useCase.execute(params: .init(searchText: search))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
-        case .success(let characters):
-            #expect(characters == expectedCharacters)
-        case .failure:
+        case .success(let filtered):
+            #expect(filtered == [characters[0]])
+        default:
             #expect(Bool(false))
         }
+        #expect(Bool(repository.getAllCharactersCalled))
     }
 
     @Test
-    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_repositoryReturnsCharacters_when_executeWithMatchingProfession_then_returnsCharactersWithProfession() async throws {
         // given
-        enum TestError: Error { case someError }
-        let repositoryMock = CharactersRepositoryMock()
-        repositoryMock.getAllCharactersError = TestError.someError
-        let useCase = GetSearchedCharacterUseCase(repository: repositoryMock)
-        let search = "Test"
-
+        let repository = CharactersRepositoryMock()
+        let characters = [
+            Character(id: 1, name: "Alice", thumbnail: "thumb1", age: 20, weight: 70.0, height: 170.0, hairColor: "Red", professions: ["Baker"], friends: ["Bob"]),
+            Character(id: 2, name: "Bob", thumbnail: "thumb2", age: 25, weight: 80.0, height: 180.0, hairColor: "Blue", professions: ["Tinker"], friends: ["Alice"])
+        ]
+        repository.getAllCharactersResult = characters
+        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        let params = GetSearchedCharacterUseCaseParams(searchText: "tink")
+        
         // when
-        let result = await useCase.execute(params: .init(searchText: search))
-
+        let result = await useCase.execute(params: params)
+        
         // then
         switch result {
-        case .success:
+        case .success(let filtered):
+            #expect(filtered == [characters[1]])
+        default:
             #expect(Bool(false))
-        case .failure(let error):
-            #expect(error is TestError)
         }
+        #expect(Bool(repository.getAllCharactersCalled))
+    }
+
+    @Test
+    static func given_repositoryReturnsCharacters_when_executeWithEmptySearchText_then_returnsAllCharacters() async throws {
+        // given
+        let repository = CharactersRepositoryMock()
+        let characters = [
+            Character(id: 1, name: "Alice", thumbnail: "thumb1", age: 20, weight: 70.0, height: 170.0, hairColor: "Red", professions: ["Baker"], friends: ["Bob"]),
+            Character(id: 2, name: "Bob", thumbnail: "thumb2", age: 25, weight: 80.0, height: 180.0, hairColor: "Blue", professions: ["Tinker"], friends: ["Alice"])
+        ]
+        repository.getAllCharactersResult = characters
+        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        let params = GetSearchedCharacterUseCaseParams(searchText: "")
+        
+        // when
+        let result = await useCase.execute(params: params)
+        
+        // then
+        switch result {
+        case .success(let filtered):
+            #expect(filtered == characters)
+        default:
+            #expect(Bool(false))
+        }
+        #expect(Bool(repository.getAllCharactersCalled))
+    }
+
+    @Test
+    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+        // given
+        let repository = CharactersRepositoryMock()
+        repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
+        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        let params = GetSearchedCharacterUseCaseParams(searchText: "Alice")
+        
+        // when
+        let result = await useCase.execute(params: params)
+        
+        // then
+        switch result {
+        case .failure(let error):
+            #expect(error == .unableToFetchCharacters)
+        default:
+            #expect(Bool(false))
+        }
+        #expect(Bool(repository.getAllCharactersCalled))
     }
 }

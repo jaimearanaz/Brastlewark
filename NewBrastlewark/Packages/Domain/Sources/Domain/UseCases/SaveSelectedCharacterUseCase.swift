@@ -6,7 +6,7 @@ public struct SaveSelectedCharacterUseCaseParams {
 }
 
 public protocol SaveSelectedCharacterUseCaseProtocol {
-    func execute(params: SaveSelectedCharacterUseCaseParams) async -> Result<Void, Error>
+    func execute(params: SaveSelectedCharacterUseCaseParams) async -> Result<Void, CharactersRepositoryError>
 }
 
 final class SaveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol {
@@ -16,12 +16,14 @@ final class SaveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute(params: SaveSelectedCharacterUseCaseParams) async -> Result<Void, Error> {
+    func execute(params: SaveSelectedCharacterUseCaseParams) async -> Result<Void, CharactersRepositoryError> {
         do {
             try await repository.saveSelectedCharacter(params.character)
             return .success(())
-        } catch {
+        } catch let error as CharactersRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToSaveSelectedCharacter)
         }
     }
 }

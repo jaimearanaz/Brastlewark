@@ -3,85 +3,90 @@ import Testing
 
 struct GetAvailableFilterUseCaseTests {
     @Test
-    func given_repositoriesReturnCharactersAndFilter_when_execute_then_returnsSuccessWithFilter() async throws {
+    static func given_bothRepositoriesReturnSuccess_when_execute_then_returnsSuccessWithFilter() async throws {
         // given
-        let expectedCharacters = [Character(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 1,
-            weight: 2,
-            height: 3,
-            hairColor: "red",
-            professions: [],
-            friends: [])]
-        let expectedFilter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
-        let charactersRepositoryMock = CharactersRepositoryMock()
-        charactersRepositoryMock.getAllCharactersResult = expectedCharacters
-        let filterRepositoryMock = FilterRepositoryMock()
-        filterRepositoryMock.getAvailableFilterResult = expectedFilter
-        let useCase = GetAvailableFilterUseCase(
-            charactersRepository: charactersRepositoryMock,
-            filterRepository: filterRepositoryMock
-        )
-
+        let charactersRepository = CharactersRepositoryMock()
+        let filterRepository = FilterRepositoryMock()
+        let expectedCharacters = [
+            Character(id: 1, name: "Test1", thumbnail: "thumb1", age: 20, weight: 70.0, height: 170.0, hairColor: "Red", professions: ["Baker"], friends: ["Test2"]),
+            Character(id: 2, name: "Test2", thumbnail: "thumb2", age: 25, weight: 80.0, height: 180.0, hairColor: "Blue", professions: ["Tinker"], friends: ["Test1"])
+        ]
+        let expectedFilter = Filter(age: 10...30, weight: 60...90, height: 160...190, hairColor: ["Red", "Blue"], profession: ["Baker", "Tinker"], friends: 1...2)
+        charactersRepository.getAllCharactersResult = expectedCharacters
+        filterRepository.getAvailableFilterResult = expectedFilter
+        let useCase = GetAvailableFilterUseCase(charactersRepository: charactersRepository, filterRepository: filterRepository)
+        
         // when
         let result = await useCase.execute()
-
+        
         // then
         switch result {
         case .success(let filter):
             #expect(filter == expectedFilter)
-        case .failure:
+        default:
             #expect(Bool(false))
         }
+        #expect(Bool(charactersRepository.getAllCharactersCalled))
+        #expect(Bool(filterRepository.getAvailableFilterCalled))
     }
 
     @Test
-    func given_charactersRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_charactersRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        enum TestError: Error { case someError }
-        let charactersRepositoryMock = CharactersRepositoryMock()
-        charactersRepositoryMock.getAllCharactersError = TestError.someError
-        let filterRepositoryMock = FilterRepositoryMock()
+        let charactersRepository = CharactersRepositoryMock()
+        let filterRepository = FilterRepositoryMock()
+        charactersRepository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
         let useCase = GetAvailableFilterUseCase(
-            charactersRepository: charactersRepositoryMock,
-            filterRepository: filterRepositoryMock
-        )
-
+            charactersRepository: charactersRepository,
+            filterRepository: filterRepository)
+        
         // when
         let result = await useCase.execute()
-
+        
         // then
         switch result {
-        case .success:
-            #expect(Bool(false))
         case .failure(let error):
-            #expect(error is TestError)
+            #expect(error == .unableToFetchCharacters)
+        default:
+            #expect(Bool(false))
         }
+        #expect(Bool(charactersRepository.getAllCharactersCalled))
+        #expect(Bool(!filterRepository.getAvailableFilterCalled))
     }
 
     @Test
-    func given_filterRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    static func given_filterRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        enum TestError: Error { case someError }
-        let charactersRepositoryMock = CharactersRepositoryMock()
-        let filterRepositoryMock = FilterRepositoryMock()
-        filterRepositoryMock.getAvailableFilterError = TestError.someError
+        let charactersRepository = CharactersRepositoryMock()
+        let filterRepository = FilterRepositoryMock()
+        charactersRepository.getAllCharactersResult = [
+            Character(
+                id: 1,
+                name: "Test1",
+                thumbnail: "thumb1",
+                age: 20,
+                weight: 70.0,
+                height: 170.0,
+                hairColor: "Red",
+                professions: ["Baker"],
+                friends: ["Test2"])
+        ]
+        filterRepository.getAvailableFilterError = FilterRepositoryError.unableToFetchFilter
         let useCase = GetAvailableFilterUseCase(
-            charactersRepository: charactersRepositoryMock,
-            filterRepository: filterRepositoryMock
-        )
-
+            charactersRepository: charactersRepository,
+            filterRepository: filterRepository)
+        
         // when
         let result = await useCase.execute()
-
+        
         // then
         switch result {
-        case .success:
-            #expect(Bool(false))
         case .failure(let error):
-            #expect(error is TestError)
+            #expect(error == .unableToGetAvailableFilter)
+        default:
+            #expect(Bool(false))
         }
+        #expect(Bool(charactersRepository.getAllCharactersCalled))
+        #expect(Bool(filterRepository.getAvailableFilterCalled))
     }
 }

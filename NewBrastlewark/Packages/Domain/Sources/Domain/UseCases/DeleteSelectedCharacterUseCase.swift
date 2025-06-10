@@ -1,5 +1,5 @@
 public protocol DeleteSelectedCharacterUseCaseProtocol {
-    func execute() async -> Result<Void, Error>
+    func execute() async -> Result<Void, CharactersRepositoryError>
 }
 
 final class DeleteSelectedCharacterUseCase: DeleteSelectedCharacterUseCaseProtocol {
@@ -8,13 +8,15 @@ final class DeleteSelectedCharacterUseCase: DeleteSelectedCharacterUseCaseProtoc
     init(repository: CharactersRepositoryProtocol) {
         self.repository = repository
     }
-    
-    func execute() async -> Result<Void, Error> {
+
+    func execute() async -> Result<Void, CharactersRepositoryError> {
         do {
             try await repository.deleteSelectedCharacter()
             return .success(())
-        } catch {
+        } catch let error as CharactersRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToDeleteSelectedCharacter)
         }
     }
 }

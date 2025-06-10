@@ -7,7 +7,7 @@ public struct GetSearchedCharacterUseCaseParams {
 }
 
 public protocol GetSearchedCharacterUseCaseProtocol {
-    func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<[Character], Error>
+    func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<[Character], CharactersRepositoryError>
 }
 
 final class GetSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol {
@@ -17,13 +17,15 @@ final class GetSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<[Character], Error> {
+    func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<[Character], CharactersRepositoryError> {
         do {
             let characters = try await repository.getAllCharacters(forceUpdate: false)
             let searchedCharacters = searchCharacters(characters, withSearchText: params.searchText)
             return .success(searchedCharacters)
-        } catch {
+        } catch let error as CharactersRepositoryError {
             return .failure(error)
+        } catch {
+            return .failure(.unableToFetchCharacters)
         }
     }
 }
