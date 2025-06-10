@@ -3,7 +3,7 @@ import Domain
 final class FilterRepository: FilterRepositoryProtocol {
     private var activeFilter: Filter? = nil
 
-    func getAvailableFilter(fromCharacters characters: [Character]) async -> Filter {
+    func getAvailableFilter(fromCharacters characters: [Character]) async throws -> Filter {
         var professions = Set<String>()
         var hairColors = Set<String>()
         var names = Set<String>()

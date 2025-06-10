@@ -13,20 +13,21 @@ class CharactersRepository: CharactersRepositoryProtocol {
     }
 
     func getAllCharacters(forceUpdate: Bool = false) async throws -> [Character] {
-        if !forceUpdate, await cache.isValid(), let cached = await cache.get() {
-            return cached.map { CharacterEntityMapper.map(entity: $0) }
-        }
+        do {
+            if !forceUpdate, await cache.isValid(), let cached = await cache.get() {
+                return cached.map { CharacterEntityMapper.map(entity: $0) }
+            }
 
-        guard let networkService = networkService else {
-            throw NSError(
-                domain: "CharactersRepository",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "NetworkService is nil"])
-        }
+            guard let networkService = networkService else {
+                throw CharactersRepositoryError.noInternetConnection
+            }
 
-        let characterEntities = try await networkService.getCharacters()
-        await cache.save(characterEntities)
-        return characterEntities.map { CharacterEntityMapper.map(entity: $0) }
+            let characterEntities = try await networkService.getCharacters()
+            await cache.save(characterEntities)
+            return characterEntities.map { CharacterEntityMapper.map(entity: $0) }
+        } catch {
+            throw CharactersRepositoryError.unableToFetchCharacters
+        }
     }
 
     func saveSelectedCharacter(_ character: Character) async throws {

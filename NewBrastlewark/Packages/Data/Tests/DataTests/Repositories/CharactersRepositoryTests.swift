@@ -5,7 +5,7 @@ import Domain
 final class CharactersRepositoryTests: XCTestCase {
     func test_given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
         let cache = CacheMock()
-        let entity = CharacterEntity(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
+        let entity = try loadCharacterFromJSON()
         cache.storedCharacters = [entity]
         cache.valid = true
         let repo = CharactersRepository(networkService: nil, cache: cache)
@@ -17,7 +17,7 @@ final class CharactersRepositoryTests: XCTestCase {
     func test_given_invalidCache_and_networkSuccess_when_getAllCharacters_then_returnsNetworkCharactersAndSavesToCache() async throws {
         let cache = CacheMock()
         cache.valid = false
-        let entity = CharacterEntity(id: 2, name: "Net", thumbnail: "", age: 20, weight: 40, height: 60, hairColor: "", professions: [], friends: [])
+        let entity = try loadCharacterFromJSON()
         let network = NetworkServiceMock()
         network.result = [entity]
         let repo = CharactersRepository(networkService: network, cache: cache)
@@ -57,8 +57,8 @@ final class CharactersRepositoryTests: XCTestCase {
     func test_when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacter() async throws {
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
-        try await repo.saveSelectedCharacter(character)
+        let character = try loadCharacterFromJSON()
+        try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
         let selected = try await repo.getSelectedCharacter()
         XCTAssertEqual(selected?.id, character.id)
     }
@@ -66,10 +66,19 @@ final class CharactersRepositoryTests: XCTestCase {
     func test_when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
-        try await repo.saveSelectedCharacter(character)
+        let character = try loadCharacterFromJSON()
+        try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
         try await repo.deleteSelectedCharacter()
         let selected = try await repo.getSelectedCharacter()
         XCTAssertNil(selected)
+    }
+}
+
+private extension CharactersRepositoryTests {
+    func loadCharacterFromJSON() throws -> CharacterEntity {
+        let url = Bundle.module.url(forResource: "one_valid_character", withExtension: "json")!
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        return try decoder.decode(CharacterEntity.self, from: data)
     }
 }

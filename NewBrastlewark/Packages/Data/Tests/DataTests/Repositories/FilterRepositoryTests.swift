@@ -5,22 +5,33 @@ import Domain
 
 struct FilterRepositoryTests {
     @Test
-    func given_characters_when_getAvailableFilter_then_returnsCorrectFilter() async {
+    func given_characters_when_getAvailableFilter_then_returnsCorrectFilter() async throws {
         let repo = FilterRepository()
-        let characters = makeCharacters()
-        let filter = await repo.getAvailableFilter(fromCharacters: characters)
-        #expect(filter.age.lowerBound == 20)
-        #expect(filter.age.upperBound == 30)
-        #expect(filter.weight.lowerBound == 50)
-        #expect(filter.weight.upperBound == 70)
-        #expect(filter.height.lowerBound == 150)
-        #expect(filter.height.upperBound == 170)
-        #expect(filter.hairColor.contains("Blonde"))
-        #expect(filter.hairColor.contains("Brown"))
+        let characters = try loadCharactersFromJSON()
+        let filter = try await repo.getAvailableFilter(fromCharacters: characters)
+        #expect(filter.age.lowerBound == 166)
+        #expect(filter.age.upperBound == 306)
+        #expect(filter.weight.lowerBound == 35)
+        #expect(filter.weight.upperBound == 39)
+        #expect(filter.height.lowerBound == 106)
+        #expect(filter.height.upperBound == 110)
+        #expect(filter.hairColor.contains("Pink"))
+        #expect(filter.hairColor.contains("Green"))
         #expect(filter.hairColor.contains("Red"))
-        #expect(filter.profession.contains("Farmer"))
+        #expect(filter.profession.contains("Metalworker"))
+        #expect(filter.profession.contains("Woodcarver"))
+        #expect(filter.profession.contains("Stonecarver"))
+        #expect(filter.profession.contains(" Tinker"))
+        #expect(filter.profession.contains("Tailor"))
+        #expect(filter.profession.contains("Potter"))
+        #expect(filter.profession.contains("Brewer"))
+        #expect(filter.profession.contains("Medic"))
+        #expect(filter.profession.contains("Prospector"))
+        #expect(filter.profession.contains("Gemcutter"))
+        #expect(filter.profession.contains("Mason"))
+        #expect(filter.profession.contains("Cook"))
+        #expect(filter.profession.contains("Baker"))
         #expect(filter.profession.contains("Miner"))
-        #expect(filter.profession.contains("Builder"))
         #expect(filter.friends.lowerBound == 0)
         #expect(filter.friends.upperBound == 2)
     }
@@ -57,10 +68,10 @@ struct FilterRepositoryTests {
     }
 
     @Test
-    func given_emptyCharacters_when_getAvailableFilter_then_returnsZeroRangesAndSets() async {
+    func given_emptyCharacters_when_getAvailableFilter_then_returnsZeroRangesAndSets() async throws {
         let repo = FilterRepository()
         let characters: [Character] = []
-        let filter = await repo.getAvailableFilter(fromCharacters: characters)
+        let filter = try await repo.getAvailableFilter(fromCharacters: characters)
         #expect(filter.age.lowerBound == 0)
         #expect(filter.age.upperBound == 0)
         #expect(filter.weight.lowerBound == 0)
@@ -75,42 +86,13 @@ struct FilterRepositoryTests {
 }
 
 private extension FilterRepositoryTests {
-    func makeCharacters() -> [Character] {
-        return [
-            Character(
-                id: 1,
-                name: "Alice",
-                thumbnail: "",
-                age: 20,
-                weight: 50,
-                height: 150,
-                hairColor: "Blonde",
-                professions: [
-                    "Farmer",
-                    "Miner"],
-                friends: ["Bob"]),
-            Character(
-                id: 2,
-                name: "Bob",
-                thumbnail: "",
-                age: 30,
-                weight: 70,
-                height: 170,
-                hairColor: "Brown",
-                professions: ["Builder"],
-                friends: [
-                    "Alice",
-                    "Charlie"]),
-            Character(
-                id: 3,
-                name: "Charlie",
-                thumbnail: "",
-                age: 25,
-                weight: 60,
-                height: 160,
-                hairColor: "Red",
-                professions: [],
-                friends: [])
-        ]
+    func loadCharactersFromJSON() throws -> [Character] {
+        let url = Bundle.module.url(forResource: "valid_characters", withExtension: "json")!
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        return try decoder
+            .decode(CityEntity.self, from: data)
+            .brastlewark
+            .map{ CharacterEntityMapper.map(entity: $0)}
     }
 }
