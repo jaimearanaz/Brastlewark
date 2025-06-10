@@ -4,7 +4,7 @@ import Testing
 
 struct GetAllCharactersUseCaseTests {
     @Test
-    func given_repository_returns_characters_when_execute_then_returns_success_with_characters() async throws {
+    func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
         // given
         let expectedCharacters = [Character(
             id: 1,
@@ -33,7 +33,7 @@ struct GetAllCharactersUseCaseTests {
     }
 
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = CharactersRepositoryMock()

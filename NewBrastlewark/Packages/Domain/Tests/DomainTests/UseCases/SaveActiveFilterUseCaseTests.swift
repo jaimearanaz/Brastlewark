@@ -4,15 +4,15 @@ import Testing
 
 struct SaveActiveFilterUseCaseTests {
     @Test
-    func given_repository_succeeds_when_execute_then_returns_success() async throws {
+    func given_repositorySucceeds_when_execute_then_returnsSuccess() async throws {
         // given
         let repositoryMock = FilterRepositoryMock()
         let filter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
         let useCase = SaveActiveFilterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute(params: .init(filter: filter))
-        
+
         // then
         switch result {
         case .success:
@@ -23,17 +23,17 @@ struct SaveActiveFilterUseCaseTests {
     }
 
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = FilterRepositoryMock()
         repositoryMock.saveActiveFilterError = TestError.someError
         let filter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
         let useCase = SaveActiveFilterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute(params: .init(filter: filter))
-        
+
         // then
         switch result {
         case .success:

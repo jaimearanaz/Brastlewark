@@ -4,7 +4,7 @@ import Testing
 
 struct GetActiveFilterUseCaseTests {
     @Test
-    func given_repository_returns_filter_when_execute_then_returns_success_with_filter() async throws {
+    func given_repositoryReturnsFilter_when_execute_then_returnsSuccessWithFilter() async throws {
         // given
         let expectedFilter = Filter(age: 1...2, weight: 3...4, height: 5...6, friends: 7...8)
         let repositoryMock = FilterRepositoryMock()
@@ -24,7 +24,7 @@ struct GetActiveFilterUseCaseTests {
     }
 
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = FilterRepositoryMock()

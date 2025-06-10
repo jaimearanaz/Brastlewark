@@ -4,7 +4,7 @@ import Testing
 
 struct GetSelectedCharacterUseCaseTests {
     @Test
-    func given_repository_returns_character_when_execute_then_returns_success_with_character() async throws {
+    func given_repositoryReturnsCharacter_when_execute_then_returnsSuccessWithCharacter() async throws {
         // given
         let expectedCharacter = Character(
             id: 1,
@@ -19,10 +19,10 @@ struct GetSelectedCharacterUseCaseTests {
         let repositoryMock = CharactersRepositoryMock()
         repositoryMock.getSelectedCharacterResult = expectedCharacter
         let useCase = GetSelectedCharacterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute()
-        
+
         // then
         switch result {
         case .success(let character):
@@ -33,16 +33,16 @@ struct GetSelectedCharacterUseCaseTests {
     }
 
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = CharactersRepositoryMock()
         repositoryMock.getSelectedCharacterError = TestError.someError
         let useCase = GetSelectedCharacterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute()
-        
+
         // then
         switch result {
         case .success:

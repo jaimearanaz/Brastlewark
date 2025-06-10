@@ -5,7 +5,7 @@ import Foundation
 
 struct GetFilteredCharactersUseCaseTests {
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = CharactersRepositoryMock()
@@ -26,7 +26,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_age_when_execute_then_returns_characters_within_age_range() async throws {
+    func given_filterByAge_when_execute_then_returnsCharactersWithinAgeRange() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -46,7 +46,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_weight_when_execute_then_returns_characters_within_weight_range() async throws {
+    func given_filterByWeight_when_execute_then_returnsCharactersWithinWeightRange() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let  repositoryMock = CharactersRepositoryMock()
@@ -66,7 +66,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_height_when_execute_then_returns_characters_within_height_range() async throws {
+    func given_filterByHeight_when_execute_then_returnsCharactersWithinHeightRange() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -86,7 +86,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_hair_color_when_execute_then_returns_characters_with_hair_color() async throws {
+    func given_filterByHairColor_when_execute_then_returnsCharactersWithHairColor() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -105,9 +105,8 @@ struct GetFilteredCharactersUseCaseTests {
         }
     }
 
-
     @Test
-    func given_filter_by_multiple_hair_colors_when_execute_then_returns_characters_with_any_of_hair_colors() async throws {
+    func given_filterByMultipleHairColors_when_execute_then_returnsCharactersWithAnyOfHairColors() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -127,7 +126,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_profession_when_execute_then_returns_characters_with_profession() async throws {
+    func given_filterByProfession_when_execute_then_returnsCharactersWithProfession() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -147,7 +146,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_multiple_professions_when_execute_then_returns_characters_with_any_of_professions() async throws {
+    func given_filterByMultipleProfessions_when_execute_then_returnsCharactersWithAnyOfProfessions() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -167,7 +166,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_friends_count_when_execute_then_returns_characters_within_friends_range() async throws {
+    func given_filterByFriendsCount_when_execute_then_returnsCharactersWithinFriendsRange() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()
@@ -187,7 +186,7 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    func given_filter_by_all_fields_when_execute_then_returns_characters_matching_all_criteria() async throws {
+    func given_filterByAllFields_when_execute_then_returnsCharactersMatchingAllCriteria() async throws {
         // given
         let allCharacters = try loadCharactersFromJSON()
         let repositoryMock = CharactersRepositoryMock()

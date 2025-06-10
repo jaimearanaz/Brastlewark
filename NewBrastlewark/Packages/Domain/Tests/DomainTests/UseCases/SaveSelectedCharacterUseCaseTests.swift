@@ -4,7 +4,7 @@ import Testing
 
 struct SaveSelectedCharacterUseCaseTests {
     @Test
-    func given_repository_succeeds_when_execute_then_returns_success() async throws {
+    func given_repositorySucceeds_when_execute_then_returnsSuccess() async throws {
         // given
         let repositoryMock = CharactersRepositoryMock()
         let character = Character(
@@ -18,10 +18,10 @@ struct SaveSelectedCharacterUseCaseTests {
             professions: [],
             friends: [])
         let useCase = SaveSelectedCharacterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute(params: .init(character: character))
-        
+
         // then
         switch result {
         case .success:
@@ -32,7 +32,7 @@ struct SaveSelectedCharacterUseCaseTests {
     }
 
     @Test
-    func given_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let repositoryMock = CharactersRepositoryMock()
@@ -48,10 +48,10 @@ struct SaveSelectedCharacterUseCaseTests {
             professions: [],
             friends: [])
         let useCase = SaveSelectedCharacterUseCase(repository: repositoryMock)
-        
+
         // when
         let result = await useCase.execute(params: .init(character: character))
-        
+
         // then
         switch result {
         case .success:

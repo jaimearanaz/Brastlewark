@@ -3,7 +3,7 @@ import Testing
 
 struct GetAvailableFilterUseCaseTests {
     @Test
-    func given_repositories_return_characters_and_filter_when_execute_then_returns_success_with_filter() async throws {
+    func given_repositoriesReturnCharactersAndFilter_when_execute_then_returnsSuccessWithFilter() async throws {
         // given
         let expectedCharacters = [Character(
             id: 1,
@@ -38,7 +38,7 @@ struct GetAvailableFilterUseCaseTests {
     }
 
     @Test
-    func given_characters_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_charactersRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let charactersRepositoryMock = CharactersRepositoryMock()
@@ -62,7 +62,7 @@ struct GetAvailableFilterUseCaseTests {
     }
 
     @Test
-    func given_filter_repository_throws_error_when_execute_then_returns_failure() async throws {
+    func given_filterRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         enum TestError: Error { case someError }
         let charactersRepositoryMock = CharactersRepositoryMock()
