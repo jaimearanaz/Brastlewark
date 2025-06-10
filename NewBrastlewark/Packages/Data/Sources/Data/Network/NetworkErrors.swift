@@ -1,6 +1,6 @@
 import Foundation
 
-enum NetworkErrors: Error {
+enum NetworkErrors: Error, Equatable {
     case general
     case noNetwork
     case timeout

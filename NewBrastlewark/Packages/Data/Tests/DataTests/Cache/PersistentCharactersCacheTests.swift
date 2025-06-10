@@ -24,7 +24,16 @@ struct PersistentCharactersCacheTests {
     func given_characterSaved_when_get_then_returnsSavedCharacter() async {
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "red", professions: ["Miner"], friends: ["Bob"])
+        let character = CharacterEntity(
+            id: 1,
+            name: "Test",
+            thumbnail: "",
+            age: 10,
+            weight: 20,
+            height: 30,
+            hairColor: "red",
+            professions: ["Miner"],
+            friends: ["Bob"])
         await cache.save([character])
         let result = await cache.get()
         #expect(result?.count == 1)
@@ -43,7 +52,16 @@ struct PersistentCharactersCacheTests {
     func given_recentlySavedCharacter_when_isValid_then_returnsTrue() async {
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "red", professions: ["Miner"], friends: ["Bob"])
+        let character = CharacterEntity(
+            id: 1,
+            name: "Test",
+            thumbnail: "",
+            age: 10,
+            weight: 20,
+            height: 30,
+            hairColor: "red",
+            professions: ["Miner"],
+            friends: ["Bob"])
         await cache.save([character])
         let valid = await cache.isValid()
         #expect(valid == true)
@@ -53,7 +71,16 @@ struct PersistentCharactersCacheTests {
     func given_oldTimestamp_when_isValid_then_returnsFalse() async {
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "red", professions: ["Miner"], friends: ["Bob"])
+        let character = CharacterEntity(
+            id: 1,
+            name: "Test",
+            thumbnail: "",
+            age: 10,
+            weight: 20,
+            height: 30,
+            hairColor: "red",
+            professions: ["Miner"],
+            friends: ["Bob"])
         await cache.save([character])
         let oldDate = Date(timeIntervalSinceNow: -1000)
         UserDefaults.standard.set(oldDate, forKey: "characters_cache_timestamp")

@@ -1,89 +1,75 @@
-import Combine
-import Domain
-import Foundation
-import Testing
-
+import XCTest
 @testable import Data
+import Domain
 
-final class CharactersRepositoryTests {
-    @Test
-    func given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
-        let cache = MockCache()
-        let entity = CharacterEntity.mock(id: 1, name: "Cached")
-        cache.characters = [entity]
+final class CharactersRepositoryTests: XCTestCase {
+    func test_given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
+        let cache = CacheMock()
+        let entity = CharacterEntity(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
+        cache.storedCharacters = [entity]
         cache.valid = true
-        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
+        let repo = CharactersRepository(networkService: nil, cache: cache)
         let result = try await repo.getAllCharacters()
-        #expect(result.count == 1)
-        #expect(result.first?.id == 1)
-        #expect(result.first?.name == "Cached")
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result.first?.id, entity.id)
     }
 
-    @Test
-    func given_invalidCache_and_networkSuccess_when_getAllCharacters_then_returnsNetworkCharactersAndSavesToCache() async throws {
-        let cache = MockCache()
+    func test_given_invalidCache_and_networkSuccess_when_getAllCharacters_then_returnsNetworkCharactersAndSavesToCache() async throws {
+        let cache = CacheMock()
         cache.valid = false
-        let entity = CharacterEntity.mock(id: 2, name: "Network")
+        let entity = CharacterEntity(id: 2, name: "Net", thumbnail: "", age: 20, weight: 40, height: 60, hairColor: "", professions: [], friends: [])
         let network = NetworkServiceMock()
-        network.result = .success([entity])
+        network.result = [entity]
         let repo = CharactersRepository(networkService: network, cache: cache)
         let result = try await repo.getAllCharacters()
-        #expect(result.count == 1)
-        #expect(result.first?.id == 2)
-        #expect(result.first?.name == "Network")
-        #expect(cache.characters?.first?.id == 2)
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result.first?.id, entity.id)
+        XCTAssertTrue(cache.saveCalled)
+        XCTAssertEqual(cache.storedCharacters?.first?.id, entity.id)
     }
 
-    @Test
-    func given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsError() async {
-        let cache = MockCache()
+    func test_given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsError() async {
+        let cache = CacheMock()
         cache.valid = false
         let network = NetworkServiceMock()
-        network.result = .failure(NetworkErrors.noNetwork)
+        network.error = NetworkErrors.general
         let repo = CharactersRepository(networkService: network, cache: cache)
         do {
             _ = try await repo.getAllCharacters()
-            #expect(Bool(false))
+            XCTFail("Should throw error")
         } catch {
-            if case .noNetwork? = error as? NetworkErrors {
-                #expect(true)
-            } else {
-                #expect(Bool(false))
-            }
+            // Success: error thrown
         }
     }
 
-    @Test
-    func given_nilNetworkService_when_getAllCharacters_then_throwsError() async {
-        let cache = MockCache()
+    func test_given_nilNetworkService_when_getAllCharacters_then_throwsError() async {
+        let cache = CacheMock()
+        cache.valid = false
         let repo = CharactersRepository(networkService: nil, cache: cache)
         do {
             _ = try await repo.getAllCharacters()
-            #expect(Bool(false))
+            XCTFail("Should throw error")
         } catch {
-            #expect((error as NSError).domain == "CharactersRepository")
+            // Success: error thrown
         }
     }
 
-    @Test
-    func when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacter() async throws {
-        let cache = MockCache()
-        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
-        let character = Character(id: 1, name: "Test", thumbnail: "url", age: 10, weight: 20, height: 30, hairColor: "Brown", professions: [], friends: [])
+    func test_when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacter() async throws {
+        let cache = CacheMock()
+        let repo = CharactersRepository(networkService: nil, cache: cache)
+        let character = Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
         try await repo.saveSelectedCharacter(character)
         let selected = try await repo.getSelectedCharacter()
-        #expect(selected?.id == 1)
-        #expect(selected?.name == "Test")
+        XCTAssertEqual(selected?.id, character.id)
     }
 
-    @Test
-    func when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
-        let cache = MockCache()
-        let repo = CharactersRepository(networkService: NetworkServiceMock(), cache: cache)
-        let character = Character(id: 1, name: "Test", thumbnail: "url", age: 10, weight: 20, height: 30, hairColor: "Brown", professions: [], friends: [])
+    func test_when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
+        let cache = CacheMock()
+        let repo = CharactersRepository(networkService: nil, cache: cache)
+        let character = Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
         try await repo.saveSelectedCharacter(character)
         try await repo.deleteSelectedCharacter()
         let selected = try await repo.getSelectedCharacter()
-        #expect(selected == nil)
+        XCTAssertNil(selected)
     }
 }

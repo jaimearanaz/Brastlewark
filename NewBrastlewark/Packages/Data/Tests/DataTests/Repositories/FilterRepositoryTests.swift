@@ -87,8 +87,7 @@ private extension FilterRepositoryTests {
                 hairColor: "Blonde",
                 professions: [
                     "Farmer",
-                    "Miner"
-                ],
+                    "Miner"],
                 friends: ["Bob"]),
             Character(
                 id: 2,
@@ -101,8 +100,7 @@ private extension FilterRepositoryTests {
                 professions: ["Builder"],
                 friends: [
                     "Alice",
-                    "Charlie"
-                ]),
+                    "Charlie"]),
             Character(
                 id: 3,
                 name: "Charlie",

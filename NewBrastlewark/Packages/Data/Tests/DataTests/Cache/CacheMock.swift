@@ -1,9 +1,28 @@
+import Foundation
 @testable import Data
 
-class MockCache: CharactersCacheProtocol {
-    var characters: [CharacterEntity]? = nil
+final class CacheMock: CharactersAsyncCacheProtocol {
+    var storedCharacters: [CharacterEntity]? = nil
     var valid: Bool = false
-    func get() -> [CharacterEntity]? { characters }
-    func save(_ characters: [CharacterEntity]) { self.characters = characters }
-    func isValid() -> Bool { valid }
+    var clearCalled = false
+    var saveCalled = false
+
+    func get() async -> [CharacterEntity]? {
+        return storedCharacters
+    }
+
+    func save(_ characters: [CharacterEntity]) async {
+        storedCharacters = characters
+        saveCalled = true
+    }
+
+    func isValid() async -> Bool {
+        return valid
+    }
+
+    func clearCache() async {
+        clearCalled = true
+        storedCharacters = nil
+        valid = false
+    }
 }

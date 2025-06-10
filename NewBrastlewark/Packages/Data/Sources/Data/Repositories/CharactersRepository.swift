@@ -1,21 +1,19 @@
-import Combine
 import Domain
 import Foundation
 
 class CharactersRepository: CharactersRepositoryProtocol {
     private let networkService: NetworkServiceProtocol?
-    private let cache: CharactersCacheProtocol
+    private let cache: CharactersAsyncCacheProtocol
     private var selectedCharacter: Character?
-    private var cancellable: AnyCancellable?
 
-    init(networkService: NetworkServiceProtocol?, cache: CharactersCacheProtocol) {
+    init(networkService: NetworkServiceProtocol?, cache: CharactersAsyncCacheProtocol) {
         self.networkService = networkService
         self.cache = cache
         self.selectedCharacter = nil
     }
 
     func getAllCharacters(forceUpdate: Bool = false) async throws -> [Character] {
-        if !forceUpdate, cache.isValid(), let cached = cache.get() {
+        if !forceUpdate, await cache.isValid(), let cached = await cache.get() {
             return cached.map { CharacterEntityMapper.map(entity: $0) }
         }
 
@@ -26,20 +24,9 @@ class CharactersRepository: CharactersRepositoryProtocol {
                 userInfo: [NSLocalizedDescriptionKey: "NetworkService is nil"])
         }
 
-        return try await withCheckedThrowingContinuation { continuation in
-            self.cancellable = networkService.getCharacters()
-                .sink(receiveCompletion: { completion in
-                    if case let .failure(error) = completion {
-                        continuation.resume(throwing: error)
-                    }
-                    self.cancellable = nil
-                }, receiveValue: { characterEntities in
-                    self.cache.save(characterEntities)
-                    let characters = characterEntities.map { CharacterEntityMapper.map(entity: $0) }
-                    continuation.resume(returning: characters)
-                    self.cancellable = nil
-                })
-        }
+        let characterEntities = try await networkService.getCharacters()
+        await cache.save(characterEntities)
+        return characterEntities.map { CharacterEntityMapper.map(entity: $0) }
     }
 
     func saveSelectedCharacter(_ character: Character) async throws {

@@ -1,4 +1,3 @@
-import Combine
 import Foundation
 import Testing
 
@@ -6,49 +5,43 @@ import Testing
 
 struct NetworkServiceTests {
     @Test
-    func given_noInternet_when_getCharacters_then_returnsNoNetworkError() {
+    func given_noInternet_when_getCharacters_then_returnsNoNetworkError() async {
         let networkStatus = NetworkStatusMock()
         networkStatus.isInternetAvailableReturnValue = false
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus)
-        let result = awaitResult(from: sut.getCharacters())
-        var isFailure = false
-        if case .failure(let error) = result {
-            isFailure = true
-            if case .noNetwork? = error as? NetworkErrors {
-                #expect(true)
-            } else {
-                #expect(Bool(false))
-            }
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch let error as NetworkErrors {
+            #expect(error == .noNetwork)
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isFailure)
     }
 
     @Test
-    func given_invalidUrl_when_getCharacters_then_returnsWrongUrlError() {
-        let sut = NetworkService(baseUrl: "invalid url", networkStatus: NetworkStatus())
-        let result = awaitResult(from: sut.getCharacters())
-        var isFailure = false
-        if case .failure(let error) = result {
-            isFailure = true
-            if case .wrongUrl? = error as? NetworkErrors {
-                #expect(true)
-            } else {
-                #expect(Bool(false))
-            }
+    func given_invalidUrl_when_getCharacters_then_returnsWrongUrlError() async {
+        let sut = NetworkService(baseUrl: "invalid url", networkStatus: NetworkStatusMock())
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch let error as NetworkErrors {
+            #expect(error == .wrongUrl)
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isFailure)
     }
 
     @Test
     func test_scenarios_with_network_mocked_responses() async {
-        given_networkTimeout_when_getCharacters_then_returnsTimeoutError()
-        given_non200StatusCode_when_getCharacters_then_returnsStatusError()
-        given_invalidJson_when_getCharacters_then_returnsWrongJsonError()
-        given_validResponse_when_getCharacters_then_returnsCharacterEntities()
+        await given_networkTimeout_when_getCharacters_then_returnsTimeoutError()
+        await given_non200StatusCode_when_getCharacters_then_returnsStatusError()
+        await given_invalidJson_when_getCharacters_then_returnsWrongJsonError()
+        await given_validResponse_when_getCharacters_then_returnsCharacterEntities()
         await given_networkFails_then_retriesExpectedNumberOfTimes()
     }
 
-    func given_networkTimeout_when_getCharacters_then_returnsTimeoutError() {
+    func given_networkTimeout_when_getCharacters_then_returnsTimeoutError() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         URLProtocolMock.requestHandler = { _ in
@@ -56,20 +49,17 @@ struct NetworkServiceTests {
         }
         defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
-        let result = awaitResult(from: sut.getCharacters())
-        var isFailure = false
-        if case .failure(let error) = result {
-            isFailure = true
-            if case .timeout? = error as? NetworkErrors {
-                #expect(true)
-            } else {
-                #expect(Bool(false))
-            }
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch let error as NetworkErrors {
+            #expect(error == .timeout)
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isFailure)
     }
 
-    func given_non200StatusCode_when_getCharacters_then_returnsStatusError() {
+    func given_non200StatusCode_when_getCharacters_then_returnsStatusError() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         URLProtocolMock.requestHandler = { _ in
@@ -82,20 +72,21 @@ struct NetworkServiceTests {
         }
         defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
-        let result = awaitResult(from: sut.getCharacters())
-        var isFailure = false
-        if case .failure(let error) = result {
-            isFailure = true
-            if case .statusError(let code) = error as? NetworkErrors {
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch let error as NetworkErrors {
+            if case .statusError(let code) = error {
                 #expect(code == 404)
             } else {
                 #expect(Bool(false))
             }
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isFailure)
     }
 
-    func given_invalidJson_when_getCharacters_then_returnsWrongJsonError() {
+    func given_invalidJson_when_getCharacters_then_returnsWrongJsonError() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         URLProtocolMock.requestHandler = { _ in
@@ -109,20 +100,17 @@ struct NetworkServiceTests {
         }
         defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
-        let result = awaitResult(from: sut.getCharacters())
-        var isFailure = false
-        if case .failure(let error) = result {
-            isFailure = true
-            if case .wrongJson? = error as? NetworkErrors {
-                #expect(true)
-            } else {
-                #expect(Bool(false))
-            }
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch let error as NetworkErrors {
+            #expect(error == .wrongJson)
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isFailure)
     }
 
-    func given_validResponse_when_getCharacters_then_returnsCharacterEntities() {
+    func given_validResponse_when_getCharacters_then_returnsCharacterEntities() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
         let jsonURL = Bundle.module.url(forResource: "valid_characters", withExtension: "json")!
@@ -135,63 +123,48 @@ struct NetworkServiceTests {
                 headerFields: nil)!
             return (response, validJson)
         }
+        defer { URLProtocolMock.requestHandler = nil }
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus, urlSession: session)
-        let result = awaitResult(from: sut.getCharacters())
-        var isSuccess = false
-        if case .success(let characters) = result {
-            isSuccess = true
+        do {
+            let characters = try await sut.getCharacters()
+            #expect(!characters.isEmpty)
+        } catch {
+            #expect(Bool(false))
         }
-        #expect(isSuccess)
     }
 
     func given_networkFails_then_retriesExpectedNumberOfTimes() async {
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
-        actor CallCounter {
+        class CallCounter: @unchecked Sendable {
             private var count = 0
-            func increment() { count += 1 }
-            func value() -> Int { count }
+            private let queue = DispatchQueue(label: "CallCounterQueue")
+            func increment() { queue.sync { count += 1 } }
+            func value() -> Int { queue.sync { count } }
         }
         let callCounter = CallCounter()
         URLProtocolMock.requestHandler = { _ in
-            Task { await callCounter.increment() }
+            callCounter.increment()
             throw URLError(.timedOut)
         }
+        defer { URLProtocolMock.requestHandler = nil }
         let retries = 2
         let sut = NetworkService(
             baseUrl: "https://test.com",
             retries: retries,
             networkStatus: networkStatus,
             urlSession: session)
-        _ = awaitResult(from: sut.getCharacters())
-        let finalCount = await callCounter.value()
-        #expect(finalCount == retries + 1)
+        do {
+            _ = try await sut.getCharacters()
+            #expect(Bool(false))
+        } catch {
+            let finalCount = callCounter.value()
+            #expect(finalCount == retries + 1)
+        }
     }
 }
 
 private extension NetworkServiceTests {
-    func awaitResult<T: Publisher>(from publisher: T) -> Result<T.Output, T.Failure>? {
-        let semaphore = DispatchSemaphore(value: 0)
-        var result: Result<T.Output, T.Failure>?
-        var value: T.Output?
-        let cancellable = publisher.sink(receiveCompletion: { completion in
-            switch completion {
-            case .failure(let error):
-                result = .failure(error)
-            case .finished:
-                if let v = value {
-                    result = .success(v)
-                }
-            }
-            semaphore.signal()
-        }, receiveValue: { v in
-            value = v
-        })
-        semaphore.wait()
-        _ = cancellable
-        return result
-    }
-
     private func makeMockSession() -> URLSession {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolMock.self]

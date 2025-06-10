@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 protocol NetworkServiceProtocol {
-    func getCharacters() -> AnyPublisher<[CharacterEntity], Error>
+    func getCharacters() async throws -> [CharacterEntity]
 }
 
 class NetworkService: NetworkServiceProtocol {
@@ -10,6 +10,7 @@ class NetworkService: NetworkServiceProtocol {
     var retries: Int
     var networkStatus: NetworkStatusProtocol
     var urlSession: URLSession
+    var cancellable: AnyCancellable?
 
     init(baseUrl: String,
          retries: Int = 3,
@@ -21,41 +22,56 @@ class NetworkService: NetworkServiceProtocol {
         self.urlSession = urlSession
     }
 
-    func getCharacters() -> AnyPublisher<[CharacterEntity], Error> {
-        guard networkStatus.isInternetAvailable() else {
-            return Fail(error: NetworkErrors.noNetwork).eraseToAnyPublisher()
-        }
-
-        guard url.isValidNetworkURL, let url = URL(string: url) else {
-            return Fail(error: NetworkErrors.wrongUrl).eraseToAnyPublisher()
-        }
-
-        return urlSession
-            .dataTaskPublisher(for: url)
-            .mapError { error -> NetworkErrors in
-                if error.errorCode == -1001 {
-                    return .timeout
-                } else {
-                    return .general
-                }
+    func getCharacters() async throws -> [CharacterEntity] {
+        try await withCheckedThrowingContinuation { continuation in
+            guard networkStatus.isInternetAvailable() else {
+                continuation.resume(throwing: NetworkErrors.noNetwork)
+                return
             }
-            .retry(retries)
-            .tryMap { (data, response) -> CityEntity in
-                guard let response = response as? HTTPURLResponse else {
-                    throw NetworkErrors.general
-                }
-                if response.statusCode == 200 {
-                    let decoder = JSONDecoder()
-                    if let city = try? decoder.decode(CityEntity.self, from: data) {
-                        return city
+            guard url.isValidNetworkURL, let url = URL(string: url) else {
+                continuation.resume(throwing: NetworkErrors.wrongUrl)
+                return
+            }
+            cancellable = urlSession.dataTaskPublisher(for: url)
+                .mapError { error -> NetworkErrors in
+                    if error.errorCode == -1001 {
+                        return .timeout
                     } else {
-                        throw NetworkErrors.wrongJson
+                        return .general
                     }
-                } else {
-                    throw NetworkErrors.statusError(response.statusCode)
                 }
-            }
-            .map { $0.brastlewark }
-            .eraseToAnyPublisher()
+                .retry(retries)
+                .tryMap { (data, response) -> CityEntity in
+                    guard let response = response as? HTTPURLResponse else {
+                        throw NetworkErrors.general
+                    }
+                    if response.statusCode == 200 {
+                        let decoder = JSONDecoder()
+                        if let city = try? decoder.decode(CityEntity.self, from: data) {
+                            return city
+                        } else {
+                            throw NetworkErrors.wrongJson
+                        }
+                    } else {
+                        throw NetworkErrors.statusError(response.statusCode)
+                    }
+                }
+                .map { $0.brastlewark }
+                .sink(receiveCompletion: { [weak self] completion in
+                    if case let .failure(error) = completion {
+                        if let networkError = error as? NetworkErrors {
+                            continuation.resume(throwing: networkError)
+                        } else if let urlError = error as? URLError, urlError.code == .timedOut {
+                            continuation.resume(throwing: NetworkErrors.timeout)
+                        } else {
+                            continuation.resume(throwing: NetworkErrors.general)
+                        }
+                    }
+                    self?.cancellable = nil
+                }, receiveValue: { [weak self] characters in
+                    continuation.resume(returning: characters)
+                    self?.cancellable = nil
+                })
+        }
     }
 }
