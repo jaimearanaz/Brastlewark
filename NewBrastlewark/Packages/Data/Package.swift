@@ -15,18 +15,17 @@ let package = Package(
             targets: ["Data"]),
     ],
     dependencies: [
-        .package(path: "../Domain")
-        // .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+        .package(path: "../Domain"),
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Data",
-            // dependencies: ["Domain", "Swinject"],
-            dependencies: ["Domain"],
+            dependencies: ["Domain", "Swinject"],
             resources: [
-                .process("Resources") // o .process("Localizable.xcstrings") si no quieres crear carpeta
+                .process("Resources")
             ]),
         .testTarget(
             name: "DataTests",

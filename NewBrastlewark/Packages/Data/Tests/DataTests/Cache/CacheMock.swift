@@ -1,7 +1,7 @@
 import Foundation
 @testable import Data
 
-final class CacheMock: CharactersAsyncCacheProtocol {
+final class CacheMock: CharactersCacheProtocol {
     var storedCharacters: [CharacterEntity]? = nil
     var valid: Bool = false
     var clearCalled = false
