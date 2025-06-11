@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 import SwiftData
+import Testing
 
 @testable import Data
 
@@ -19,20 +19,11 @@ struct PersistentCharactersCacheTests {
     }
 
     @Test
-    func given_characterSaved_when_get_then_returnsSavedCharacter() async {
+    func given_characterSaved_when_get_then_returnsSavedCharacter() async throws {
         // given
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 10,
-            weight: 20,
-            height: 30,
-            hairColor: "red",
-            professions: ["Miner"],
-            friends: ["Bob"])
+        let character = try loadOneCharacterFromJSON()
 
         // when
         await cache.save([character])
@@ -57,20 +48,11 @@ struct PersistentCharactersCacheTests {
     }
 
     @Test
-    func given_recentlySavedCharacter_when_isValid_then_returnsTrue() async {
+    func given_recentlySavedCharacter_when_isValid_then_returnsTrue() async throws {
         // given
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 10,
-            weight: 20,
-            height: 30,
-            hairColor: "red",
-            professions: ["Miner"],
-            friends: ["Bob"])
+        let character = try loadOneCharacterFromJSON()
 
         // when
         await cache.save([character])
@@ -81,20 +63,11 @@ struct PersistentCharactersCacheTests {
     }
 
     @Test
-    func given_oldTimestamp_when_isValid_then_returnsFalse() async {
+    func given_oldTimestamp_when_isValid_then_returnsFalse() async throws {
         // given
         let cache = makeInMemoryCache()
         await cache.clearCache()
-        let character = CharacterEntity(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 10,
-            weight: 20,
-            height: 30,
-            hairColor: "red",
-            professions: ["Miner"],
-            friends: ["Bob"])
+        let character = try loadOneCharacterFromJSON()
 
         // when
         await cache.save([character])

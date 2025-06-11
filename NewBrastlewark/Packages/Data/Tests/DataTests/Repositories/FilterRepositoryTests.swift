@@ -9,7 +9,7 @@ struct FilterRepositoryTests {
     func given_characters_when_getAvailableFilter_then_returnsCorrectFilter() async throws {
         // given
         let repo = FilterRepository()
-        let characters = try loadCharactersFromJSON()
+        let characters = try loadCharactersFromJSON().map { CharacterEntityMapper.map(entity: $0) }
 
         // when
         let filter = try await repo.getAvailableFilter(fromCharacters: characters)
@@ -103,17 +103,5 @@ struct FilterRepositoryTests {
         #expect(filter.profession.isEmpty)
         #expect(filter.friends.lowerBound == 0)
         #expect(filter.friends.upperBound == 0)
-    }
-}
-
-private extension FilterRepositoryTests {
-    func loadCharactersFromJSON() throws -> [Character] {
-        let url = Bundle.module.url(forResource: "valid_characters", withExtension: "json")!
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder
-            .decode(CityEntity.self, from: data)
-            .brastlewark
-            .map{ CharacterEntityMapper.map(entity: $0)}
     }
 }

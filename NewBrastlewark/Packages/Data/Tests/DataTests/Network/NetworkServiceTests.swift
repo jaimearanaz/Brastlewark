@@ -139,7 +139,7 @@ struct NetworkServiceTests {
         // given
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
-        let jsonURL = Bundle.module.url(forResource: "valid_characters", withExtension: "json")!
+        let jsonURL = Bundle.module.url(forResource: "characters", withExtension: "json")!
         let validJson = try! Data(contentsOf: jsonURL)
         URLProtocolMock.requestHandler = { _ in
             let response = HTTPURLResponse(

@@ -8,14 +8,14 @@ final class CharacterEntityTests {
     func given_validJSON_when_decoded_then_propertiesMatch() throws {
         // given
         let testBundle = Bundle.module
-        guard let jsonURL = testBundle.url(forResource: "one_valid_character", withExtension: "json") else {
-            fatalError("one_valid_character.json file not found in test bundle")
+        guard let jsonURL = testBundle.url(forResource: "one_character", withExtension: "json") else {
+            fatalError("one_character.json file not found in test bundle")
         }
         let json = try Data(contentsOf: jsonURL)
         let decoder = JSONDecoder()
 
         // when
-        let entity = try decoder.decode(CharacterEntity.self, from: json)
+        let entity = try loadOneCharacterFromJSON()
 
         // then
         #expect(entity.id == 1)

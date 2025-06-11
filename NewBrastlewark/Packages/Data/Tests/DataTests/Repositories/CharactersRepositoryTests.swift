@@ -7,7 +7,7 @@ final class CharactersRepositoryTests: XCTestCase {
     func test_given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
         // given
         let cache = CacheMock()
-        let entity = try loadCharacterFromJSON()
+        let entity = try loadOneCharacterFromJSON()
         cache.storedCharacters = [entity]
         cache.valid = true
         let repo = CharactersRepository(networkService: nil, cache: cache)
@@ -24,7 +24,7 @@ final class CharactersRepositoryTests: XCTestCase {
         // given
         let cache = CacheMock()
         cache.valid = false
-        let entity = try loadCharacterFromJSON()
+        let entity = try loadOneCharacterFromJSON()
         let network = NetworkServiceMock()
         network.result = [entity]
         let repo = CharactersRepository(networkService: network, cache: cache)
@@ -77,7 +77,7 @@ final class CharactersRepositoryTests: XCTestCase {
         // given
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = try loadCharacterFromJSON()
+        let character = try loadOneCharacterFromJSON()
 
         // when
         try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
@@ -91,7 +91,7 @@ final class CharactersRepositoryTests: XCTestCase {
         // given
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = try loadCharacterFromJSON()
+        let character = try loadOneCharacterFromJSON()
 
         // when
         try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
@@ -100,14 +100,5 @@ final class CharactersRepositoryTests: XCTestCase {
 
         // then
         XCTAssertNil(selected)
-    }
-}
-
-private extension CharactersRepositoryTests {
-    func loadCharacterFromJSON() throws -> CharacterEntity {
-        let url = Bundle.module.url(forResource: "one_valid_character", withExtension: "json")!
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder.decode(CharacterEntity.self, from: data)
     }
 }
