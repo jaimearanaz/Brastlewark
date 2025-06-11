@@ -3,7 +3,7 @@ import Testing
 
 struct DeleteSelectedCharacterUseCaseTests {
     @Test
-    static func given_repositoryDeletesSuccessfully_when_execute_then_returnsSuccess() async throws {
+    func given_repositoryDeletesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
         let repository = CharactersRepositoryMock()
         repository.deleteSelectedCharacterError = nil
@@ -23,7 +23,7 @@ struct DeleteSelectedCharacterUseCaseTests {
     }
 
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         let repository = CharactersRepositoryMock()
         repository.deleteSelectedCharacterError = CharactersRepositoryError.unableToDeleteSelectedCharacter

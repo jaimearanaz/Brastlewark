@@ -6,7 +6,7 @@ public struct Filter: Equatable, Sendable {
     public var profession = Set<String>()
     public var friends: ClosedRange<Int> = 0...0
 
-    public static func ==(lhs: Filter, rhs: Filter) -> Bool {
+    static public func ==(lhs: Filter, rhs: Filter) -> Bool {
         return ((lhs.age == rhs.age) &&
         (lhs.weight == rhs.weight) &&
         (lhs.height == rhs.height) &&

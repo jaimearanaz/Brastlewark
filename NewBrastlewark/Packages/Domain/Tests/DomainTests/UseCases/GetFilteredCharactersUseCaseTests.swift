@@ -35,8 +35,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(age: 100...200)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -56,8 +58,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(weight: 39...41)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -77,8 +81,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(height: 120...130)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -98,8 +104,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(hairColor: ["Red"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -119,8 +127,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(hairColor: ["Red", "Green"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -140,8 +150,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(profession: ["Baker"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -161,8 +173,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(profession: ["Baker", "Tinker"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -182,8 +196,10 @@ struct GetFilteredCharactersUseCaseTests {
         let useCase = GetFilteredCharactersUseCase(repository: repository)
         let filter = Filter(friends: 2...4)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -210,8 +226,10 @@ struct GetFilteredCharactersUseCaseTests {
             friends: 1...4
         )
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
+
         // when
         let result = await useCase.execute(params: params)
+
         // then
         switch result {
         case .success(let filtered):
@@ -230,7 +248,7 @@ struct GetFilteredCharactersUseCaseTests {
 
 private extension GetFilteredCharactersUseCaseTests {
     static func loadCharactersFromJSON() throws -> [Character] {
-        let url = Bundle.module.url(forResource: "filter_characters", withExtension: "json")!
+        let url = Bundle.module.url(forResource: "characters", withExtension: "json")!
         let data = try Data(contentsOf: url)
         let decoder = JSONDecoder()
         return try decoder.decode([Character].self, from: data)

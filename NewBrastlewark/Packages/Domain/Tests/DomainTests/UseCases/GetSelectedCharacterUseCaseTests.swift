@@ -1,19 +1,21 @@
+import Foundation
 import Testing
+
 @testable import Domain
 
 struct GetSelectedCharacterUseCaseTests {
     @Test
-    static func given_repositoryReturnsCharacter_when_execute_then_returnsSuccessWithCharacter() async throws {
+    func given_repositoryReturnsCharacter_when_execute_then_returnsSuccessWithCharacter() async throws {
         // given
         let repository = CharactersRepositoryMock()
-        let expectedCharacter = Character(id: 1, name: "Test1", thumbnail: "thumb1", age: 20, weight: 70.0, height: 170.0, hairColor: "Red", professions: ["Baker"], friends: ["Test2"])
+        let expectedCharacter = try loadCharacterFromJSON()
         repository.getSelectedCharacterResult = expectedCharacter
         repository.getSelectedCharacterError = nil
         let useCase = GetSelectedCharacterUseCase(repository: repository)
-        
+
         // when
         let result = await useCase.execute()
-        
+
         // then
         switch result {
         case .success(let character):
@@ -25,16 +27,16 @@ struct GetSelectedCharacterUseCaseTests {
     }
 
     @Test
-    static func given_repositoryReturnsNil_when_execute_then_returnsSuccessWithNil() async throws {
+    func given_repositoryReturnsNil_when_execute_then_returnsSuccessWithNil() async throws {
         // given
         let repository = CharactersRepositoryMock()
         repository.getSelectedCharacterResult = nil
         repository.getSelectedCharacterError = nil
         let useCase = GetSelectedCharacterUseCase(repository: repository)
-        
+
         // when
         let result = await useCase.execute()
-        
+
         // then
         switch result {
         case .success(let character):
@@ -46,15 +48,15 @@ struct GetSelectedCharacterUseCaseTests {
     }
 
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         let repository = CharactersRepositoryMock()
         repository.getSelectedCharacterError = CharactersRepositoryError.unableToGetSelectedCharacter
         let useCase = GetSelectedCharacterUseCase(repository: repository)
-        
+
         // when
         let result = await useCase.execute()
-        
+
         // then
         switch result {
         case .failure(let error):
@@ -63,5 +65,14 @@ struct GetSelectedCharacterUseCaseTests {
             #expect(Bool(false))
         }
         #expect(Bool(repository.getSelectedCharacterCalled))
+    }
+}
+
+private extension GetSelectedCharacterUseCaseTests {
+    func loadCharacterFromJSON() throws -> Character {
+        let url = Bundle.module.url(forResource: "one_valid_character", withExtension: "json")!
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        return try decoder.decode(Character.self, from: data)
     }
 }

@@ -3,7 +3,7 @@ import Testing
 
 struct GetActiveFilterUseCaseTests {
     @Test
-    static func given_repositoryReturnsFilter_when_execute_then_returnsSuccessWithFilter() async throws {
+    func given_repositoryReturnsFilter_when_execute_then_returnsSuccessWithFilter() async throws {
         // given
         let repository = FilterRepositoryMock()
         let expectedFilter = Filter(
@@ -31,7 +31,7 @@ struct GetActiveFilterUseCaseTests {
     }
 
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         let repository = FilterRepositoryMock()
         repository.getActiveFilterError = FilterRepositoryError.unableToFetchFilter

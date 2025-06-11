@@ -30,7 +30,7 @@ public struct Character: Codable, Sendable, Equatable {
         self.friends = friends
     }
 
-    public static func == (lhs: Character, rhs: Character) -> Bool {
+    static public func == (lhs: Character, rhs: Character) -> Bool {
         return lhs.id == rhs.id &&
             lhs.name == rhs.name &&
             lhs.thumbnail == rhs.thumbnail &&

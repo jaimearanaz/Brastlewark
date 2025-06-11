@@ -27,7 +27,8 @@ let package = Package(
             name: "DomainTests",
             dependencies: ["Domain"],
             resources: [
-                .copy("filter_characters.json")
+                .copy("characters.json"),
+                .copy("one_valid_character.json"),
             ]
         ),
     ]

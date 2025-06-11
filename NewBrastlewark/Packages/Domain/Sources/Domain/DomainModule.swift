@@ -1,12 +1,12 @@
 //import Swinject
 
 public struct DomainModule {
-//    public static func registerDependencies(inContainer container: Container) {
+//    public func registerDependencies(inContainer container: Container) {
 //        registerCharacterUseCases(in: container)
 //        registerFilterUseCases(in: container)
 //    }
 //
-//    private static func registerCharacterUseCases(in container: Container) {
+//    private func registerCharacterUseCases(in container: Container) {
 //        container.register(GetAllCharactersUseCaseProtocol.self) { r in
 //            GetAllCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
 //        }
@@ -27,7 +27,7 @@ public struct DomainModule {
 //        }
 //    }
 //
-//    private static func registerFilterUseCases(in container: Container) {
+//    private func registerFilterUseCases(in container: Container) {
 //        container.register(GetAvailableFilterUseCaseProtocol.self) { r in
 //            GetAvailableFilterUseCase(
 //                charactersRepository: resolveOrFail(r, CharactersRepositoryProtocol.self),
@@ -45,7 +45,7 @@ public struct DomainModule {
 //        }
 //    }
 //
-//    private static func resolveOrFail<Service>(
+//    private func resolveOrFail<Service>(
 //        _ resolver: Resolver,
 //        _ serviceType: Service.Type) -> Service {
 //        guard let service = resolver.resolve(serviceType) else {

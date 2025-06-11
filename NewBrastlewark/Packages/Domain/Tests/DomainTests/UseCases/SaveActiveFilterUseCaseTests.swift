@@ -3,7 +3,7 @@ import Testing
 
 struct SaveActiveFilterUseCaseTests {
     @Test
-    static func given_repositorySavesSuccessfully_when_execute_then_returnsSuccess() async throws {
+    func given_repositorySavesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
         let repository = FilterRepositoryMock()
         repository.saveActiveFilterError = nil
@@ -26,7 +26,7 @@ struct SaveActiveFilterUseCaseTests {
     }
 
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         let repository = FilterRepositoryMock()
         repository.saveActiveFilterError = FilterRepositoryError.unableToSaveFilter

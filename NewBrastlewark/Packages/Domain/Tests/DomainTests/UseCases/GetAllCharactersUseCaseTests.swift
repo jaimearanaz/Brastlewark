@@ -1,33 +1,14 @@
+import Foundation
 import Testing
+
 @testable import Domain
 
 struct GetAllCharactersUseCaseTests {
     @Test
-    static func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
+    func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
         // given
         let repository = CharactersRepositoryMock()
-        let expectedCharacters = [
-            Character(
-                id: 1,
-                name: "Test1",
-                thumbnail: "thumb1",
-                age: 20,
-                weight: 70.0,
-                height: 170.0,
-                hairColor: "Red",
-                professions: ["Baker"],
-                friends: ["Test2"]),
-            Character(
-                id: 2,
-                name: "Test2",
-                thumbnail: "thumb2",
-                age: 25,
-                weight: 80.0,
-                height: 180.0,
-                hairColor: "Blue",
-                professions: ["Tinker"],
-                friends: ["Test1"])
-        ]
+        let expectedCharacters = try loadCharactersFromJSON()
         repository.getAllCharactersResult = expectedCharacters
         repository.getAllCharactersError = nil
         let useCase = GetAllCharactersUseCase(repository: repository)
@@ -47,7 +28,7 @@ struct GetAllCharactersUseCaseTests {
     }
 
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
         let repository = CharactersRepositoryMock()
         repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
@@ -65,5 +46,14 @@ struct GetAllCharactersUseCaseTests {
             #expect(Bool(false))
         }
         #expect(Bool(repository.getAllCharactersCalled))
+    }
+}
+
+private extension GetAllCharactersUseCaseTests {
+    func loadCharactersFromJSON() throws -> [Character] {
+        let url = Bundle.module.url(forResource: "characters", withExtension: "json")!
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        return try decoder.decode([Character].self, from: data)
     }
 }

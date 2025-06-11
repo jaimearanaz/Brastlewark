@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "Test Name",
+  "thumbnail": "http://test.com/image.png",
+  "age": 25,
+  "weight": 70.5,
+  "height": 120.0,
+  "hairColor": "Red",
+  "professions": ["Carpenter", "Farmer"],
+  "friends": ["Friend1", "Friend2"]
+}
