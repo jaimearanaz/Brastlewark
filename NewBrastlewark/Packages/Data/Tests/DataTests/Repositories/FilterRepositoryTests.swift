@@ -1,14 +1,20 @@
+import Domain
 import Foundation
 import Testing
+
 @testable import Data
-import Domain
 
 struct FilterRepositoryTests {
     @Test
     func given_characters_when_getAvailableFilter_then_returnsCorrectFilter() async throws {
+        // given
         let repo = FilterRepository()
         let characters = try loadCharactersFromJSON()
+
+        // when
         let filter = try await repo.getAvailableFilter(fromCharacters: characters)
+
+        // then
         #expect(filter.age.lowerBound == 166)
         #expect(filter.age.upperBound == 306)
         #expect(filter.weight.lowerBound == 35)
@@ -38,6 +44,7 @@ struct FilterRepositoryTests {
 
     @Test
     func when_saveActiveFilter_and_getActiveFilter_then_returnsSavedFilter() async throws {
+        // given
         let repo = FilterRepository()
         let filter = Filter(
             age: 1...2,
@@ -46,13 +53,18 @@ struct FilterRepositoryTests {
             hairColor: ["A"],
             profession: ["B"],
             friends: 7...8)
+
+        // when
         try await repo.saveActiveFilter(filter)
         let result = try await repo.getActiveFilter()
+
+        // then
         #expect(result == filter)
     }
 
     @Test
     func when_saveActiveFilter_and_deleteActiveFilter_then_getActiveFilterReturnsNil() async throws {
+        // given
         let repo = FilterRepository()
         let filter = Filter(
             age: 1...2,
@@ -61,17 +73,26 @@ struct FilterRepositoryTests {
             hairColor: ["A"],
             profession: ["B"],
             friends: 7...8)
+
+        // when
         try await repo.saveActiveFilter(filter)
         try await repo.deleteActiveFilter()
         let result = try await repo.getActiveFilter()
+
+        // then
         #expect(result == nil)
     }
 
     @Test
     func given_emptyCharacters_when_getAvailableFilter_then_returnsZeroRangesAndSets() async throws {
+        // given
         let repo = FilterRepository()
         let characters: [Character] = []
+
+        // when
         let filter = try await repo.getAvailableFilter(fromCharacters: characters)
+
+        // then
         #expect(filter.age.lowerBound == 0)
         #expect(filter.age.upperBound == 0)
         #expect(filter.weight.lowerBound == 0)
