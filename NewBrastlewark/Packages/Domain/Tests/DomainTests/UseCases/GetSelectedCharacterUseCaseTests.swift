@@ -8,7 +8,7 @@ struct GetSelectedCharacterUseCaseTests {
     func given_repositoryReturnsCharacter_when_execute_then_returnsSuccessWithCharacter() async throws {
         // given
         let repository = CharactersRepositoryMock()
-        let expectedCharacter = try loadCharacterFromJSON()
+        let expectedCharacter = try loadOneCharacterFromJSON()
         repository.getSelectedCharacterResult = expectedCharacter
         repository.getSelectedCharacterError = nil
         let useCase = GetSelectedCharacterUseCase(repository: repository)
@@ -65,14 +65,5 @@ struct GetSelectedCharacterUseCaseTests {
             #expect(Bool(false))
         }
         #expect(Bool(repository.getSelectedCharacterCalled))
-    }
-}
-
-private extension GetSelectedCharacterUseCaseTests {
-    func loadCharacterFromJSON() throws -> Character {
-        let url = Bundle.module.url(forResource: "one_valid_character", withExtension: "json")!
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder.decode(Character.self, from: data)
     }
 }

@@ -10,7 +10,7 @@ struct SaveSelectedCharacterUseCaseTests {
         let repository = CharactersRepositoryMock()
         repository.saveSelectedCharacterError = nil
         let useCase = SaveSelectedCharacterUseCase(repository: repository)
-        let character = try loadCharacterFromJSON()
+        let character = try loadOneCharacterFromJSON()
         let params = SaveSelectedCharacterUseCaseParams(character: character)
         
         // when
@@ -33,7 +33,7 @@ struct SaveSelectedCharacterUseCaseTests {
         let repository = CharactersRepositoryMock()
         repository.saveSelectedCharacterError = CharactersRepositoryError.unableToSaveSelectedCharacter
         let useCase = SaveSelectedCharacterUseCase(repository: repository)
-        let character = try loadCharacterFromJSON()
+        let character = try loadOneCharacterFromJSON()
         let params = SaveSelectedCharacterUseCaseParams(character: character)
         
         // when
@@ -47,14 +47,5 @@ struct SaveSelectedCharacterUseCaseTests {
             #expect(Bool(false))
         }
         #expect(Bool(repository.saveSelectedCharacterCalled))
-    }
-}
-
-private extension SaveSelectedCharacterUseCaseTests {
-    func loadCharacterFromJSON() throws -> Character {
-        let url = Bundle.module.url(forResource: "one_valid_character", withExtension: "json")!
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder.decode(Character.self, from: data)
     }
 }
