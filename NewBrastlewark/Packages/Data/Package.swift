@@ -31,9 +31,9 @@ let package = Package(
             name: "DataTests",
             dependencies: ["Data"],
             resources: [
-                .copy("characters.json"),
-                .copy("one_character.json"),
-                .copy("empty_professions_character.json")
+                .copy("Resources/characters.json"),
+                .copy("Resources/one_character.json"),
+                .copy("Resources/empty_professions_character.json")
             ]
         ),
     ]
