@@ -2,21 +2,19 @@ import Combine
 import Domain
 import Foundation
 
-@MainActor
-protocol HomeViewModelProtocol: ObservableObject {
+protocol HomeViewModelProtocol {
     // Outputs
     var characters: [CharacterUIModel] { get }
     var isLoading: Bool { get }
     var searchText: String { get set }
 
     // Inputs
-    func didViewLoad() async
-    func didSelectCharacter(_ character: CharacterUIModel) async
-    func didTapFilterButton() async
-    func didTapResetButton() async
+    func didViewLoad()
+    func didSelectCharacter(_ character: CharacterUIModel)
+    func didTapFilterButton()
+    func didTapResetButton()
 }
 
-@MainActor
 final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     @Published private(set) var characters: [CharacterUIModel] = []
     @Published private(set) var isLoading = false
@@ -47,19 +45,36 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
         self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
     }
 
-    func didViewLoad() async {
+    func didViewLoad() {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            self.characters = try loadCharactersFromJSON().map { CharacterMapper.map(model: $0) }
+        } catch {
+            self.characters = []
+        }
+//        let useCase = getAllCharactersUseCase
+//        Task {
+//            let result = await useCase.execute(params: .init(forceUpdate: false))
+//            switch result {
+//            case .success(let characters):
+//                self.characters = CharacterMapper.map(models: characters)
+//            case .failure:
+//                // TODO: Handle error, show alert, etc.
+//                self.characters = []
+//            }
+//        }
+    }
+
+    func didSelectCharacter(_ character: CharacterUIModel) {
         // Implementation pending
     }
 
-    func didSelectCharacter(_ character: CharacterUIModel) async {
+    func didTapFilterButton() {
         // Implementation pending
     }
 
-    func didTapFilterButton() async {
-        // Implementation pending
-    }
-
-    func didTapResetButton() async {
-        // Implementation pending
+    func didTapResetButton() {
+        didViewLoad()
     }
 }

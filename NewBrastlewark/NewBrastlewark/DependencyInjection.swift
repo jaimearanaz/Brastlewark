@@ -1,14 +1,14 @@
 import Data
 import Domain
+import Presentation
 import Swinject
 
-// TODO: this shouldn't be a main actor
-@MainActor
 public enum DIContainer {
     public static let shared: Container = {
         let container = Container()
         DataModule.registerDependencies(inContainer: container)
         DomainModule.registerDependencies(inContainer: container)
+        PresentationModule.registerDependencies(inContainer: container)
         return container
     }()
 }

@@ -69,31 +69,6 @@ public struct HomeView: View {
     }
 }
 
-private struct CharacterCell: View {
-    let character: CharacterUIModel
-
-    var body: some View {
-        VStack {
-            if let thumbnail = character.thumbnail {
-                AsyncImage(url: URL(string: thumbnail)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Color.gray
-                }
-                .frame(width: 100, height: 100)
-                .clipShape(Circle())
-            }
-
-            Text(character.name)
-                .font(.caption)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-        }
-    }
-}
-
 #Preview {
     HomeView(viewModel: .preview)
 }

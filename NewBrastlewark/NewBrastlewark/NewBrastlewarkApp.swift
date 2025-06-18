@@ -1,14 +1,8 @@
-//
-//  NewBrastlewarkApp.swift
-//  NewBrastlewark
-//
-//  Created by Jaime Aranaz on 29/5/25.
-//
-
 import SwiftUI
 import SwiftData
 import Domain
 import Data
+import Presentation
 
 @main
 struct NewBrastlewarkApp: App {
@@ -17,7 +11,6 @@ struct NewBrastlewarkApp: App {
             Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -27,7 +20,12 @@ struct NewBrastlewarkApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if let homeViewModel = DIContainer.shared.resolve(HomeViewModel.self) {
+                HomeView(viewModel: homeViewModel)
+            } else {
+                Text("Error initializing dependencies")
+                    .foregroundColor(.red)
+            }
         }
         .modelContainer(sharedModelContainer)
     }

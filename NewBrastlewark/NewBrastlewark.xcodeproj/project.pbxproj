@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F56D1F42DF9A2FC006B5563 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6F56D1F32DF9A2FC006B5563 /* Data */; };
-		6F56D1F72DF9A315006B5563 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6F56D1F62DF9A315006B5563 /* Presentation */; };
-		6F56D1FC2DF9A34C006B5563 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6F56D1FB2DF9A34C006B5563 /* Domain */; };
+		6FD0231E2E0320660088CAB8 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD0231D2E0320660088CAB8 /* Domain */; };
+		6FD023212E0320740088CAB8 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD023202E0320740088CAB8 /* Data */; };
+		6FD023242E0320800088CAB8 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD023232E0320800088CAB8 /* Presentation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F56D1FC2DF9A34C006B5563 /* Domain in Frameworks */,
-				6F56D1F72DF9A315006B5563 /* Presentation in Frameworks */,
-				6F56D1F42DF9A2FC006B5563 /* Data in Frameworks */,
+				6FD023212E0320740088CAB8 /* Data in Frameworks */,
+				6FD023242E0320800088CAB8 /* Presentation in Frameworks */,
+				6FD0231E2E0320660088CAB8 /* Domain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,9 +143,9 @@
 			);
 			name = NewBrastlewark;
 			packageProductDependencies = (
-				6F56D1F32DF9A2FC006B5563 /* Data */,
-				6F56D1F62DF9A315006B5563 /* Presentation */,
-				6F56D1FB2DF9A34C006B5563 /* Domain */,
+				6FD0231D2E0320660088CAB8 /* Domain */,
+				6FD023202E0320740088CAB8 /* Data */,
+				6FD023232E0320800088CAB8 /* Presentation */,
 			);
 			productName = NewBrastlewark;
 			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
@@ -230,9 +230,9 @@
 			mainGroup = 6F8F7E3D2DE851FF0054CD0B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				6F56D1F22DF9A2FC006B5563 /* XCLocalSwiftPackageReference "Packages/Data" */,
-				6F56D1F52DF9A315006B5563 /* XCLocalSwiftPackageReference "Packages/Presentation" */,
-				6F56D1FA2DF9A34C006B5563 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				6FD0231C2E0320660088CAB8 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				6FD0231F2E0320740088CAB8 /* XCLocalSwiftPackageReference "Packages/Data" */,
+				6FD023222E0320800088CAB8 /* XCLocalSwiftPackageReference "Packages/Presentation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6F8F7E472DE851FF0054CD0B /* Products */;
@@ -595,32 +595,32 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		6F56D1F22DF9A2FC006B5563 /* XCLocalSwiftPackageReference "Packages/Data" */ = {
+		6FD0231C2E0320660088CAB8 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Domain;
+		};
+		6FD0231F2E0320740088CAB8 /* XCLocalSwiftPackageReference "Packages/Data" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Data;
 		};
-		6F56D1F52DF9A315006B5563 /* XCLocalSwiftPackageReference "Packages/Presentation" */ = {
+		6FD023222E0320800088CAB8 /* XCLocalSwiftPackageReference "Packages/Presentation" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Presentation;
-		};
-		6F56D1FA2DF9A34C006B5563 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/Domain;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6F56D1F32DF9A2FC006B5563 /* Data */ = {
+		6FD0231D2E0320660088CAB8 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		6FD023202E0320740088CAB8 /* Data */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Data;
 		};
-		6F56D1F62DF9A315006B5563 /* Presentation */ = {
+		6FD023232E0320800088CAB8 /* Presentation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Presentation;
-		};
-		6F56D1FB2DF9A34C006B5563 /* Domain */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Domain;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
