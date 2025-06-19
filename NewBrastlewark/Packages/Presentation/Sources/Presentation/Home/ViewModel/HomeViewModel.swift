@@ -2,11 +2,22 @@ import Combine
 import Domain
 import Foundation
 
+public enum HomeError {
+    case noInternetConnection
+    case generalError
+}
+
+public enum HomeState {
+    case loading
+    case ready([CharacterUIModel])
+    case empty
+    case error(HomeError)
+}
+
 @MainActor
-protocol HomeViewModelProtocol {
+public protocol HomeViewModelProtocol: ObservableObject {
     // Outputs
-    var characters: [CharacterUIModel] { get }
-    var isLoading: Bool { get }
+    var state: HomeState { get }
     var searchText: String { get set }
 
     // Inputs
@@ -19,10 +30,9 @@ protocol HomeViewModelProtocol {
 }
 
 @MainActor
-final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
-    @Published private(set) var characters: [CharacterUIModel] = []
-    @Published private(set) var isLoading = false
-    @Published var searchText = "" {
+final public class HomeViewModel: HomeViewModelProtocol {
+    @Published public var state: HomeState = .loading
+    @Published public var searchText = "" {
         didSet {
             didSearchTextChanged()
         }
@@ -57,24 +67,24 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
         setupSearchSubscription()
     }
 
-    func didViewLoad() {
+    public func didViewLoad() {
         loadAllCharacters()
     }
 
-    func didSelectCharacter(_ character: CharacterUIModel) {
+    public func didSelectCharacter(_ character: CharacterUIModel) {
         // Implementation pending
     }
 
-    func didTapFilterButton() {
+    public func didTapFilterButton() {
         // Implementation pending
     }
 
-    func didTapResetButton() {
+    public func didTapResetButton() {
         searchText = ""
         loadAllCharacters()
     }
 
-    func didSearchTextChanged() {
+    public func didSearchTextChanged() {
         guard searchText.count >= minSearchChars else {
             loadAllCharacters()
             return
@@ -84,14 +94,20 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
             let result = await useCase.execute(params: .init(searchText: searchText))
             switch result {
             case .success(let characters):
-                self.characters = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-            case .failure:
-                self.characters = []
+                let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
+                self.state = .ready(charactersUi)
+            case .failure(let error):
+                switch error {
+                case .noInternetConnection:
+                    self.state = .error(.noInternetConnection)
+                default:
+                    self.state = .error(.generalError)
+                }
             }
         }
     }
 
-    func didRefreshCharacters() {
+    public func didRefreshCharacters() {
         searchText = ""
         loadAllCharacters(forceUpdate: true)
     }
@@ -107,17 +123,21 @@ private extension HomeViewModel {
     }
 
     func loadAllCharacters(forceUpdate: Bool = false) {
-        isLoading = true
-        defer { isLoading = false }
-
+        state = .loading
         let useCase = getAllCharactersUseCase
         Task {
             let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
             switch result {
             case .success(let characters):
-                self.characters = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-            case .failure:
-                self.characters = []
+                let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
+                self.state = charactersUi.isEmpty ? .empty : .ready(charactersUi)
+            case .failure(let error):
+                switch error {
+                case .noInternetConnection:
+                    self.state = .error(.noInternetConnection)
+                default:
+                    self.state = .error(.generalError)
+                }
             }
         }
     }

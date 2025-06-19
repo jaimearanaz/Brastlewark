@@ -1,0 +1,8 @@
+"HOME_TITLE" = "Brastlewark";
+"HOME_SEARCH" = "Search";
+"HOME_RESET_BUTTON" = "Reset";
+"HOME_FILTER_BUTTON" = "Filter";
+"HOME_EMPTY" = "No characters found";
+"HOME_ERROR_NO_INTERNET" = "No internet available, please check your connection.";
+"HOME_ERROR_GENERAL" = "Something went wrong, please try again.";
+"HOME_FILTER_VIEW" = "Filter";

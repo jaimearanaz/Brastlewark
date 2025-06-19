@@ -1,7 +1,7 @@
 import Foundation
 
-struct CharacterUIModel: Identifiable {
-    let id: Int
+public struct CharacterUIModel: Identifiable {
+    public let id: Int
     let name: String
     let thumbnail: String
     let profession: String
