@@ -14,14 +14,22 @@ protocol HomeViewModelProtocol {
     func didSelectCharacter(_ character: CharacterUIModel)
     func didTapFilterButton()
     func didTapResetButton()
+    func didSearchTextChanged()
 }
 
 @MainActor
 final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     @Published private(set) var characters: [CharacterUIModel] = []
     @Published private(set) var isLoading = false
-    @Published var searchText = ""
+    @Published var searchText = "" {
+        didSet {
+            didSearchTextChanged()
+        }
+    }
 
+    private let minSearchChars = 3
+    private var searchCancellable: AnyCancellable?
+    
     // MARK: - Use Cases
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
@@ -45,21 +53,11 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
         self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
         self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
         self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
+        setupSearchSubscription()
     }
 
     func didViewLoad() {
-        isLoading = true
-        defer { isLoading = false }
-        let useCase = getAllCharactersUseCase
-        Task {
-            let result = await useCase.execute(params: .init(forceUpdate: false))
-            switch result {
-            case .success(let characters):
-                self.characters = CharacterMapper.map(models: characters)
-            case .failure:
-                self.characters = []
-            }
-        }
+        loadCharacters()
     }
 
     func didSelectCharacter(_ character: CharacterUIModel) {
@@ -71,6 +69,50 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     }
 
     func didTapResetButton() {
-        didViewLoad()
+        searchText = ""
+        loadCharacters()
+    }
+
+    func didSearchTextChanged() {
+        guard searchText.count >= minSearchChars else {
+            loadCharacters()
+            return
+        }
+        let useCase = getSearchedCharacterUseCase
+        Task {
+            let result = await useCase.execute(params: .init(searchText: searchText))
+            switch result {
+            case .success(let characters):
+                self.characters = CharacterMapper.map(models: characters)
+            case .failure:
+                self.characters = []
+            }
+        }
+    }
+}
+
+private extension HomeViewModel {
+    func setupSearchSubscription() {
+        searchCancellable = $searchText
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.didSearchTextChanged()
+            }
+    }
+
+    func loadCharacters() {
+        isLoading = true
+        defer { isLoading = false }
+
+        let useCase = getAllCharactersUseCase
+        Task {
+            let result = await useCase.execute(params: .init(forceUpdate: false))
+            switch result {
+            case .success(let characters):
+                self.characters = CharacterMapper.map(models: characters)
+            case .failure:
+                self.characters = []
+            }
+        }
     }
 }
