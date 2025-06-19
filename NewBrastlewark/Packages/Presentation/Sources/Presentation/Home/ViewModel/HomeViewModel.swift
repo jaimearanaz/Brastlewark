@@ -2,6 +2,7 @@ import Combine
 import Domain
 import Foundation
 
+@MainActor
 protocol HomeViewModelProtocol {
     // Outputs
     var characters: [CharacterUIModel] { get }
@@ -15,6 +16,7 @@ protocol HomeViewModelProtocol {
     func didTapResetButton()
 }
 
+@MainActor
 final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     @Published private(set) var characters: [CharacterUIModel] = []
     @Published private(set) var isLoading = false
@@ -48,22 +50,16 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     func didViewLoad() {
         isLoading = true
         defer { isLoading = false }
-        do {
-            self.characters = try loadCharactersFromJSON().map { CharacterMapper.map(model: $0) }
-        } catch {
-            self.characters = []
+        let useCase = getAllCharactersUseCase
+        Task {
+            let result = await useCase.execute(params: .init(forceUpdate: false))
+            switch result {
+            case .success(let characters):
+                self.characters = CharacterMapper.map(models: characters)
+            case .failure:
+                self.characters = []
+            }
         }
-//        let useCase = getAllCharactersUseCase
-//        Task {
-//            let result = await useCase.execute(params: .init(forceUpdate: false))
-//            switch result {
-//            case .success(let characters):
-//                self.characters = CharacterMapper.map(models: characters)
-//            case .failure:
-//                // TODO: Handle error, show alert, etc.
-//                self.characters = []
-//            }
-//        }
     }
 
     func didSelectCharacter(_ character: CharacterUIModel) {

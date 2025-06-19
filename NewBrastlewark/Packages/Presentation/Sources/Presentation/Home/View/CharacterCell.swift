@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CharacterCell: View {
     let character: CharacterUIModel
+    private let imageSize: CGFloat = 100
 
     init(character: CharacterUIModel) {
         self.character = character
@@ -9,22 +10,42 @@ struct CharacterCell: View {
 
     var body: some View {
         VStack {
-            if let thumbnail = character.thumbnail {
-                AsyncImage(url: URL(string: thumbnail)) { image in
+            CachedAsyncImage(url: character.thumbnail) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: imageSize, height: imageSize)
+                case .success(let image):
                     image
                         .resizable()
                         .scaledToFill()
-                } placeholder: {
-                    Color.gray
+                        .frame(width: imageSize, height: imageSize)
+                        .clipped()
+                case .failure:
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: imageSize, height: imageSize)
+                        .foregroundColor(.gray)
+                @unknown default:
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: imageSize, height: imageSize)
+                        .foregroundColor(.gray)
                 }
-                .frame(width: 100, height: 100)
-                .clipShape(Circle())
             }
+            .clipShape(Circle())
+            .overlay(
+                Circle()
+                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+            )
 
             Text(character.name)
                 .font(.caption)
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
+                .frame(maxWidth: imageSize)
         }
     }
 }

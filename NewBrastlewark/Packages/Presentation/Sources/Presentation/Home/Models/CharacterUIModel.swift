@@ -3,7 +3,7 @@ import Foundation
 struct CharacterUIModel: Identifiable {
     let id: Int
     let name: String
-    let thumbnail: String?
+    let thumbnail: String
     let profession: String
     let age: Int
     let weight: Double
@@ -13,7 +13,7 @@ struct CharacterUIModel: Identifiable {
 
     init(id: Int,
          name: String,
-         thumbnail: String? = nil,
+         thumbnail: String,
          profession: String,
          age: Int,
          weight: Double,
@@ -31,4 +31,3 @@ struct CharacterUIModel: Identifiable {
         self.friends = friends
     }
 }
-

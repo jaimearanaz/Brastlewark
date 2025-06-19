@@ -48,9 +48,22 @@
 		6F8F7E5F2DE852000054CD0B /* NewBrastlewarkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6FF34C172E0456500005C6E4 /* Exceptions for "NewBrastlewark" folder in "NewBrastlewark" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6F8F7E452DE851FF0054CD0B /* NewBrastlewark */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6F8F7E482DE851FF0054CD0B /* NewBrastlewark */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6FF34C172E0456500005C6E4 /* Exceptions for "NewBrastlewark" folder in "NewBrastlewark" target */,
+			);
 			path = NewBrastlewark;
 			sourceTree = "<group>";
 		};
@@ -437,6 +450,7 @@
 				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NewBrastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -466,6 +480,7 @@
 				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NewBrastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

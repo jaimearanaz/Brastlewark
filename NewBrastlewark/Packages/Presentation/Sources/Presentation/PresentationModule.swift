@@ -1,6 +1,7 @@
 import Domain
 import Swinject
 
+@MainActor
 public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
         container.register(HomeViewModel.self) { r in
