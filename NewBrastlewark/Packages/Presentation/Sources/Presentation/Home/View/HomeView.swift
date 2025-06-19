@@ -53,8 +53,8 @@ private extension HomeView {
             }
         case .error(let error):
             VStack {
-                Text(errorMessage(for: error))
-                    .foregroundColor(.red)
+                Text(errorMessage(for: error))                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
             }
         }
     }
@@ -122,8 +122,12 @@ private extension HomeView {
 
 // MARK: - Previews
 
-#Preview("Ready") {
-    HomeView(viewModel: HomeViewModel.preview)
+#Preview("Ready full") {
+    HomeView(viewModel: HomeViewModel.full)
+}
+
+#Preview("Ready partial") {
+    HomeView(viewModel: HomeViewModel.partial)
 }
 
 #Preview("Loading") {
