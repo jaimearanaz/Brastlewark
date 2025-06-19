@@ -15,6 +15,7 @@ protocol HomeViewModelProtocol {
     func didTapFilterButton()
     func didTapResetButton()
     func didSearchTextChanged()
+    func didRefreshCharacters()
 }
 
 @MainActor
@@ -57,7 +58,7 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
     }
 
     func didViewLoad() {
-        loadCharacters()
+        loadAllCharacters()
     }
 
     func didSelectCharacter(_ character: CharacterUIModel) {
@@ -70,12 +71,12 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
 
     func didTapResetButton() {
         searchText = ""
-        loadCharacters()
+        loadAllCharacters()
     }
 
     func didSearchTextChanged() {
         guard searchText.count >= minSearchChars else {
-            loadCharacters()
+            loadAllCharacters()
             return
         }
         let useCase = getSearchedCharacterUseCase
@@ -83,11 +84,16 @@ final public class HomeViewModel: ObservableObject, HomeViewModelProtocol {
             let result = await useCase.execute(params: .init(searchText: searchText))
             switch result {
             case .success(let characters):
-                self.characters = CharacterMapper.map(models: characters)
+                self.characters = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
             case .failure:
                 self.characters = []
             }
         }
+    }
+
+    func didRefreshCharacters() {
+        searchText = ""
+        loadAllCharacters(forceUpdate: true)
     }
 }
 
@@ -100,16 +106,16 @@ private extension HomeViewModel {
             }
     }
 
-    func loadCharacters() {
+    func loadAllCharacters(forceUpdate: Bool = false) {
         isLoading = true
         defer { isLoading = false }
 
         let useCase = getAllCharactersUseCase
         Task {
-            let result = await useCase.execute(params: .init(forceUpdate: false))
+            let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
             switch result {
             case .success(let characters):
-                self.characters = CharacterMapper.map(models: characters)
+                self.characters = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
             case .failure:
                 self.characters = []
             }

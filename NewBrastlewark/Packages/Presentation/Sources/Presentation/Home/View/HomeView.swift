@@ -18,6 +18,9 @@ public struct HomeView: View {
                         searchBar
                         characterList
                     }
+                    .refreshable {
+                        viewModel.didRefreshCharacters()
+                    }
                 }
             }
             .navigationTitle("Brastlewark")
