@@ -30,7 +30,7 @@ public protocol HomeViewModelProtocol: ObservableObject {
 }
 
 @MainActor
-final public class HomeViewModel: HomeViewModelProtocol {
+public final class HomeViewModel: HomeViewModelProtocol {
     @Published public var state: HomeState = .loading
     @Published public var searchText = "" {
         didSet {
@@ -40,8 +40,7 @@ final public class HomeViewModel: HomeViewModelProtocol {
 
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
-    
-    // MARK: - Use Cases
+
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
@@ -49,15 +48,15 @@ final public class HomeViewModel: HomeViewModelProtocol {
     private let deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
 
-    // MARK: - Initializer
+    // MARK: - Public methods
+
     public init(
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
         saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
-        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
-    ) {
+        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
         self.getAllCharactersUseCase = getAllCharactersUseCase
         self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
         self.getActiveFilterUseCase = getActiveFilterUseCase
@@ -72,11 +71,11 @@ final public class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
-        // Implementation pending
+        // TODO: implementation pending
     }
 
     public func didTapFilterButton() {
-        // Implementation pending
+        // TODO: implementation pending
     }
 
     public func didTapResetButton() {
@@ -112,6 +111,8 @@ final public class HomeViewModel: HomeViewModelProtocol {
         loadAllCharacters(forceUpdate: true)
     }
 }
+
+// MARK: - Private methods
 
 private extension HomeViewModel {
     func setupSearchSubscription() {

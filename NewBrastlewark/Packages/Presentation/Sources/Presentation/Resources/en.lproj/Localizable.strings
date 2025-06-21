@@ -6,3 +6,10 @@
 "HOME_ERROR_NO_INTERNET" = "No internet available.\nPlease check your connection.";
 "HOME_ERROR_GENERAL" = "Something went wrong, please try again.";
 "HOME_FILTER_VIEW" = "Filter";
+"FILTER_TITLE" = "Filter";
+"FILTER_APPLY_BUTTON" = "Apply";
+"FILTER_CANCEL_BUTTON" = "Cancel";
+"FILTER_SLIDER_AGE" = "Age";
+"FILTER_SLIDER_WEIGHT" = "Weight";
+"FILTER_SLIDER_HEIGHT" = "Height";
+"FILTER_SLIDER_FRIENDS" = "Friends";

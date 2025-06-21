@@ -4,6 +4,23 @@ import Swinject
 @MainActor
 public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
+        registerViews(inContainer: container)
+        registerViewModels(inContainer: container)
+
+    }
+
+    private static func registerViews(inContainer container: Container) {
+        container.register(HomeView.self) { r in
+            let viewModel = resolveOrFail(r, HomeViewModel.self)
+            return HomeView(viewModel: viewModel)
+        }
+        container.register(FilterView.self) { r in
+            let viewModel = resolveOrFail(r, FilterViewModel.self)
+            return FilterView(viewModel: viewModel)
+        }
+    }
+
+    private static func registerViewModels(inContainer container: Container) {
         container.register(HomeViewModel.self) { r in
             HomeViewModel(
                 getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
@@ -11,11 +28,16 @@ public struct PresentationModule {
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
                 deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self)
-            )
+                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
+        }
+        container.register(FilterViewModel.self) { r in
+            FilterViewModel(
+                getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
+                getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
+                saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
         }
     }
-    
+
     private static func resolveOrFail<Service>(
         _ resolver: Resolver,
         _ serviceType: Service.Type) -> Service {

@@ -1,4 +1,3 @@
-import Domain
 import SwiftUI
 
 public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: View {
@@ -34,7 +33,7 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
 
 private extension HomeView {
     @ViewBuilder
-    private var content: some View {
+    var content: some View {
         switch viewModel.state {
         case .loading:
             ProgressView()
@@ -59,7 +58,7 @@ private extension HomeView {
         }
     }
 
-    private func characterList(characters: [CharacterUIModel]) -> some View {
+    func characterList(characters: [CharacterUIModel]) -> some View {
         ScrollView {
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -74,13 +73,13 @@ private extension HomeView {
         }
     }
 
-    private var searchBar: some View {
+    var searchBar: some View {
         TextField(localizables.search, text: $viewModel.searchText)
             .textFieldStyle(.roundedBorder)
             .padding()
     }
 
-    private var toolbarButtons: some View {
+    var toolbarButtons: some View {
         HStack(spacing: 16) {
             Button(localizables.reset) {
                 Task {
@@ -95,7 +94,7 @@ private extension HomeView {
         }
     }
 
-    private func errorMessage(for error: HomeError) -> String {
+    func errorMessage(for error: HomeError) -> String {
         switch error {
         case .noInternetConnection:
             return localizables.noInternet
