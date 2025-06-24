@@ -13,9 +13,11 @@ public struct DataModule {
                 networkService: resolveOrFail(r, NetworkServiceProtocol.self),
                 cache: resolveOrFail(r, CharactersCacheProtocol.self))
         }
+        .inObjectScope(.container)
         container.register(FilterRepositoryProtocol.self) { r in
             FilterRepository()
         }
+        .inObjectScope(.container)
     }
 
     private static func registerOthers(in container: Container) {
@@ -28,6 +30,7 @@ public struct DataModule {
         container.register(CharactersCacheProtocol.self) { _ in
             PersistentCharactersCache()
         }
+        .inObjectScope(.container)
     }
 
     private static func resolveOrFail<Service>(

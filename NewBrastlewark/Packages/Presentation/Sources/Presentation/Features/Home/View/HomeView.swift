@@ -21,8 +21,8 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
                     toolbarButtons
                 }
             }
-            .task {
-                viewModel.didViewLoad()
+            .onAppear {
+                viewModel.didOnAppear()
             }
         }
     }
@@ -37,7 +37,7 @@ private extension HomeView {
         switch viewModel.state {
         case .loading:
             ProgressView()
-        case .ready(let characters):
+        case .ready(let characters, let reset):
             VStack(spacing: 0) {
                 searchBar
                 characterList(characters: characters)
@@ -86,8 +86,9 @@ private extension HomeView {
                     viewModel.didTapResetButton()
                 }
             }
+            .disabled(isResetDisabled)
             NavigationLink {
-                Text(localizables.filterView) // Placeholder for FilterView
+                viewModel.filterView()
             } label: {
                 Text(localizables.filter)
             }
@@ -101,6 +102,13 @@ private extension HomeView {
         case .generalError:
             return localizables.generalError
         }
+    }
+
+    var isResetDisabled: Bool {
+        if case .ready(_, let reset) = viewModel.state {
+            return !reset
+        }
+        return false
     }
 }
 
@@ -126,7 +134,7 @@ private extension HomeView {
 }
 
 #Preview("Ready partial") {
-    HomeView(viewModel: HomeViewModel.partial)
+    HomeView(viewModel: HomeViewModel.notFull)
 }
 
 #Preview("Loading") {

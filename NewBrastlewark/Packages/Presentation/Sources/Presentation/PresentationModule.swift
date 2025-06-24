@@ -1,12 +1,12 @@
 import Domain
+import SwiftUICore
 import Swinject
 
 @MainActor
 public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
-        registerViews(inContainer: container)
         registerViewModels(inContainer: container)
-
+        registerViews(inContainer: container)
     }
 
     private static func registerViews(inContainer container: Container) {
@@ -28,7 +28,11 @@ public struct PresentationModule {
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
                 deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
+                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
+            filterView: {
+                let filterVM = resolveOrFail(r, FilterViewModel.self)
+                return AnyView(FilterView(viewModel: filterVM))
+            })
         }
         container.register(FilterViewModel.self) { r in
             FilterViewModel(

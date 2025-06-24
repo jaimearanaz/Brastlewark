@@ -16,12 +16,13 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Domain"),
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+        .package(url: "https://github.com/yonat/MultiSlider", from: "2.2.0")
     ],
     targets: [
         .target(
             name: "Presentation",
-            dependencies: ["Domain", "Swinject"],
+            dependencies: ["Domain", "Swinject", "MultiSlider"],
             resources: [
                 .process("Resources")
             ]),

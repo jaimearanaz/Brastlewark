@@ -2,6 +2,7 @@ import Domain
 import SwiftUI
 
 public enum FilterState {
+    case loading
     case ready(FilterUIModel)
 }
 
@@ -9,6 +10,7 @@ public enum FilterState {
 public protocol FilterViewModelProtocol: ObservableObject {
     // Outputs
     var state: FilterState { get }
+    var dismiss: (() -> Void)? { get set } 
 
     // Inputs
     func didViewLoad()
@@ -17,12 +19,12 @@ public protocol FilterViewModelProtocol: ObservableObject {
     func didChangeHeight(_ height: ClosedRange<Int>)
     func didChangeFriends(_ friends: ClosedRange<Int>)
     func didTapApplyButton()
-    func didTapCancelButton()
 }
 
 @MainActor
 public final class FilterViewModel: FilterViewModelProtocol {
-    @Published public var state: FilterState = .ready(FilterUIModel())
+    @Published public var state: FilterState = .loading
+    public var dismiss: (() -> Void)?
 
     private let getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
@@ -51,7 +53,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             case (.success(let availableFilter), .success(let activeFilter)):
                 self.state = .ready(FilterUIModel(
                     available: FilterMapper.map(model: availableFilter),
-                    active: FilterMapper.map(model: activeFilter ?? Filter())))
+                    active: FilterMapper.map(model: activeFilter ?? availableFilter)))
             default:
                 self.state = .ready(FilterUIModel())
             }
@@ -59,26 +61,42 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeAge(_ age: ClosedRange<Int>) {
-        // TODO: implement
+        guard case .ready(var filter) = state else { return }
+        filter.active.age = age
+        state = .ready(filter)
     }
 
     public func didChangeWeight(_ weight: ClosedRange<Int>) {
-        // TODO: implement
+        guard case .ready(var filter) = state else { return }
+        filter.active.weight = weight
+        state = .ready(filter)
     }
 
     public func didChangeHeight(_ height: ClosedRange<Int>) {
-        // TODO: implement
+        guard case .ready(var filter) = state else { return }
+        filter.active.height = height
+        state = .ready(filter)
     }
 
     public func didChangeFriends(_ friends: ClosedRange<Int>) {
-        // TODO: implement
+        guard case .ready(var filter) = state else { return }
+        filter.active.friends = friends
+        state = .ready(filter)
     }
 
     public func didTapApplyButton() {
-        // TODO: implement
-    }
-
-    public func didTapCancelButton() {
-        // TODO: implement
+        guard case .ready(let filter) = state else { return }
+        let activeFilter = FilterUIModel.map(model: filter.active)
+        let saveActiveFilterUseCase = saveActiveFilterUseCase
+        Task {
+            let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
+            switch result {
+            case .success:
+                dismiss?()
+            case .failure:
+                break
+                // TODO: implement error handling
+            }
+        }
     }
 }

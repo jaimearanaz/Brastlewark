@@ -1,4 +1,5 @@
 import Combine
+import SwiftUICore
 import Domain
 import Foundation
 
@@ -9,19 +10,22 @@ public enum HomeError {
 
 public enum HomeState {
     case loading
-    case ready([CharacterUIModel])
+    case ready(characters: [CharacterUIModel], reset: Bool = false)
     case empty
     case error(HomeError)
 }
 
 @MainActor
 public protocol HomeViewModelProtocol: ObservableObject {
+    typealias FilterViewFactory = () -> AnyView
+
     // Outputs
     var state: HomeState { get }
     var searchText: String { get set }
+    var filterView: FilterViewFactory { get }
 
     // Inputs
-    func didViewLoad()
+    func didOnAppear()
     func didSelectCharacter(_ character: CharacterUIModel)
     func didTapFilterButton()
     func didTapResetButton()
@@ -37,6 +41,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
             didSearchTextChanged()
         }
     }
+    public var filterView: FilterViewFactory
 
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
@@ -56,18 +61,20 @@ public final class HomeViewModel: HomeViewModelProtocol {
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
-        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
-        self.getAllCharactersUseCase = getAllCharactersUseCase
-        self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
-        self.getActiveFilterUseCase = getActiveFilterUseCase
-        self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
-        self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
-        self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
-        setupSearchSubscription()
+        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol,
+        filterView: @escaping FilterViewFactory) {
+            self.getAllCharactersUseCase = getAllCharactersUseCase
+            self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
+            self.getActiveFilterUseCase = getActiveFilterUseCase
+            self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
+            self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
+            self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
+            self.filterView = filterView
+            setupSearchSubscription()
     }
 
-    public func didViewLoad() {
-        loadAllCharacters()
+    public func didOnAppear() {
+        loadCharacters()
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
@@ -94,14 +101,9 @@ public final class HomeViewModel: HomeViewModelProtocol {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                self.state = .ready(charactersUi)
+                self.state = .ready(characters: charactersUi)
             case .failure(let error):
-                switch error {
-                case .noInternetConnection:
-                    self.state = .error(.noInternetConnection)
-                default:
-                    self.state = .error(.generalError)
-                }
+                handleResultError(error)
             }
         }
     }
@@ -123,6 +125,24 @@ private extension HomeViewModel {
             }
     }
 
+    func loadCharacters() {
+        state = .loading
+        let getActiveFilterUseCase = getActiveFilterUseCase
+        Task {
+            let result = await getActiveFilterUseCase.execute()
+            switch result {
+            case .success(let filter):
+                if let filter = filter {
+                    loadFilteredCharacters(filter: filter)
+                } else {
+                    loadAllCharacters()
+                }
+            case .failure(let error):
+                handleResultError(error)
+            }
+        }
+    }
+
     func loadAllCharacters(forceUpdate: Bool = false) {
         state = .loading
         let useCase = getAllCharactersUseCase
@@ -131,15 +151,34 @@ private extension HomeViewModel {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                self.state = charactersUi.isEmpty ? .empty : .ready(charactersUi)
+                self.state = charactersUi.isEmpty ? .empty : .ready(characters: charactersUi)
             case .failure(let error):
-                switch error {
-                case .noInternetConnection:
-                    self.state = .error(.noInternetConnection)
-                default:
-                    self.state = .error(.generalError)
-                }
+                handleResultError(error)
             }
+        }
+    }
+
+    func loadFilteredCharacters(filter: Filter) {
+        state = .loading
+        let getFilteredCharactersUseCase = getFilteredCharactersUseCase
+        Task {
+            let result = await getFilteredCharactersUseCase.execute(params: .init(filter: filter))
+            switch result {
+            case .success(let characters):
+                let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
+                self.state = charactersUi.isEmpty ? .empty : .ready(characters: charactersUi, reset: true)
+            case .failure(let error):
+                handleResultError(error)
+            }
+        }
+    }
+
+    func handleResultError(_ error: Error) {
+        switch error {
+        case CharactersRepositoryError.noInternetConnection, FilterRepositoryError.noInternetConnection:
+            self.state = .error(.noInternetConnection)
+        default:
+            self.state = .error(.generalError)
         }
     }
 }

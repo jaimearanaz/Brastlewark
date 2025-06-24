@@ -11,7 +11,13 @@ extension FilterViewModelProtocol {
                 hairColor: ["Red", "Blue"],
                 profession: ["Baker", "Carpenter"],
                 friends: 1...5),
-            active: OneFilterUIModel()))
+            active: OneFilterUIModel(
+                age: 50...100,
+                weight: 30...50,
+                height: 60...100,
+                hairColor: ["Red", "Blue"],
+                profession: ["Baker", "Carpenter"],
+                friends: 1...5)))
         )
     }
 

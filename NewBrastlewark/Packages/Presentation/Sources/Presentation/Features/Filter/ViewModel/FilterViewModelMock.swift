@@ -6,6 +6,7 @@ import Foundation
 final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     // Outputs
     @Published var state: FilterState
+    var dismiss: (() -> Void)?
 
     // Input callbacks
     var didViewLoadCallback: (() -> Void)?
@@ -18,6 +19,7 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
 
     init(
         state: FilterState = .ready(FilterUIModel()),
+        dismiss: (() -> Void)? = nil,
         didViewLoadCallback: (() -> Void)? = nil,
         didChangeAgeCallback: ((ClosedRange<Int>) -> Void)? = nil,
         didChangeWeightCallback: ((ClosedRange<Int>) -> Void)? = nil,
@@ -26,6 +28,7 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         didTapApplyButtonCallback: (() -> Void)? = nil,
         didTapCancelButtonCallback: (() -> Void)? = nil) {
         self.state = state
+        self.dismiss = dismiss
         self.didViewLoadCallback = didViewLoadCallback
         self.didChangeAgeCallback = didChangeAgeCallback
         self.didChangeWeightCallback = didChangeWeightCallback

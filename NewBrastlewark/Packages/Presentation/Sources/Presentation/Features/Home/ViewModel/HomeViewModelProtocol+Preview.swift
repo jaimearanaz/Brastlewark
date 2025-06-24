@@ -3,29 +3,33 @@ import Domain
 
 extension HomeViewModelProtocol {
     static var full: HomeViewModelMock {
-        HomeViewModelMock(state: .ready(getCharacters()))
+        HomeViewModelMock(state: .ready(characters: getCharacters()))
     }
 
-    static var partial: HomeViewModelMock {
+    static var notFull: HomeViewModelMock {
         let characters = getCharacters()
         let halfCharacters = Array(characters.prefix(characters.count / 2))
-        return HomeViewModelMock(state: .ready(halfCharacters))
+        return HomeViewModelMock(state: .ready(characters: halfCharacters))
+    }
+
+    static var filtered: HomeViewModelMock {
+        HomeViewModelMock(state: .ready(characters: getCharacters(), reset: true))
     }
 
     static var loading: HomeViewModelMock {
-        return HomeViewModelMock(didViewLoadCallback: { })
+        return HomeViewModelMock(didOnAppearCallback: { })
     }
 
     static var empty: HomeViewModelMock {
-        return HomeViewModelMock(state: .empty, didViewLoadCallback: { })
+        return HomeViewModelMock(state: .empty, didOnAppearCallback: { })
     }
 
     static var noInternet: HomeViewModelMock {
-        return HomeViewModelMock(state: .error(.noInternetConnection), didViewLoadCallback: { })
+        return HomeViewModelMock(state: .error(.noInternetConnection), didOnAppearCallback: { })
     }
 
     static var generalError: HomeViewModelMock {
-        return HomeViewModelMock(state: .error(.generalError), didViewLoadCallback: { })
+        return HomeViewModelMock(state: .error(.generalError), didOnAppearCallback: { })
     }
 
     private static func getCharacters() -> [CharacterUIModel] {

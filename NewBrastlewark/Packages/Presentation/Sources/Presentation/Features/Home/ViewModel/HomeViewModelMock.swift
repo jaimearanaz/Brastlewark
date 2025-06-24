@@ -1,6 +1,7 @@
 import Combine
 import Domain
 import Foundation
+import SwiftUI
 
 @MainActor
 final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
@@ -8,8 +9,11 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     @Published var state: HomeState
     @Published var searchText: String
 
+    // Navigation
+    var filterView: () -> AnyView
+
     // Input callbacks
-    var didViewLoadCallback: (() -> Void)?
+    var didOnAppearCallback: (() -> Void)?
     var didSelectCharacterCallback: ((CharacterUIModel) -> Void)?
     var didTapFilterButtonCallback: (() -> Void)?
     var didTapResetButtonCallback: (() -> Void)?
@@ -19,7 +23,8 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     init(
         state: HomeState = .loading,
         searchText: String = "",
-        didViewLoadCallback: (() -> Void)? = nil,
+        filterView: @escaping () -> AnyView = { AnyView(EmptyView()) },
+        didOnAppearCallback: (() -> Void)? = nil,
         didSelectCharacterCallback: ((CharacterUIModel) -> Void)? = nil,
         didTapFilterButtonCallback: (() -> Void)? = nil,
         didTapResetButtonCallback: (() -> Void)? = nil,
@@ -28,7 +33,8 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     ) {
         self.state = state
         self.searchText = searchText
-        self.didViewLoadCallback = didViewLoadCallback
+        self.filterView = filterView
+        self.didOnAppearCallback = didOnAppearCallback
         self.didSelectCharacterCallback = didSelectCharacterCallback
         self.didTapFilterButtonCallback = didTapFilterButtonCallback
         self.didTapResetButtonCallback = didTapResetButtonCallback
@@ -37,8 +43,8 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     }
 
     // Inputs
-    func didViewLoad() {
-        didViewLoadCallback?()
+    func didOnAppear() {
+        didOnAppearCallback?()
     }
     func didSelectCharacter(_ character: CharacterUIModel) {
         didSelectCharacterCallback?(character)
