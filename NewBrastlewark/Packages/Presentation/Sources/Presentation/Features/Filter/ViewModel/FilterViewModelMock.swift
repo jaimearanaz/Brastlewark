@@ -14,6 +14,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     var didChangeWeightCallback: ((ClosedRange<Int>) -> Void)?
     var didChangeHeightCallback: ((ClosedRange<Int>) -> Void)?
     var didChangeFriendsCallback: ((ClosedRange<Int>) -> Void)?
+    var didChangeHairColorCallback: ((String, Bool) -> Void)?
+    var didResetHairColorCallback: (() -> Void)?
     var didTapApplyButtonCallback: (() -> Void)?
     var didTapCancelButtonCallback: (() -> Void)?
 
@@ -25,6 +27,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         didChangeWeightCallback: ((ClosedRange<Int>) -> Void)? = nil,
         didChangeHeightCallback: ((ClosedRange<Int>) -> Void)? = nil,
         didChangeFriendsCallback: ((ClosedRange<Int>) -> Void)? = nil,
+        didChangeHairColorCallback: ((String, Bool) -> Void)? = nil,
+        didResetHairColorCallback: (() -> Void)? = nil,
         didTapApplyButtonCallback: (() -> Void)? = nil,
         didTapCancelButtonCallback: (() -> Void)? = nil) {
         self.state = state
@@ -34,6 +38,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         self.didChangeWeightCallback = didChangeWeightCallback
         self.didChangeHeightCallback = didChangeHeightCallback
         self.didChangeFriendsCallback = didChangeFriendsCallback
+        self.didChangeHairColorCallback = didChangeHairColorCallback
+        self.didResetHairColorCallback = didResetHairColorCallback
         self.didTapApplyButtonCallback = didTapApplyButtonCallback
         self.didTapCancelButtonCallback = didTapCancelButtonCallback
     }
@@ -53,6 +59,12 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     }
     func didChangeFriends(_ friends: ClosedRange<Int>) {
         didChangeFriendsCallback?(friends)
+    }
+    func didChangeHairColor(title: String, checked: Bool) {
+        didChangeHairColorCallback?(title, checked)
+    }
+    func didResetHairColor() {
+        didResetHairColorCallback?()
     }
     func didTapApplyButton() {
         didTapApplyButtonCallback?()

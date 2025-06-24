@@ -17,6 +17,8 @@ public protocol FilterViewModelProtocol: ObservableObject {
     func didChangeAge(_ age: ClosedRange<Int>)
     func didChangeWeight(_ weight: ClosedRange<Int>)
     func didChangeHeight(_ height: ClosedRange<Int>)
+    func didChangeHairColor(title: String, checked: Bool)
+    func didResetHairColor()
     func didChangeFriends(_ friends: ClosedRange<Int>)
     func didTapApplyButton()
 }
@@ -51,9 +53,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
             
             switch (available, active) {
             case (.success(let availableFilter), .success(let activeFilter)):
-                self.state = .ready(FilterUIModel(
-                    available: FilterMapper.map(model: availableFilter),
-                    active: FilterMapper.map(model: activeFilter ?? availableFilter)))
+                self.state = .ready(Filter.map(
+                    available: availableFilter,
+                    active: activeFilter ?? defaultActiveFilter(available: availableFilter)))
             default:
                 self.state = .ready(FilterUIModel())
             }
@@ -62,31 +64,47 @@ public final class FilterViewModel: FilterViewModelProtocol {
 
     public func didChangeAge(_ age: ClosedRange<Int>) {
         guard case .ready(var filter) = state else { return }
-        filter.active.age = age
+        filter.age.active = age
         state = .ready(filter)
     }
 
     public func didChangeWeight(_ weight: ClosedRange<Int>) {
         guard case .ready(var filter) = state else { return }
-        filter.active.weight = weight
+        filter.weight.active = weight
         state = .ready(filter)
     }
 
     public func didChangeHeight(_ height: ClosedRange<Int>) {
         guard case .ready(var filter) = state else { return }
-        filter.active.height = height
+        filter.height.active = height
+        state = .ready(filter)
+    }
+
+    public func didChangeHairColor(title: String, checked: Bool) {
+        guard case .ready(var filter) = state else { return }
+        if let index = filter.hairColor.firstIndex(where: { $0.title == title }) {
+            filter.hairColor[index].checked = checked
+            state = .ready(filter)
+        }
+    }
+
+    public func didResetHairColor() {
+        guard case .ready(var filter) = state else { return }
+        for index in filter.hairColor.indices {
+            filter.hairColor[index].checked = false
+        }
         state = .ready(filter)
     }
 
     public func didChangeFriends(_ friends: ClosedRange<Int>) {
         guard case .ready(var filter) = state else { return }
-        filter.active.friends = friends
+        filter.friends.active = friends
         state = .ready(filter)
     }
 
     public func didTapApplyButton() {
         guard case .ready(let filter) = state else { return }
-        let activeFilter = FilterUIModel.map(model: filter.active)
+        let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
         Task {
             let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
@@ -98,5 +116,18 @@ public final class FilterViewModel: FilterViewModelProtocol {
                 // TODO: implement error handling
             }
         }
+    }
+}
+
+private extension FilterViewModel {
+    func defaultActiveFilter(available: Filter) -> Filter {
+        .init(
+            age: available.age,
+            weight: available.weight,
+            height: available.height,
+            hairColor: [],
+            profession: [],
+            friends: available.friends
+        )
     }
 }

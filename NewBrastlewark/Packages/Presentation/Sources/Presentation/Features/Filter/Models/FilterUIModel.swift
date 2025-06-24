@@ -1,30 +1,18 @@
 public struct FilterUIModel {
-    var available: OneFilterUIModel = OneFilterUIModel()
-    var active: OneFilterUIModel = OneFilterUIModel()
+    var age: FilterSliderUIModel
+    var weight: FilterSliderUIModel
+    var height: FilterSliderUIModel
+    var hairColor: [FilterItemListUIModel]
+    var profession: [FilterItemListUIModel]
+    var friends: FilterSliderUIModel
 
     public init(
-        available: OneFilterUIModel = OneFilterUIModel(),
-        active: OneFilterUIModel = OneFilterUIModel()) {
-        self.available = available
-        self.active = active
-    }
-}
-
-public struct OneFilterUIModel: Equatable, Sendable {
-    var age: ClosedRange<Int> = 0...0
-    var weight: ClosedRange<Int> = 0...0
-    var height: ClosedRange<Int> = 0...0
-    var hairColor = Set<String>()
-    var profession = Set<String>()
-    var friends: ClosedRange<Int> = 0...0
-
-    public init(
-        age: ClosedRange<Int> = 0...0,
-        weight: ClosedRange<Int> = 0...0,
-        height: ClosedRange<Int> = 0...0,
-        hairColor: Set<String> = Set<String>(),
-        profession: Set<String> = Set<String>(),
-        friends: ClosedRange<Int> = 0...0) {
+        age: FilterSliderUIModel = FilterSliderUIModel(),
+        weight: FilterSliderUIModel = FilterSliderUIModel(),
+        height: FilterSliderUIModel = FilterSliderUIModel(),
+        hairColor: [FilterItemListUIModel] = [FilterItemListUIModel](),
+        profession: [FilterItemListUIModel] = [FilterItemListUIModel](),
+        friends: FilterSliderUIModel = FilterSliderUIModel()) {
         self.age = age
         self.weight = weight
         self.height = height
@@ -34,3 +22,22 @@ public struct OneFilterUIModel: Equatable, Sendable {
     }
 }
 
+public struct FilterSliderUIModel {
+    var available: ClosedRange<Int>
+    var active: ClosedRange<Int>
+
+    public init(available: ClosedRange<Int> = 0...0, active: ClosedRange<Int> = 0...0) {
+        self.available = available
+        self.active = active
+    }
+}
+
+public struct FilterItemListUIModel {
+    var title: String
+    var checked: Bool
+
+    public init(title: String = "", checked: Bool = false) {
+        self.title = title
+        self.checked = checked
+    }
+}
