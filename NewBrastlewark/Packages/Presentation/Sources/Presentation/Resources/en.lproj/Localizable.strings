@@ -12,7 +12,10 @@
 "FILTER_SLIDER_WEIGHT" = "Weight";
 "FILTER_SLIDER_HEIGHT" = "Height";
 "FILTER_HAIR_COLOR" = "Hair color";
+"FILTER_HAIR_PROFESSION" = "Profession";
 "FILTER_SLIDER_FRIENDS" = "Friends";
 "FILTER_ACCEPT_BUTTON" = "Accept";
 "FILTER_RESET_BUTTON" = "Reset";
 "FILTER_ALL_HAIR_COLORS" = "Any hair color";
+"FILTER_ALL_PROFESSIONS" = "Any profession";
+

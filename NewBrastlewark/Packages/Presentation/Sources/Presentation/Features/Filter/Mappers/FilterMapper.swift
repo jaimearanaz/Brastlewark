@@ -13,7 +13,7 @@ extension Filter {
                 available: available.height.lowerBound...available.height.upperBound,
                 active: active.height.lowerBound...active.height.upperBound),
             hairColor: mapHairColor(available: available, active: active),
-            profession: [.init(title: "", checked: false)],
+            profession: mapProfession(available: available, active: active),
             friends: .init(
                 available: available.friends.lowerBound...available.friends.upperBound,
                 active: active.friends.lowerBound...active.friends.upperBound)
@@ -22,6 +22,9 @@ extension Filter {
 }
 
 private extension Filter {
+    
+    // TODO: refactor these two function to use one
+
     static func mapHairColor(available: Filter, active: Filter) -> [FilterItemListUIModel] {
         let availableHairColors = Set(available.hairColor)
         let activeHairColors = Set(active.hairColor)
@@ -29,6 +32,17 @@ private extension Filter {
             FilterItemListUIModel(
                 title: color,
                 checked: activeHairColors.contains(color)
+            )
+        }
+    }
+
+    static func mapProfession(available: Filter, active: Filter) -> [FilterItemListUIModel] {
+        let availableProfession = Set(available.profession)
+        let activeProfession = Set(active.profession)
+        return availableProfession.map { profession in
+            FilterItemListUIModel(
+                title: profession,
+                checked: activeProfession.contains(profession)
             )
         }
     }

@@ -4,7 +4,8 @@ import MultiSlider
 public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel
     @State private var isApplyDisabled = true
-    @State private var isHairColorSheetPresented = false
+    @State private var isHairSheetPresented = false
+    @State private var isProfessionSheetPresented = false
     @Environment(\.dismiss) private var dismiss
     private var localizables = Localizables()
 
@@ -37,50 +38,11 @@ private extension FilterView {
         switch viewModel.state {
         case .ready(let filter):
             GeometryReader { geometry in
-                let titles = [
-                    localizables.age,
-                    localizables.weight,
-                    localizables.height,
-                    localizables.friends
-                ]
-                let maxTitleWidth = titles
-                    .map { $0.widthOfString(usingFont: .systemFont(ofSize: UIFont.labelFontSize)) }
-                    .max() ?? 0
-
+                let (titleWidth, summaryWidth) = calculateMaxWidths(geometry: geometry, filter: filter)
                 VStack(spacing: 32) {
-                    sliderView(
-                        title: localizables.age,
-                        available: filter.age.available,
-                        active: filter.age.active,
-                        titleWidth: maxTitleWidth,
-                        callback: { viewModel.didChangeAge($0) }
-                    )
-                    sliderView(
-                        title: localizables.weight,
-                        available: filter.weight.available,
-                        active: filter.weight.active,
-                        titleWidth: maxTitleWidth,
-                        callback: { viewModel.didChangeWeight($0) }
-                    )
-                    sliderView(
-                        title: localizables.height,
-                        available: filter.height.available,
-                        active: filter.height.active,
-                        titleWidth: maxTitleWidth,
-                        callback: { viewModel.didChangeHeight($0) }
-                    )
-                    sliderView(
-                        title: localizables.friends,
-                        available: filter.friends.available,
-                        active: filter.friends.active,
-                        titleWidth: maxTitleWidth,
-                        callback: { viewModel.didChangeFriends($0) }
-                    )
-                    hairColorRow(
-                        title: localizables.hairColor,
-                        items: filter.hairColor,
-                        titleWidth: maxTitleWidth
-                    )
+                    sliderListView(filter: filter, maxTitleWidth: titleWidth)
+                    hairColorView(filter: filter, maxTitleWidth: titleWidth, maxSummaryWidth: summaryWidth)
+                    professionView(filter: filter, maxTitleWidth: titleWidth, maxSummaryWidth: summaryWidth)
                     Spacer()
                 }
                 .padding(.top, 32)
@@ -98,6 +60,38 @@ private extension FilterView {
             }
             .disabled(isApplyDisabled)
         }
+    }
+
+    @ViewBuilder
+    func sliderListView(filter: FilterUIModel, maxTitleWidth: CGFloat) -> some View {
+        sliderView(
+            title: localizables.age,
+            available: filter.age.available,
+            active: filter.age.active,
+            titleWidth: maxTitleWidth,
+            callback: { viewModel.didChangeAge($0) }
+        )
+        sliderView(
+            title: localizables.weight,
+            available: filter.weight.available,
+            active: filter.weight.active,
+            titleWidth: maxTitleWidth,
+            callback: { viewModel.didChangeWeight($0) }
+        )
+        sliderView(
+            title: localizables.height,
+            available: filter.height.available,
+            active: filter.height.active,
+            titleWidth: maxTitleWidth,
+            callback: { viewModel.didChangeHeight($0) }
+        )
+        sliderView(
+            title: localizables.friends,
+            available: filter.friends.available,
+            active: filter.friends.active,
+            titleWidth: maxTitleWidth,
+            callback: { viewModel.didChangeFriends($0) }
+        )
     }
 
     @ViewBuilder
@@ -142,48 +136,120 @@ private extension FilterView {
     }
 
     @ViewBuilder
-    func hairColorRow(title: String, items: [FilterItemListUIModel], titleWidth: CGFloat) -> some View {
-        let font = UIFont.systemFont(ofSize: UIFont.buttonFontSize)
-        let buttonWidth = title.widthOfString(usingFont: font) + 16
+    func hairColorView(filter: FilterUIModel, maxTitleWidth: CGFloat, maxSummaryWidth: CGFloat) -> some View {
+        multipleFieldRow(
+            title: localizables.hairColor,
+            items: filter.hairColor,
+            titleWidth: maxTitleWidth,
+            summaryWidth: maxSummaryWidth,
+            allTitle: localizables.allHairColors,
+            isSheetPresented: $isHairSheetPresented,
+            sheetTitle: localizables.hairColor,
+            onToggle: { title, checked in
+                viewModel.didChangeHairColor(title: title, checked: checked)
+            },
+            onReset: {
+                viewModel.didResetHairColor()
+            }
+        )
+    }
 
+    @ViewBuilder
+    func professionView(filter: FilterUIModel, maxTitleWidth: CGFloat, maxSummaryWidth: CGFloat) -> some View {
+        multipleFieldRow(
+            title: localizables.profession,
+            items: filter.profession,
+            titleWidth: maxTitleWidth,
+            summaryWidth: maxSummaryWidth,
+            allTitle: localizables.allProfessions,
+            isSheetPresented: $isProfessionSheetPresented,
+            sheetTitle: localizables.profession,
+            onToggle: { title, checked in
+                viewModel.didChangeProfession(title: title, checked: checked)
+            },
+            onReset: {
+                viewModel.didResetProfession()
+            }
+        )
+    }
+
+    @ViewBuilder
+    func multipleFieldRow(
+        title: String,
+        items: [FilterItemListUIModel],
+        titleWidth: CGFloat,
+        summaryWidth: CGFloat,
+        allTitle: String,
+        isSheetPresented: Binding<Bool>,
+        sheetTitle: String,
+        onToggle: @escaping (String, Bool) -> Void,
+        onReset: @escaping () -> Void
+    ) -> some View {
         HStack(spacing: 16) {
-            Button(action: { isHairColorSheetPresented = true }) {
+            Button(action: { isSheetPresented.wrappedValue = true }) {
                 HStack(spacing: 16) {
                     Text(title)
-                        .frame(width: buttonWidth, alignment: .leading)
+                        .foregroundColor(.accentColor)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                    Text(hairColorSummary(items: items))
+                    Text(multipleFieldSummary(allTitle: allTitle, items: items))
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal)
-        .sheet(isPresented: $isHairColorSheetPresented) {
+        .sheet(isPresented: isSheetPresented) {
             FilterSheetView(
-                title: localizables.hairColor,
+                title: sheetTitle,
                 items: items,
                 onToggle: { title, checked in
-                    viewModel.didChangeHairColor(title: title, checked: checked)
+                    onToggle(title, checked)
                     isApplyDisabled = false
                 },
                 onReset: {
-                    viewModel.didResetHairColor()
+                    onReset()
                     isApplyDisabled = false
                 }
             )
         }
     }
 
-    func hairColorSummary(items: [FilterItemListUIModel]) -> String {
+    func multipleFieldSummary(allTitle: String, items: [FilterItemListUIModel]) -> String {
         let selected = items.filter { $0.checked }
         if selected.isEmpty {
-            return localizables.allHairColors
+            return allTitle
         } else {
             return selected.map { $0.title }.joined(separator: ", ")
         }
+    }
+
+    func calculateMaxWidths(
+        geometry: GeometryProxy,
+        filter: FilterUIModel) -> (maxTitleWidth: CGFloat, maxSummaryWidth: CGFloat) {
+        let titles = [
+            localizables.age,
+            localizables.weight,
+            localizables.height,
+            localizables.friends,
+            localizables.hairColor,
+            localizables.profession
+        ]
+        let maxTitleWidth = titles
+            .map { $0.widthOfString(usingFont: .systemFont(ofSize: UIFont.labelFontSize)) }
+            .max() ?? 0
+
+        let hairSummary = multipleFieldSummary(allTitle: localizables.allHairColors, items: filter.hairColor)
+        let professionSummary = multipleFieldSummary(allTitle: localizables.allProfessions, items: filter.profession)
+        let summaries = [hairSummary, professionSummary]
+        let maxSummaryWidth = summaries
+            .map { $0.widthOfString(usingFont: .systemFont(ofSize: UIFont.labelFontSize)) }
+            .max() ?? 0
+        return (maxTitleWidth, maxSummaryWidth)
     }
 }
 
@@ -195,8 +261,10 @@ private extension FilterView {
         let weight = "FILTER_SLIDER_WEIGHT".localized
         let height = "FILTER_SLIDER_HEIGHT".localized
         let hairColor = "FILTER_HAIR_COLOR".localized
+        let profession = "FILTER_HAIR_PROFESSION".localized
         let friends = "FILTER_SLIDER_FRIENDS".localized
         let allHairColors = "FILTER_ALL_HAIR_COLORS".localized
+        let allProfessions = "FILTER_ALL_PROFESSIONS".localized
     }
 }
 

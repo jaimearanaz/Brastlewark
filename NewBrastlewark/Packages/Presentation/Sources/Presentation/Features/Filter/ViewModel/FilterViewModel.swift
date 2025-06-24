@@ -19,6 +19,8 @@ public protocol FilterViewModelProtocol: ObservableObject {
     func didChangeHeight(_ height: ClosedRange<Int>)
     func didChangeHairColor(title: String, checked: Bool)
     func didResetHairColor()
+    func didChangeProfession(title: String, checked: Bool)
+    func didResetProfession()
     func didChangeFriends(_ friends: ClosedRange<Int>)
     func didTapApplyButton()
 }
@@ -92,6 +94,22 @@ public final class FilterViewModel: FilterViewModelProtocol {
         guard case .ready(var filter) = state else { return }
         for index in filter.hairColor.indices {
             filter.hairColor[index].checked = false
+        }
+        state = .ready(filter)
+    }
+
+    public func didChangeProfession(title: String, checked: Bool) {
+        guard case .ready(var filter) = state else { return }
+        if let index = filter.profession.firstIndex(where: { $0.title == title }) {
+            filter.profession[index].checked = checked
+            state = .ready(filter)
+        }
+    }
+
+    public func didResetProfession() {
+        guard case .ready(var filter) = state else { return }
+        for index in filter.profession.indices {
+            filter.profession[index].checked = false
         }
         state = .ready(filter)
     }

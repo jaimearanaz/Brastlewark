@@ -1,6 +1,4 @@
-import Combine
-import Domain
-import Foundation
+import SwiftUI
 
 @MainActor
 final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
@@ -16,6 +14,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     var didChangeFriendsCallback: ((ClosedRange<Int>) -> Void)?
     var didChangeHairColorCallback: ((String, Bool) -> Void)?
     var didResetHairColorCallback: (() -> Void)?
+    var didChangeProfessionCallback: ((String, Bool) -> Void)?
+    var didResetProfessionCallback: (() -> Void)?
     var didTapApplyButtonCallback: (() -> Void)?
     var didTapCancelButtonCallback: (() -> Void)?
 
@@ -29,6 +29,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         didChangeFriendsCallback: ((ClosedRange<Int>) -> Void)? = nil,
         didChangeHairColorCallback: ((String, Bool) -> Void)? = nil,
         didResetHairColorCallback: (() -> Void)? = nil,
+        didChangeProfessionCallback: ((String, Bool) -> Void)? = nil,
+        didResetProfessionCallback: (() -> Void)? = nil,
         didTapApplyButtonCallback: (() -> Void)? = nil,
         didTapCancelButtonCallback: (() -> Void)? = nil) {
         self.state = state
@@ -40,6 +42,8 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         self.didChangeFriendsCallback = didChangeFriendsCallback
         self.didChangeHairColorCallback = didChangeHairColorCallback
         self.didResetHairColorCallback = didResetHairColorCallback
+        self.didChangeProfessionCallback = didChangeProfessionCallback
+        self.didResetProfessionCallback = didResetProfessionCallback
         self.didTapApplyButtonCallback = didTapApplyButtonCallback
         self.didTapCancelButtonCallback = didTapCancelButtonCallback
     }
@@ -65,6 +69,12 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     }
     func didResetHairColor() {
         didResetHairColorCallback?()
+    }
+    func didChangeProfession(title: String, checked: Bool) {
+        didChangeProfessionCallback?(title, checked)
+    }
+    func didResetProfession() {
+        didResetProfessionCallback?()
     }
     func didTapApplyButton() {
         didTapApplyButtonCallback?()
