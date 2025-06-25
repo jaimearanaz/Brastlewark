@@ -14,8 +14,8 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
         content
             .navigationTitle(localizables.title)
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                viewModel.didOnAppear()
+            .task {
+                viewModel.didViewLoad()
             }
     }
 }
@@ -38,6 +38,7 @@ private extension DetailsView {
                         detailsImage(details: details, geometry: geometry)
                         detailsName(details: details)
                         detailsInfo(details: details)
+                        detailsFriends(details: details)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -88,7 +89,8 @@ private extension DetailsView {
             (localizables.weight, String(format: "%.1f", details.weight)),
             (localizables.height, String(format: "%.1f", details.height)),
             (localizables.hairColor, details.hairColor),
-            (localizables.professions, details.professions.joined(separator: ", "))
+            (localizables.professions, details.professions.joined(separator: ", ")),
+            (localizables.friends, "")
         ]
 
         return ZStack {
@@ -130,7 +132,24 @@ private extension DetailsView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-}
+
+    @ViewBuilder
+    func detailsFriends(details: DetailsUIModel) -> some View {
+        if !details.friends.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 16) {
+                    ForEach(details.friends, id: \.id) { friend in
+                        FriendCell(friend: friend)
+                            .onTapGesture {
+                                viewModel.didSelectCharacter(String(friend.id))
+                            }
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .padding(.top)
+        }
+    }}
 
 private extension DetailsView {
     struct Localizables {
@@ -141,6 +160,7 @@ private extension DetailsView {
         let height = "DETAILS_HEIGHT".localized
         let hairColor = "DETAILS_HAIR_COLOR".localized
         let professions = "DETAILS_PROFESSIONS".localized
+        let friends = "DETAILS_FRIENDS".localized
     }
 }
 

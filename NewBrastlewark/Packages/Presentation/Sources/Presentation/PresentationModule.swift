@@ -50,8 +50,8 @@ public struct PresentationModule {
         }
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
-                getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
                 getSelectedCharacterUseCaseProtocol: resolveOrFail(r, GetSelectedCharacterUseCaseProtocol.self),
+                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
                 saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self))
         }
     }

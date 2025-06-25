@@ -6,6 +6,7 @@ public struct DetailsUIModel {
     let height: Double
     let hairColor: String
     let professions: [String]
+    let friends: [DetailsFriendUIModel]
 
     public init(
         name: String = "",
@@ -14,7 +15,8 @@ public struct DetailsUIModel {
         weight: Double = 0.0,
         height: Double = 0.0,
         hairColor: String = "",
-        professions: [String] = []) {
+        professions: [String] = [],
+        friends: [DetailsFriendUIModel] = []) {
         self.name = name
         self.thumbnail = thumbnail
         self.age = age
@@ -22,5 +24,21 @@ public struct DetailsUIModel {
         self.height = height
         self.hairColor = hairColor
         self.professions = professions
+        self.friends = friends
+    }
+}
+
+public struct DetailsFriendUIModel {
+    let id: Int
+    let name: String
+    let thumbnail: String
+
+    public init(
+        id: Int = 0,
+        name: String = "",
+        thumbnail: String = "") {
+        self.id = id
+        self.name = name
+        self.thumbnail = thumbnail
     }
 }
