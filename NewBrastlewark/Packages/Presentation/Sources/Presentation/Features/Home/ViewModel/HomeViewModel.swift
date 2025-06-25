@@ -85,8 +85,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     public func didSelectCharacter(_ character: CharacterUIModel) {
         let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
         Task {
-            let characterDomain = CharacterUIModel.map(model: character)
-            _ = await saveSelectedCharacterUseCase.execute(params: .init(character: characterDomain))
+            _ = await saveSelectedCharacterUseCase.execute(params: .init(id: character.id))
         }
     }
 
