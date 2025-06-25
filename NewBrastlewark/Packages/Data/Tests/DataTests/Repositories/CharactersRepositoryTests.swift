@@ -73,32 +73,32 @@ final class CharactersRepositoryTests: XCTestCase {
         }
     }
 
-    func test_when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacter() async throws {
+    func test_when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacterId() async throws {
         // given
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = try loadOneCharacterFromJSON()
+        let character = CharacterEntityMapper.map(entity: try loadOneCharacterFromJSON())
 
         // when
-        try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
-        let selected = try await repo.getSelectedCharacter()
+        try await repo.saveSelectedCharacter(id: character.id)
+        let selectedId = try await repo.getSelectedCharacter()
 
         // then
-        XCTAssertEqual(selected?.id, character.id)
+        XCTAssertEqual(selectedId, character.id)
     }
 
     func test_when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
         // given
         let cache = CacheMock()
         let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = try loadOneCharacterFromJSON()
+        let character = CharacterEntityMapper.map(entity: try loadOneCharacterFromJSON())
 
         // when
-        try await repo.saveSelectedCharacter(CharacterEntityMapper.map(entity: character))
+        try await repo.saveSelectedCharacter(id: character.id)
         try await repo.deleteSelectedCharacter()
-        let selected = try await repo.getSelectedCharacter()
+        let selectedId = try await repo.getSelectedCharacter()
 
         // then
-        XCTAssertNil(selected)
+        XCTAssertNil(selectedId)
     }
 }

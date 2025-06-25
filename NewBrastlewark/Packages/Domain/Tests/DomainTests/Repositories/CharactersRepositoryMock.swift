@@ -3,6 +3,7 @@ import Foundation
 @testable import Domain
 
 final class CharactersRepositoryMock: CharactersRepositoryProtocol {
+    // MARK: - getAllCharacters
     var getAllCharactersResult: [Character] = []
     var getAllCharactersError: Error?
     var getAllCharactersCalled = false
@@ -14,21 +15,23 @@ final class CharactersRepositoryMock: CharactersRepositoryProtocol {
         return getAllCharactersResult
     }
 
+    // MARK: - saveSelectedCharacter
     var saveSelectedCharacterCalled = false
-    var savedCharacter: Character?
+    var savedCharacterId: Int?
     var saveSelectedCharacterError: Error?
-    func saveSelectedCharacter(_ character: Character) async throws {
+    func saveSelectedCharacter(id: Int) async throws {
         saveSelectedCharacterCalled = true
-        savedCharacter = character
+        savedCharacterId = id
         if let error = saveSelectedCharacterError {
             throw error
         }
     }
 
-    var getSelectedCharacterResult: Character?
+    // MARK: - getSelectedCharacter
+    var getSelectedCharacterResult: Int?
     var getSelectedCharacterError: Error?
     var getSelectedCharacterCalled = false
-    func getSelectedCharacter() async throws -> Character? {
+    func getSelectedCharacter() async throws -> Int? {
         getSelectedCharacterCalled = true
         if let error = getSelectedCharacterError {
             throw error
@@ -36,6 +39,7 @@ final class CharactersRepositoryMock: CharactersRepositoryProtocol {
         return getSelectedCharacterResult
     }
 
+    // MARK: - deleteSelectedCharacter
     var deleteSelectedCharacterCalled = false
     var deleteSelectedCharacterError: Error?
     func deleteSelectedCharacter() async throws {

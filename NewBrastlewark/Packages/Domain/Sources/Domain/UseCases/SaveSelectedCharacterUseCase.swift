@@ -1,7 +1,7 @@
 public struct SaveSelectedCharacterUseCaseParams {
-    public let character: Character
-    public init(character: Character) {
-        self.character = character
+    public let id: Int
+    public init(id: Int) {
+        self.id = id
     }
 }
 
@@ -18,7 +18,7 @@ final class SaveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol {
 
     func execute(params: SaveSelectedCharacterUseCaseParams) async -> Result<Void, CharactersRepositoryError> {
         do {
-            try await repository.saveSelectedCharacter(params.character)
+            try await repository.saveSelectedCharacter(id: params.id)
             return .success(())
         } catch let error as CharactersRepositoryError {
             return .failure(error)

@@ -5,11 +5,12 @@ import Testing
 
 struct GetSelectedCharacterUseCaseTests {
     @Test
-    func given_repositoryReturnsCharacter_when_execute_then_returnsSuccessWithCharacter() async throws {
+    func given_repositoryReturnsCharacterId_when_execute_then_returnsSuccessWithCharacter() async throws {
         // given
         let repository = CharactersRepositoryMock()
         let expectedCharacter = try loadOneCharacterFromJSON()
-        repository.getSelectedCharacterResult = expectedCharacter
+        repository.getSelectedCharacterResult = expectedCharacter.id
+        repository.getAllCharactersResult = [expectedCharacter]
         repository.getSelectedCharacterError = nil
         let useCase = GetSelectedCharacterUseCase(repository: repository)
 
@@ -31,6 +32,7 @@ struct GetSelectedCharacterUseCaseTests {
         // given
         let repository = CharactersRepositoryMock()
         repository.getSelectedCharacterResult = nil
+        repository.getAllCharactersResult = []
         repository.getSelectedCharacterError = nil
         let useCase = GetSelectedCharacterUseCase(repository: repository)
 

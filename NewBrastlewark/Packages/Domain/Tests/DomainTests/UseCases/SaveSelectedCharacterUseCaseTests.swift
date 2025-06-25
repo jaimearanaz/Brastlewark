@@ -11,11 +11,11 @@ struct SaveSelectedCharacterUseCaseTests {
         repository.saveSelectedCharacterError = nil
         let useCase = SaveSelectedCharacterUseCase(repository: repository)
         let character = try loadOneCharacterFromJSON()
-        let params = SaveSelectedCharacterUseCaseParams(character: character)
-        
+        let params = SaveSelectedCharacterUseCaseParams(id: character.id)
+
         // when
         let result = await useCase.execute(params: params)
-        
+
         // then
         switch result {
         case .success:
@@ -24,7 +24,7 @@ struct SaveSelectedCharacterUseCaseTests {
             #expect(Bool(false))
         }
         #expect(Bool(repository.saveSelectedCharacterCalled))
-        #expect(repository.savedCharacter == character)
+        #expect(repository.savedCharacterId == character.id)
     }
 
     @Test
@@ -34,11 +34,11 @@ struct SaveSelectedCharacterUseCaseTests {
         repository.saveSelectedCharacterError = CharactersRepositoryError.unableToSaveSelectedCharacter
         let useCase = SaveSelectedCharacterUseCase(repository: repository)
         let character = try loadOneCharacterFromJSON()
-        let params = SaveSelectedCharacterUseCaseParams(character: character)
-        
+        let params = SaveSelectedCharacterUseCaseParams(id: character.id)
+
         // when
         let result = await useCase.execute(params: params)
-        
+
         // then
         switch result {
         case .failure(let error):

@@ -11,8 +11,9 @@ final class GetSelectedCharacterUseCase: GetSelectedCharacterUseCaseProtocol {
 
     func execute() async -> Result<Character?, CharactersRepositoryError> {
         do {
-            let character = try await repository.getSelectedCharacter()
-            return .success(character)
+            let id = try await repository.getSelectedCharacter()
+            let characters = try await repository.getAllCharacters(forceUpdate: false)
+            return .success(characters.filter { $0.id == id }.first)
         } catch let error as CharactersRepositoryError {
             return .failure(error)
         } catch {

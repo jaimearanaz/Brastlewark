@@ -8,7 +8,7 @@ public enum CharactersRepositoryError: Error {
 
 public protocol CharactersRepositoryProtocol {
     func getAllCharacters(forceUpdate: Bool) async throws -> [Character]
-    func saveSelectedCharacter(_ character: Character) async throws
-    func getSelectedCharacter() async throws -> Character?
+    func saveSelectedCharacter(id: Int) async throws
+    func getSelectedCharacter() async throws -> Int?
     func deleteSelectedCharacter() async throws
 }
