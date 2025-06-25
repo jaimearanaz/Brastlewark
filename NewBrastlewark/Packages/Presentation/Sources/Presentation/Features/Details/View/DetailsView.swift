@@ -15,6 +15,9 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
         content
             .navigationTitle(localizables.title)
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                viewModel.didOnAppear()
+            }
     }
 }
 

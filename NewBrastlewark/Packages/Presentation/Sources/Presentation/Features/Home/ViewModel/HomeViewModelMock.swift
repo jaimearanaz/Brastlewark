@@ -1,13 +1,12 @@
 import SwiftUI
 
-@MainActor
 final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     // Outputs
     @Published var state: HomeState
     @Published var searchText: String
 
-    // Navigation
-    var filterView: () -> AnyView
+    var filterView: FilterViewFactory
+    var detailsView: DetailsViewFactory
 
     // Input callbacks
     var didOnAppearCallback: (() -> Void)?
@@ -20,7 +19,8 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     init(
         state: HomeState = .loading,
         searchText: String = "",
-        filterView: @escaping () -> AnyView = { AnyView(EmptyView()) },
+        filterView: @escaping FilterViewFactory = { AnyView(EmptyView()) },
+        detailsView: @escaping DetailsViewFactory = { AnyView(EmptyView()) },
         didOnAppearCallback: (() -> Void)? = nil,
         didSelectCharacterCallback: ((CharacterUIModel) -> Void)? = nil,
         didTapFilterButtonCallback: (() -> Void)? = nil,
@@ -31,6 +31,7 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
         self.state = state
         self.searchText = searchText
         self.filterView = filterView
+        self.detailsView = detailsView
         self.didOnAppearCallback = didOnAppearCallback
         self.didSelectCharacterCallback = didSelectCharacterCallback
         self.didTapFilterButtonCallback = didTapFilterButtonCallback

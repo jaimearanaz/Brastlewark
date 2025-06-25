@@ -18,11 +18,13 @@ public enum HomeState {
 @MainActor
 public protocol HomeViewModelProtocol: ObservableObject {
     typealias FilterViewFactory = () -> AnyView
+    typealias DetailsViewFactory = () -> AnyView
 
     // Outputs
     var state: HomeState { get }
     var searchText: String { get set }
     var filterView: FilterViewFactory { get }
+    var detailsView: DetailsViewFactory { get }
 
     // Inputs
     func didOnAppear()
@@ -42,6 +44,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
         }
     }
     public var filterView: FilterViewFactory
+    public var detailsView: DetailsViewFactory
 
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
@@ -62,7 +65,8 @@ public final class HomeViewModel: HomeViewModelProtocol {
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol,
-        filterView: @escaping FilterViewFactory) {
+        filterView: @escaping FilterViewFactory,
+        detailsView: @escaping DetailsViewFactory) {
             self.getAllCharactersUseCase = getAllCharactersUseCase
             self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
@@ -70,6 +74,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
             self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
             self.filterView = filterView
+            self.detailsView = detailsView
             setupSearchSubscription()
     }
 

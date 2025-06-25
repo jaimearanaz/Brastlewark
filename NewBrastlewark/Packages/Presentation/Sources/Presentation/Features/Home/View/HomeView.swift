@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel
+    @State private var selectedCharacter: CharacterUIModel? = nil
     private var localizables = Localizables()
 
     // MARK: - Public methods
@@ -14,6 +15,18 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
         NavigationStack {
             ZStack {
                 content
+                // Hidden NavigationLink for programmatic navigation
+                NavigationLink(
+                    destination: selectedCharacter.map { _ in viewModel.detailsView() },
+                    isActive: Binding(
+                        get: { selectedCharacter != nil },
+                        set: { isActive in
+                            if !isActive { selectedCharacter = nil }
+                        }
+                    )
+                ) {
+                    EmptyView()
+                }
             }
             .navigationTitle(localizables.title)
             .toolbar {
@@ -26,7 +39,6 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
             }
         }
     }
-
 }
 
 // MARK: - Private methods
@@ -52,7 +64,8 @@ private extension HomeView {
             }
         case .error(let error):
             VStack {
-                Text(errorMessage(for: error))                    .foregroundColor(.red)
+                Text(errorMessage(for: error))
+                    .foregroundColor(.red)
                     .multilineTextAlignment(.center)
             }
         }
@@ -69,6 +82,7 @@ private extension HomeView {
                     CharacterCell(character: character)
                         .onTapGesture {
                             viewModel.didSelectCharacter(character)
+                            selectedCharacter = character
                         }
                 }
             }

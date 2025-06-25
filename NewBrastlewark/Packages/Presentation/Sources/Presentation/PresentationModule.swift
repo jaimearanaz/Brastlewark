@@ -36,6 +36,10 @@ public struct PresentationModule {
             filterView: {
                 let filterViewModel = resolveOrFail(r, FilterViewModel.self)
                 return AnyView(FilterView(viewModel: filterViewModel))
+            },
+            detailsView: {
+                let detailsViewModel = resolveOrFail(r, DetailsViewModel.self)
+                return AnyView(DetailsView(viewModel: detailsViewModel))
             })
         }
         container.register(FilterViewModel.self) { r in

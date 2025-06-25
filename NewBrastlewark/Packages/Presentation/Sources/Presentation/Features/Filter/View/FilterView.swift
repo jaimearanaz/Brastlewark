@@ -21,6 +21,7 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
                 content
             }
             .navigationTitle(localizables.title)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     toolbarButtons

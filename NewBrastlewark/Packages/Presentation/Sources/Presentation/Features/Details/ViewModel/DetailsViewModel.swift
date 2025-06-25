@@ -13,7 +13,7 @@ public protocol DetailsViewModelProtocol: ObservableObject {
     var state: DetailsState { get }
 
     // Inputs
-    func didViewLoad()
+    func didOnAppear()
     func didSelectCharacter(_ id: String)
 }
 
@@ -34,7 +34,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
             self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
     }
 
-    public func didViewLoad() {
+    public func didOnAppear() {
         state = .loading
         let getSelectedCharacterUseCase = getSelectedCharacterUseCaseProtocol
         Task {
@@ -62,6 +62,7 @@ private extension DetailsViewModel {
     func mapToUIModel(_ character: Character) -> DetailsUIModel {
         DetailsUIModel(
             name: character.name,
+            thumbnail: character.thumbnail,
             age: character.age,
             weight: character.weight,
             height: character.height,
