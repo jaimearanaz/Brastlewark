@@ -18,6 +18,10 @@ public struct PresentationModule {
             let viewModel = resolveOrFail(r, FilterViewModel.self)
             return FilterView(viewModel: viewModel)
         }
+        container.register(DetailsView.self) { r in
+            let viewModel = resolveOrFail(r, DetailsViewModel.self)
+            return DetailsView(viewModel: viewModel)
+        }
     }
 
     private static func registerViewModels(inContainer container: Container) {
@@ -30,8 +34,8 @@ public struct PresentationModule {
                 deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
                 getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
             filterView: {
-                let filterVM = resolveOrFail(r, FilterViewModel.self)
-                return AnyView(FilterView(viewModel: filterVM))
+                let filterViewModel = resolveOrFail(r, FilterViewModel.self)
+                return AnyView(FilterView(viewModel: filterViewModel))
             })
         }
         container.register(FilterViewModel.self) { r in
@@ -39,6 +43,12 @@ public struct PresentationModule {
                 getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
+        }
+        container.register(DetailsViewModel.self) { r in
+            DetailsViewModel(
+                getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
+                getSelectedCharacterUseCaseProtocol: resolveOrFail(r, GetSelectedCharacterUseCaseProtocol.self),
+                saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self))
         }
     }
 

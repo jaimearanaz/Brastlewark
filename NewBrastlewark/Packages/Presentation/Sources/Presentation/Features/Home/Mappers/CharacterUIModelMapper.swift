@@ -1,9 +1,8 @@
-import Foundation
 import Domain
 
-struct CharacterMapper {
-    static func map(model: Character) -> CharacterUIModel {
-        CharacterUIModel(
+extension CharacterUIModel {
+    static func map(model: CharacterUIModel) -> Character {
+        .init(
             id: model.id,
             name: model.name,
             thumbnail: model.thumbnail,
@@ -12,11 +11,6 @@ struct CharacterMapper {
             height: model.height,
             hairColor: model.hairColor,
             professions: model.professions,
-            friends: model.friends
-        )
-    }
-    
-    static func map(models: [Character]) -> [CharacterUIModel] {
-        models.map { map(model: $0) }
+            friends: model.friends)
     }
 }

@@ -67,6 +67,9 @@ private extension HomeView {
             ], spacing: 16) {
                 ForEach(characters) { character in
                     CharacterCell(character: character)
+                        .onTapGesture {
+                            viewModel.didSelectCharacter(character)
+                        }
                 }
             }
             .padding()

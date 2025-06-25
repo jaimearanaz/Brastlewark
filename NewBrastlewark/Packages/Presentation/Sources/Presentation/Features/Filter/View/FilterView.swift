@@ -9,6 +9,8 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
     @Environment(\.dismiss) private var dismiss
     private var localizables = Localizables()
 
+    // MARK: - Public methods
+
     public init(viewModel: ViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -31,6 +33,8 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
         }
     }
 }
+
+// MARK: - Private methods
 
 private extension FilterView {
     @ViewBuilder
@@ -252,6 +256,8 @@ private extension FilterView {
         return (maxTitleWidth, maxSummaryWidth)
     }
 }
+
+// MARK: - Constants
 
 private extension FilterView {
     struct Localizables {

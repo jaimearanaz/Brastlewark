@@ -78,7 +78,11 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
-        // TODO: implementation pending
+        let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
+        Task {
+            let characterDomain = CharacterUIModel.map(model: character)
+            _ = await saveSelectedCharacterUseCase.execute(params: .init(character: characterDomain))
+        }
     }
 
     public func didTapFilterButton() {

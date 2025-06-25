@@ -55,11 +55,11 @@ struct CharacterCell: View {
         id: 1,
         name: "Test Gnome",
         thumbnail: "https://example.com/image.jpg",
-        profession: "Baker",
         age: 25,
         weight: 65.5,
         height: 120.0,
         hairColor: "Red",
+        professions: ["Baker"],
         friends: ["Friend 1", "Friend 2"]
     ))
 }

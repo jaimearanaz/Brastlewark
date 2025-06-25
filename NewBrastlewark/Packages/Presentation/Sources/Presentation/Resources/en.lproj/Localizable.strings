@@ -18,4 +18,10 @@
 "FILTER_RESET_BUTTON" = "Reset";
 "FILTER_ALL_HAIR_COLORS" = "Any hair color";
 "FILTER_ALL_PROFESSIONS" = "Any profession";
-
+"PROFESSION_NONE" = "Not employed";
+"DETAILS_TITLE" = "Details";
+"DETAILS_ERROR_GENERAL" = "Something went wrong, please try again.";
+"DETAILS_AGE" = "Age";
+"DETAILS_WEIGHT" = "Weight";
+"DETAILS_HEIGHT" = "Height";
+"DETAILS_HAIR_COLOR" = "Hair color";
