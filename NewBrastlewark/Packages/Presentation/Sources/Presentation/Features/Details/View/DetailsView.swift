@@ -141,7 +141,7 @@ private extension DetailsView {
                     ForEach(details.friends, id: \.id) { friend in
                         FriendCell(friend: friend)
                             .onTapGesture {
-                                viewModel.didSelectCharacter(String(friend.id))
+                                viewModel.didSelectCharacter(friend.id)
                             }
                     }
                 }

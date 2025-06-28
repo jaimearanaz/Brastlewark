@@ -5,9 +5,6 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     @Published var state: HomeState
     @Published var searchText: String
 
-    var filterView: FilterViewFactory
-    var detailsView: DetailsViewFactory
-
     // Input callbacks
     var didOnAppearCallback: (() -> Void)?
     var didSelectCharacterCallback: ((CharacterUIModel) -> Void)?
@@ -19,8 +16,6 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     init(
         state: HomeState = .loading,
         searchText: String = "",
-        filterView: @escaping FilterViewFactory = { AnyView(EmptyView()) },
-        detailsView: @escaping DetailsViewFactory = { AnyView(EmptyView()) },
         didOnAppearCallback: (() -> Void)? = nil,
         didSelectCharacterCallback: ((CharacterUIModel) -> Void)? = nil,
         didTapFilterButtonCallback: (() -> Void)? = nil,
@@ -30,8 +25,6 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     ) {
         self.state = state
         self.searchText = searchText
-        self.filterView = filterView
-        self.detailsView = detailsView
         self.didOnAppearCallback = didOnAppearCallback
         self.didSelectCharacterCallback = didSelectCharacterCallback
         self.didTapFilterButtonCallback = didTapFilterButtonCallback

@@ -5,7 +5,6 @@
 "HOME_EMPTY" = "No characters found";
 "HOME_ERROR_NO_INTERNET" = "No internet available.\nPlease check your connection.";
 "HOME_ERROR_GENERAL" = "Something went wrong, please try again.";
-"HOME_FILTER_VIEW" = "Filter";
 "FILTER_TITLE" = "Filter";
 "FILTER_APPLY_BUTTON" = "Apply";
 "FILTER_SLIDER_AGE" = "Age";

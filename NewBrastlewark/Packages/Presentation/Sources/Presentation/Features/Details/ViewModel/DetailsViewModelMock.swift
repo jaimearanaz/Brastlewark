@@ -8,12 +8,12 @@ final class DetailsViewModelMock: DetailsViewModelProtocol, ObservableObject {
 
     // Input callbacks
     var didViewLoadCallback: (() -> Void)?
-    var didSelectCharacterCallback: ((String) -> Void)?
+    var didSelectCharacterCallback: ((Int) -> Void)?
 
     init(
         state: DetailsState = .loading,
         didViewLoadCallback: (() -> Void)? = nil,
-        didSelectCharacterCallback: ((String) -> Void)? = nil) {
+        didSelectCharacterCallback: ((Int) -> Void)? = nil) {
         self.state = state
         self.didViewLoadCallback = didViewLoadCallback
         self.didSelectCharacterCallback = didSelectCharacterCallback
@@ -24,7 +24,7 @@ final class DetailsViewModelMock: DetailsViewModelProtocol, ObservableObject {
         didViewLoadCallback?()
     }
 
-    func didSelectCharacter(_ id: String) {
+    func didSelectCharacter(_ id: Int) {
         didSelectCharacterCallback?(id)
     }
 }

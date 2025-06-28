@@ -17,14 +17,9 @@ public enum HomeState {
 
 @MainActor
 public protocol HomeViewModelProtocol: ObservableObject {
-    typealias FilterViewFactory = () -> AnyView
-    typealias DetailsViewFactory = () -> AnyView
-
     // Outputs
     var state: HomeState { get }
     var searchText: String { get set }
-    var filterView: FilterViewFactory { get }
-    var detailsView: DetailsViewFactory { get }
 
     // Inputs
     func didOnAppear()
@@ -43,12 +38,11 @@ public final class HomeViewModel: HomeViewModelProtocol {
             didSearchTextChanged()
         }
     }
-    public var filterView: FilterViewFactory
-    public var detailsView: DetailsViewFactory
 
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
 
+    private let router: Router
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
@@ -59,22 +53,20 @@ public final class HomeViewModel: HomeViewModelProtocol {
     // MARK: - Public methods
 
     public init(
+        router: Router,
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
         saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
-        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol,
-        filterView: @escaping FilterViewFactory,
-        detailsView: @escaping DetailsViewFactory) {
+        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
+            self.router = router
             self.getAllCharactersUseCase = getAllCharactersUseCase
             self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
             self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
             self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
-            self.filterView = filterView
-            self.detailsView = detailsView
             setupSearchSubscription()
     }
 
@@ -86,11 +78,12 @@ public final class HomeViewModel: HomeViewModelProtocol {
         let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
         Task {
             _ = await saveSelectedCharacterUseCase.execute(params: .init(id: character.id))
+            router.navigate(to: .details)
         }
     }
 
     public func didTapFilterButton() {
-        // TODO: implementation pending
+        router.navigate(to: .filter)
     }
 
     public func didTapResetButton() {

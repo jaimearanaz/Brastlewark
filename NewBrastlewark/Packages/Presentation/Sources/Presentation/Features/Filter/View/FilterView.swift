@@ -16,21 +16,19 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
     }
 
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                content
+        ZStack {
+            content
+        }
+        .navigationTitle(localizables.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                toolbarButtons
             }
-            .navigationTitle(localizables.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    toolbarButtons
-                }
-            }
-            .task {
-                viewModel.dismiss = { dismiss() }
-                viewModel.didViewLoad()
-            }
+        }
+        .task {
+            viewModel.dismiss = { dismiss() }
+            viewModel.didViewLoad()
         }
     }
 }

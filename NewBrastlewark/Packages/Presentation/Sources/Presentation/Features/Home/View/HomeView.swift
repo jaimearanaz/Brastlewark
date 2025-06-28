@@ -2,7 +2,6 @@ import SwiftUI
 
 public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel
-    @State private var selectedCharacter: CharacterUIModel? = nil
     private var localizables = Localizables()
 
     // MARK: - Public methods
@@ -12,31 +11,17 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
     }
 
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                content
-                // Hidden NavigationLink for programmatic navigation
-                NavigationLink(
-                    destination: selectedCharacter.map { _ in viewModel.detailsView() },
-                    isActive: Binding(
-                        get: { selectedCharacter != nil },
-                        set: { isActive in
-                            if !isActive { selectedCharacter = nil }
-                        }
-                    )
-                ) {
-                    EmptyView()
-                }
+        ZStack {
+            content
+        }
+        .navigationTitle(localizables.title)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                toolbarButtons
             }
-            .navigationTitle(localizables.title)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    toolbarButtons
-                }
-            }
-            .onAppear {
-                viewModel.didOnAppear()
-            }
+        }
+        .onAppear {
+            viewModel.didOnAppear()
         }
     }
 }
@@ -82,7 +67,6 @@ private extension HomeView {
                     CharacterCell(character: character)
                         .onTapGesture {
                             viewModel.didSelectCharacter(character)
-                            selectedCharacter = character
                         }
                 }
             }
@@ -104,10 +88,10 @@ private extension HomeView {
                 }
             }
             .disabled(isResetDisabled)
-            NavigationLink {
-                viewModel.filterView()
-            } label: {
-                Text(localizables.filter)
+            Button(localizables.filter) {
+                Task {
+                    viewModel.didTapFilterButton()
+                }
             }
         }
     }
@@ -140,7 +124,6 @@ private extension HomeView {
         let empty = "HOME_EMPTY".localized
         let noInternet = "HOME_ERROR_NO_INTERNET".localized
         let generalError = "HOME_ERROR_GENERAL".localized
-        let filterView = "HOME_FILTER_VIEW".localized
     }
 }
 

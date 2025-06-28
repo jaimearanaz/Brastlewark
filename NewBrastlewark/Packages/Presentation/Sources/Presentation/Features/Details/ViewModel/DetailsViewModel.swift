@@ -14,22 +14,25 @@ public protocol DetailsViewModelProtocol: ObservableObject {
 
     // Inputs
     func didViewLoad()
-    func didSelectCharacter(_ id: String)
+    func didSelectCharacter(_ id: Int)
 }
 
 @MainActor
 public final class DetailsViewModel: DetailsViewModelProtocol {
     @Published public var state: DetailsState = .loading
 
+    private let router: Router
     private let getSelectedCharacterUseCaseProtocol: GetSelectedCharacterUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
     private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
 
 
     public init(
+        router: Router,
         getSelectedCharacterUseCaseProtocol: GetSelectedCharacterUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol,
         saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol) {
+            self.router = router
             self.getSelectedCharacterUseCaseProtocol = getSelectedCharacterUseCaseProtocol
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
             self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
@@ -68,8 +71,12 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
         }
     }
     
-    public func didSelectCharacter(_ id: String) {
-        // TODO: implement
+    public func didSelectCharacter(_ id: Int) {
+        let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
+        Task  {
+            _ = await saveSelectedCharacterUseCase.execute(params: .init(id: id))
+            router.navigate(to: .details)
+        }
     }
 }
 

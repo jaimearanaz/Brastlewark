@@ -5,8 +5,16 @@ import Swinject
 @MainActor
 public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
+        registerRouter(inContainer: container)
         registerViewModels(inContainer: container)
         registerViews(inContainer: container)
+    }
+
+    private static func registerRouter(inContainer container: Container) {
+        container.register(Router.self) { r in
+            Router()
+        }
+        .inObjectScope(.container)
     }
 
     private static func registerViews(inContainer container: Container) {
@@ -27,20 +35,13 @@ public struct PresentationModule {
     private static func registerViewModels(inContainer container: Container) {
         container.register(HomeViewModel.self) { r in
             HomeViewModel(
+                router: resolveOrFail(r, Router.self),
                 getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
                 saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
                 deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
-            filterView: {
-                let filterViewModel = resolveOrFail(r, FilterViewModel.self)
-                return AnyView(FilterView(viewModel: filterViewModel))
-            },
-            detailsView: {
-                let detailsViewModel = resolveOrFail(r, DetailsViewModel.self)
-                return AnyView(DetailsView(viewModel: detailsViewModel))
-            })
+                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
         }
         container.register(FilterViewModel.self) { r in
             FilterViewModel(
@@ -50,6 +51,7 @@ public struct PresentationModule {
         }
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
+                router: resolveOrFail(r, Router.self),
                 getSelectedCharacterUseCaseProtocol: resolveOrFail(r, GetSelectedCharacterUseCaseProtocol.self),
                 getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
                 saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self))
