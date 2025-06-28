@@ -37,7 +37,6 @@ public struct PresentationModule {
             HomeViewModel(
                 router: resolveOrFail(r, Router.self),
                 getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
-                saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
                 deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
@@ -52,9 +51,8 @@ public struct PresentationModule {
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
                 router: resolveOrFail(r, Router.self),
-                getSelectedCharacterUseCaseProtocol: resolveOrFail(r, GetSelectedCharacterUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self),
-                saveSelectedCharacterUseCase: resolveOrFail(r, SaveSelectedCharacterUseCaseProtocol.self))
+                getCharacterByIdUseCase: resolveOrFail(r, GetCharacterByIdUseCaseProtocol.self),
+                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
         }
     }
 

@@ -11,6 +11,7 @@ public enum DetailsState {
 public protocol DetailsViewModelProtocol: ObservableObject {
     // Outputs
     var state: DetailsState { get }
+    var characterId: Int { get set }
 
     // Inputs
     func didViewLoad()
@@ -20,30 +21,30 @@ public protocol DetailsViewModelProtocol: ObservableObject {
 @MainActor
 public final class DetailsViewModel: DetailsViewModelProtocol {
     @Published public var state: DetailsState = .loading
+    public var characterId: Int
 
     private let router: Router
-    private let getSelectedCharacterUseCaseProtocol: GetSelectedCharacterUseCaseProtocol
+    private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
-    private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
 
 
     public init(
+        characterId: Int = 0,
         router: Router,
-        getSelectedCharacterUseCaseProtocol: GetSelectedCharacterUseCaseProtocol,
-        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol,
-        saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol) {
+        getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol,
+        getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
+            self.characterId = characterId
             self.router = router
-            self.getSelectedCharacterUseCaseProtocol = getSelectedCharacterUseCaseProtocol
+            self.getCharacterByIdUseCase = getCharacterByIdUseCase
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
-            self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
     }
 
     public func didViewLoad() {
         state = .loading
-        let getSelectedCharacterUseCase = getSelectedCharacterUseCaseProtocol
+        let getCharacterByIdUseCase = getCharacterByIdUseCase
         let getSearchedCharacterUseCase = getSearchedCharacterUseCase
         Task {
-            let result = await getSelectedCharacterUseCase.execute()
+            let result = await getCharacterByIdUseCase.execute(params: .init(id: characterId))
             switch result {
             case .success(let character):
                 guard let character = character else {
@@ -65,18 +66,14 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                 }
 
                 self.state = .ready(details: mapToUIModel(character: character, friends: friends))
-            case .failure(let error):
+            case .failure(_):
                 self.state = .error
             }
         }
     }
     
     public func didSelectCharacter(_ id: Int) {
-        let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
-        Task  {
-            _ = await saveSelectedCharacterUseCase.execute(params: .init(id: id))
-            router.navigate(to: .details)
-        }
+        router.navigate(to: .details(characterId: id))
     }
 }
 

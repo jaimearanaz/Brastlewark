@@ -44,7 +44,6 @@ public final class HomeViewModel: HomeViewModelProtocol {
 
     private let router: Router
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
-    private let saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol
     private let deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol
@@ -55,14 +54,12 @@ public final class HomeViewModel: HomeViewModelProtocol {
     public init(
         router: Router,
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
-        saveSelectedCharacterUseCase: SaveSelectedCharacterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
             self.router = router
             self.getAllCharactersUseCase = getAllCharactersUseCase
-            self.saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
             self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
             self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
@@ -75,11 +72,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
-        let saveSelectedCharacterUseCase = saveSelectedCharacterUseCase
-        Task {
-            _ = await saveSelectedCharacterUseCase.execute(params: .init(id: character.id))
-            router.navigate(to: .details)
-        }
+        router.navigate(to: .details(characterId: character.id))
     }
 
     public func didTapFilterButton() {

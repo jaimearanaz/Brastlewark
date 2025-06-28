@@ -72,33 +72,4 @@ final class CharactersRepositoryTests: XCTestCase {
             // Success: error thrown
         }
     }
-
-    func test_when_saveSelectedCharacter_and_getSelectedCharacter_then_returnsSavedCharacterId() async throws {
-        // given
-        let cache = CacheMock()
-        let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = CharacterEntityMapper.map(entity: try loadOneCharacterFromJSON())
-
-        // when
-        try await repo.saveSelectedCharacter(id: character.id)
-        let selectedId = try await repo.getSelectedCharacter()
-
-        // then
-        XCTAssertEqual(selectedId, character.id)
-    }
-
-    func test_when_saveSelectedCharacter_and_deleteSelectedCharacter_then_getSelectedCharacterReturnsNil() async throws {
-        // given
-        let cache = CacheMock()
-        let repo = CharactersRepository(networkService: nil, cache: cache)
-        let character = CharacterEntityMapper.map(entity: try loadOneCharacterFromJSON())
-
-        // when
-        try await repo.saveSelectedCharacter(id: character.id)
-        try await repo.deleteSelectedCharacter()
-        let selectedId = try await repo.getSelectedCharacter()
-
-        // then
-        XCTAssertNil(selectedId)
-    }
 }

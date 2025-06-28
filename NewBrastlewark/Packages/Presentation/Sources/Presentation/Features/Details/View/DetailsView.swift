@@ -4,9 +4,11 @@ import MultiSlider
 public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel
     @State private var maxTitleWidth: CGFloat = 0
+    @State private var characterId: Int = 0
     private var localizables = Localizables()
 
-    public init(viewModel: ViewModel) {
+    public init(characterId: Int = 0, viewModel: ViewModel) {
+        self.characterId = characterId
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -15,6 +17,7 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
             .navigationTitle(localizables.title)
             .navigationBarTitleDisplayMode(.inline)
             .task {
+                viewModel.characterId = characterId
                 viewModel.didViewLoad()
             }
     }

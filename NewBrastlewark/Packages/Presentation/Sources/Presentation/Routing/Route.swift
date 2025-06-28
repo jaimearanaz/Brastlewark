@@ -1,4 +1,4 @@
 public enum Route: Hashable {
     case filter
-    case details
+    case details(characterId: Int)
 }

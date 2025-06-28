@@ -4,12 +4,10 @@ import Foundation
 class CharactersRepository: CharactersRepositoryProtocol {
     private let networkService: NetworkServiceProtocol?
     private let cache: CharactersCacheProtocol
-    private var selectedCharacterId: Int?
 
     init(networkService: NetworkServiceProtocol?, cache: CharactersCacheProtocol) {
         self.networkService = networkService
         self.cache = cache
-        self.selectedCharacterId = nil
     }
 
     func getAllCharacters(forceUpdate: Bool = false) async throws -> [Character] {
@@ -28,17 +26,5 @@ class CharactersRepository: CharactersRepositoryProtocol {
         } catch {
             throw CharactersRepositoryError.unableToFetchCharacters
         }
-    }
-
-    func saveSelectedCharacter(id: Int) async throws {
-        selectedCharacterId = id
-    }
-
-    func getSelectedCharacter() async throws -> Int? {
-        return selectedCharacterId
-    }
-
-    func deleteSelectedCharacter() async throws {
-        selectedCharacterId = nil
     }
 }

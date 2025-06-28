@@ -5,6 +5,7 @@ import Domain
 final class DetailsViewModelMock: DetailsViewModelProtocol, ObservableObject {
     // Outputs
     @Published var state: DetailsState
+    var characterId: Int = 0
 
     // Input callbacks
     var didViewLoadCallback: (() -> Void)?

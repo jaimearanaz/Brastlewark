@@ -13,17 +13,11 @@ public struct DomainModule {
         container.register(GetFilteredCharactersUseCaseProtocol.self) { r in
             GetFilteredCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
         }
-        container.register(SaveSelectedCharacterUseCaseProtocol.self) { r in
-            SaveSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
-        }
-        container.register(GetSelectedCharacterUseCaseProtocol.self) { r in
-            GetSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
-        }
-        container.register(DeleteSelectedCharacterUseCaseProtocol.self) { r in
-            DeleteSelectedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
-        }
         container.register(GetSearchedCharacterUseCaseProtocol.self) { r in
             GetSearchedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        }
+        container.register(GetCharacterByIdUseCaseProtocol.self) { r in
+            GetCharacterByIdUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
         }
     }
 

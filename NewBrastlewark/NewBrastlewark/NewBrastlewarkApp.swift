@@ -38,8 +38,8 @@ struct NewBrastlewarkApp: App {
                             switch route {
                             case .filter:
                                 FilterView(viewModel: filterViewModel)
-                            case .details:
-                                DetailsView(viewModel: detailsViewModel)
+                            case .details(let characterId):
+                                DetailsView(characterId: characterId, viewModel: detailsViewModel)
                             }
                         }
                 }
