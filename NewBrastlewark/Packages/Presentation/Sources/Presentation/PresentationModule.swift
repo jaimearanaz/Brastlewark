@@ -11,7 +11,7 @@ public struct PresentationModule {
     }
 
     private static func registerRouter(inContainer container: Container) {
-        container.register(Router.self) { r in
+        container.register(RouterProtocol.self) { r in
             Router()
         }
         .inObjectScope(.container)

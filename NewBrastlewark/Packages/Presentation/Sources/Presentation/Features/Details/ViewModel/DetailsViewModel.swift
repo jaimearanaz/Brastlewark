@@ -23,14 +23,14 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
     @Published public var state: DetailsState = .loading
     public var characterId: Int
 
-    private let router: Router
+    private let router: RouterProtocol
     private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
 
 
     public init(
         characterId: Int = 0,
-        router: Router,
+        router: RouterProtocol,
         getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
             self.characterId = characterId

@@ -1,29 +1,37 @@
 import SwiftUI
 
-public class Router: ObservableObject {
+public protocol RouterProtocol: ObservableObject {
+    var path: NavigationPath { get set }
+
+    func navigate(to route: Route)
+    func navigateBack()
+    func navigateToRoot()
+    func popToView(count: Int)
+    func canNavigateBack() -> Bool
+}
+
+public class Router: RouterProtocol {
     @Published public var path = NavigationPath()
 
     public init() {}
 
-    func navigate(to route: Route) {
+    public func navigate(to route: Route) {
         path.append(route)
     }
 
-    func navigateBack() {
+    public func navigateBack() {
         path.removeLast()
     }
 
-    func navigateToRoot() {
+    public func navigateToRoot() {
         path.removeLast(path.count)
     }
 
-    func popToView(count: Int) {
+    public func popToView(count: Int) {
         path.removeLast(count)
     }
-}
 
-extension Router {
-    func canNavigateBack() -> Bool {
+    public func canNavigateBack() -> Bool {
         return path.count > 0
     }
 }

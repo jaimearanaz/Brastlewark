@@ -3,12 +3,12 @@ import SwiftUICore
 import Domain
 import Foundation
 
-public enum HomeError {
+public enum HomeError: Sendable {
     case noInternetConnection
     case generalError
 }
 
-public enum HomeState {
+public enum HomeState: Sendable {
     case loading
     case ready(characters: [CharacterUIModel], reset: Bool = false)
     case empty
@@ -42,7 +42,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
 
-    private let router: Router
+    private let router: RouterProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol
@@ -52,7 +52,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     // MARK: - Public methods
 
     public init(
-        router: Router,
+        router: RouterProtocol,
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
