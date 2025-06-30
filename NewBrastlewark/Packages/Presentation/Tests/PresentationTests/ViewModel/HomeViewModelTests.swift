@@ -12,20 +12,33 @@ struct HomeViewModelTests {
         let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
         let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        getActiveFilterUseCase.executeResult = .success(nil)
+        let expectedCharacters = [Character(
+            id: 1,
+            name: "Test",
+            thumbnail: "",
+            age: 10,
+            weight: 20,
+            height: 30,
+            hairColor: "",
+            professions: [],
+            friends: [])]
+        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
+
         let sut = await HomeViewModel(
             router: router,
             getAllCharactersUseCase: getAllCharactersUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             getFilteredCharactersUseCase: getFilteredCharactersUseCase,
             deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-        )
-        getActiveFilterUseCase.executeResult = .success(nil)
-        let expectedCharacters = [Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])]
-        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
 
         // when
         await sut.didOnAppear()
+
+        // Espera un poco para asegurar que las operaciones asíncronas se completen
+        try? await Task.sleep(nanoseconds: 100_000_000)  // 100ms
 
         // then
         let state = await sut.state
@@ -33,7 +46,7 @@ struct HomeViewModelTests {
             #expect(characters.count == 1)
             #expect(characters.first?.id == 1)
         } else {
-            #expect(Bool(false), "Expected .ready state")
+            #expect(false, "Expected .ready state but got \(state)")
         }
     }
 
