@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F312EC72E14586800BEA3B9 /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 6F312EC62E14586800BEA3B9 /* InlineSnapshotTesting */; };
+		6F312EC92E14586800BEA3B9 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 6F312EC82E14586800BEA3B9 /* SnapshotTesting */; };
+		6F312ECB2E14586800BEA3B9 /* SnapshotTestingCustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 6F312ECA2E14586800BEA3B9 /* SnapshotTestingCustomDump */; };
 		6FD0231E2E0320660088CAB8 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD0231D2E0320660088CAB8 /* Domain */; };
 		6FD023212E0320740088CAB8 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD023202E0320740088CAB8 /* Data */; };
 		6FD023242E0320800088CAB8 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD023232E0320800088CAB8 /* Presentation */; };
@@ -14,13 +17,6 @@
 
 /* Begin PBXContainerItemProxy section */
 		6F8F7E562DE852000054CD0B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F8F7E3E2DE851FF0054CD0B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6F8F7E452DE851FF0054CD0B;
-			remoteInfo = NewBrastlewark;
-		};
-		6F8F7E602DE852000054CD0B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6F8F7E3E2DE851FF0054CD0B /* Project object */;
 			proxyType = 1;
@@ -45,7 +41,6 @@
 /* Begin PBXFileReference section */
 		6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewBrastlewark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F8F7E5F2DE852000054CD0B /* NewBrastlewarkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -72,11 +67,6 @@
 			path = NewBrastlewarkTests;
 			sourceTree = "<group>";
 		};
-		6F8F7E622DE852000054CD0B /* NewBrastlewarkUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NewBrastlewarkUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,13 +84,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6F8F7E5C2DE852000054CD0B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				6F312ECB2E14586800BEA3B9 /* SnapshotTestingCustomDump in Frameworks */,
+				6F312EC72E14586800BEA3B9 /* InlineSnapshotTesting in Frameworks */,
+				6F312EC92E14586800BEA3B9 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +98,6 @@
 			children = (
 				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
 				6F8F7E582DE852000054CD0B /* NewBrastlewarkTests */,
-				6F8F7E622DE852000054CD0B /* NewBrastlewarkUITests */,
 				6FFF0F842DEA006A00621BE5 /* Frameworks */,
 				6F8F7E472DE851FF0054CD0B /* Products */,
 			);
@@ -123,7 +108,6 @@
 			children = (
 				6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */,
 				6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */,
-				6F8F7E5F2DE852000054CD0B /* NewBrastlewarkUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,33 +166,13 @@
 			);
 			name = NewBrastlewarkTests;
 			packageProductDependencies = (
+				6F312EC62E14586800BEA3B9 /* InlineSnapshotTesting */,
+				6F312EC82E14586800BEA3B9 /* SnapshotTesting */,
+				6F312ECA2E14586800BEA3B9 /* SnapshotTestingCustomDump */,
 			);
 			productName = NewBrastlewarkTests;
 			productReference = 6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		6F8F7E5E2DE852000054CD0B /* NewBrastlewarkUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6F8F7E6F2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkUITests" */;
-			buildPhases = (
-				6F8F7E5B2DE852000054CD0B /* Sources */,
-				6F8F7E5C2DE852000054CD0B /* Frameworks */,
-				6F8F7E5D2DE852000054CD0B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6F8F7E612DE852000054CD0B /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6F8F7E622DE852000054CD0B /* NewBrastlewarkUITests */,
-			);
-			name = NewBrastlewarkUITests;
-			packageProductDependencies = (
-			);
-			productName = NewBrastlewarkUITests;
-			productReference = 6F8F7E5F2DE852000054CD0B /* NewBrastlewarkUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -227,10 +191,6 @@
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 6F8F7E452DE851FF0054CD0B;
 					};
-					6F8F7E5E2DE852000054CD0B = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 6F8F7E452DE851FF0054CD0B;
-					};
 				};
 			};
 			buildConfigurationList = 6F8F7E412DE851FF0054CD0B /* Build configuration list for PBXProject "NewBrastlewark" */;
@@ -246,6 +206,7 @@
 				6FD0231C2E0320660088CAB8 /* XCLocalSwiftPackageReference "Packages/Domain" */,
 				6FD0231F2E0320740088CAB8 /* XCLocalSwiftPackageReference "Packages/Data" */,
 				6FD023222E0320800088CAB8 /* XCLocalSwiftPackageReference "Packages/Presentation" */,
+				6FF2911F2E14523E0044B060 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6F8F7E472DE851FF0054CD0B /* Products */;
@@ -254,7 +215,6 @@
 			targets = (
 				6F8F7E452DE851FF0054CD0B /* NewBrastlewark */,
 				6F8F7E542DE852000054CD0B /* NewBrastlewarkTests */,
-				6F8F7E5E2DE852000054CD0B /* NewBrastlewarkUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -268,13 +228,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6F8F7E532DE852000054CD0B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6F8F7E5D2DE852000054CD0B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -298,13 +251,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6F8F7E5B2DE852000054CD0B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -312,11 +258,6 @@
 			isa = PBXTargetDependency;
 			target = 6F8F7E452DE851FF0054CD0B /* NewBrastlewark */;
 			targetProxy = 6F8F7E562DE852000054CD0B /* PBXContainerItemProxy */;
-		};
-		6F8F7E612DE852000054CD0B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6F8F7E452DE851FF0054CD0B /* NewBrastlewark */;
-			targetProxy = 6F8F7E602DE852000054CD0B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -536,38 +477,6 @@
 			};
 			name = Release;
 		};
-		6F8F7E702DE852000054CD0B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewarkUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NewBrastlewark;
-			};
-			name = Debug;
-		};
-		6F8F7E712DE852000054CD0B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewarkUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NewBrastlewark;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -598,15 +507,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F8F7E6F2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6F8F7E702DE852000054CD0B /* Debug */,
-				6F8F7E712DE852000054CD0B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -624,7 +524,33 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		6FF2911F2E14523E0044B060 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		6F312EC62E14586800BEA3B9 /* InlineSnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FF2911F2E14523E0044B060 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = InlineSnapshotTesting;
+		};
+		6F312EC82E14586800BEA3B9 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FF2911F2E14523E0044B060 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		6F312ECA2E14586800BEA3B9 /* SnapshotTestingCustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FF2911F2E14523E0044B060 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTestingCustomDump;
+		};
 		6FD0231D2E0320660088CAB8 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
