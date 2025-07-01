@@ -21,10 +21,10 @@ struct NewBrastlewarkApp: App {
     }()
 
     init() {
-        guard let resolvedRouter = DIContainer.shared.resolve(Router.self) else {
+        guard let resolvedRouter = DIContainer.shared.resolve(RouterProtocol.self) else {
             fatalError("Could not resolve Router from DIContainer")
         }
-        _router = StateObject(wrappedValue: resolvedRouter)
+        _router = StateObject(wrappedValue: resolvedRouter as! Router)
     }
 
     var body: some Scene {

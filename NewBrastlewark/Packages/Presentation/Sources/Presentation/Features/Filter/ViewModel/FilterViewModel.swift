@@ -10,7 +10,6 @@ public enum FilterState: Sendable {
 public protocol FilterViewModelProtocol: ObservableObject {
     // Outputs
     var state: FilterState { get }
-    var dismiss: (() -> Void)? { get set } 
 
     // Inputs
     func didViewLoad()
@@ -28,8 +27,8 @@ public protocol FilterViewModelProtocol: ObservableObject {
 @MainActor
 public final class FilterViewModel: FilterViewModelProtocol {
     @Published public var state: FilterState = .loading
-    public var dismiss: (() -> Void)?
 
+    private let router: RouterProtocol
     private let getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol
@@ -37,9 +36,11 @@ public final class FilterViewModel: FilterViewModelProtocol {
     // MARK: - Public methods
 
     public init(
+        router: RouterProtocol,
         getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol) {
+            self.router = router
             self.getAvailableFilterUseCase = getAvailableFilterUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
             self.saveActiveFilterUseCase = saveActiveFilterUseCase
@@ -128,7 +129,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
             switch result {
             case .success:
-                dismiss?()
+                router.navigateBack()
             case .failure:
                 break
                 // TODO: implement error handling

@@ -8,6 +8,7 @@ struct FilterViewModelTests {
     @Test
     func givenNoActiveFilter_whenFilterIsLoaded_ThenUsesDefaultFilter() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -24,6 +25,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -62,6 +64,7 @@ struct FilterViewModelTests {
     @Test
     func givenActiveFilter_whenFilterIsLoaded_ThenUsesActiveFilterValues() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -87,6 +90,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(activeFilter)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -94,7 +98,7 @@ struct FilterViewModelTests {
 
         // when
         await sut.didViewLoad()
-        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -132,6 +136,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenTapsOnApply_thenFilterIsSavedAndDismiss() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -139,20 +144,14 @@ struct FilterViewModelTests {
         let availableFilter = Filter.mock(age: 0...100)
         getAvailableFilterUseCase.executeResult = .success(availableFilter)
         getActiveFilterUseCase.executeResult = .success(nil)
-
-        var dismissCalled = false
+        saveActiveFilterUseCase.executeResult = .success(())
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
-
-        await MainActor.run {
-            sut.dismiss = {
-                dismissCalled = true
-            }
-        }
 
         await sut.didViewLoad()
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -165,7 +164,7 @@ struct FilterViewModelTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
-        #expect(dismissCalled, "Dismiss should be called after applying filter")
+        #expect(router.didNavigateBack, "Router should navigate back after applying filter")
         let capturedParams = saveActiveFilterUseCase.capturedParams
         #expect(capturedParams != nil, "Filter should have been saved")
         #expect(capturedParams?.filter.age == testRange, "Saved filter should have the modified age range")
@@ -174,6 +173,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenAgeChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -183,6 +183,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -207,6 +208,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenWeightChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -216,6 +218,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -240,6 +243,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenHeightChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -249,6 +253,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -273,6 +278,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenHairColorChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -282,6 +288,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -307,6 +314,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenHairColorIsReset_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -316,6 +324,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -342,6 +351,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenProfessionChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -351,6 +361,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -376,6 +387,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenProfessionIsReset_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -385,6 +397,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -411,6 +424,7 @@ struct FilterViewModelTests {
     @Test
     func givenFilter_whenFriendsChanges_thenFilterIsUpdated() async {
         // given
+        let router = RouterMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -420,6 +434,7 @@ struct FilterViewModelTests {
         getActiveFilterUseCase.executeResult = .success(nil)
 
         let sut = await FilterViewModel(
+            router: router,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase

@@ -6,7 +6,6 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
     @State private var isApplyDisabled = true
     @State private var isHairSheetPresented = false
     @State private var isProfessionSheetPresented = false
-    @Environment(\.dismiss) private var dismiss
     private var localizables = Localizables()
 
     // MARK: - Public methods
@@ -27,7 +26,6 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
             }
         }
         .task {
-            viewModel.dismiss = { dismiss() }
             viewModel.didViewLoad()
         }
     }
