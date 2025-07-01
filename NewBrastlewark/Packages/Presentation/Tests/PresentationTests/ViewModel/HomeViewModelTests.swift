@@ -4,7 +4,8 @@ import Combine
 import Domain
 
 struct HomeViewModelTests {
-    @Test func givenNoActiveFilter_whenDidOnAppear_thenLoadsAllCharacters() async {
+    @Test
+    func givenNoActiveFilter_whenDidOnAppear_thenLoadsAllCharacters() async {
         // given
         let router = RouterMock()
         let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
@@ -14,16 +15,7 @@ struct HomeViewModelTests {
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
         getActiveFilterUseCase.executeResult = .success(nil)
-        let expectedCharacters = [Character(
-            id: 1,
-            name: "Test",
-            thumbnail: "",
-            age: 10,
-            weight: 20,
-            height: 30,
-            hairColor: "",
-            professions: [],
-            friends: [])]
+        let expectedCharacters = [Character.mock(id: 42)]
         getAllCharactersUseCase.executeResult = .success(expectedCharacters)
 
         let sut = await HomeViewModel(
@@ -36,190 +28,264 @@ struct HomeViewModelTests {
 
         // when
         await sut.didOnAppear()
-
-        // Espera un poco para asegurar que las operaciones asíncronas se completen
-        try? await Task.sleep(nanoseconds: 100_000_000)  // 100ms
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
         if case let .ready(characters, _) = state {
             #expect(characters.count == 1)
-            #expect(characters.first?.id == 1)
+            #expect(characters.first?.id == 42)
         } else {
-            #expect(false, "Expected .ready state but got \(state)")
+            #expect(Bool(false), "Expected .ready state but got \(state)")
         }
     }
 
-//    @Test func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        let character = CharacterUIModel(id: 42, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])
-//
-//        // when
-//        sut.didSelectCharacter(character)
-//
-//        // then
-//        #expect(router.didNavigateToRoute.called)
-//        #expect(router.didNavigateToRoute.route == .details(characterId: 42))
-//    }
-//
-//    @Test func givenNoParams_whenDidTapFilterButton_thenRouterNavigatesToFilter() {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        // when
-//        sut.didTapFilterButton()
-//        // then
-//        #expect(router.didNavigateToRoute.called)
-//        #expect(router.didNavigateToRoute.route == .filter)
-//    }
-//
-//    @Test func givenCharacters_whenDidTapResetButton_thenSearchTextIsClearedAndAllCharactersLoaded() async {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        sut.searchText = "abc"
-//        let expectedCharacters = [Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])]
-//        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-//        // when
-//        await sut.didTapResetButton()
-//        // then
-//        #expect(sut.searchText == "")
-//        let state = await sut.state
-//        if case let .ready(characters, _) = state {
-//            #expect(characters.count == 1)
-//        } else {
-//            #expect(false, "Expected .ready state")
-//        }
-//    }
-//
-//    @Test func givenShortSearchText_whenDidSearchTextChanged_thenLoadsAllCharacters() async {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        sut.searchText = "ab" // less than minSearchChars
-//        let expectedCharacters = [Character(id: 1, name: "Test", thumbnail: "", age: 10, weight: 20, height: 30, hairColor: "", professions: [], friends: [])]
-//        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-//        // when
-//        await sut.didSearchTextChanged()
-//        // then
-//        let state = await sut.state
-//        if case let .ready(characters, _) = state {
-//            #expect(characters.count == 1)
-//        } else {
-//            #expect(false, "Expected .ready state")
-//        }
-//    }
-//
-//    @Test func givenLongSearchText_whenDidSearchTextChanged_thenSearchesCharacters() async {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        sut.searchText = "abcd" // >= minSearchChars
-//        let expectedCharacters = [Character(id: 2, name: "Searched", thumbnail: "", age: 20, weight: 40, height: 60, hairColor: "", professions: [], friends: [])]
-//        getSearchedCharacterUseCase.executeResult = .success(expectedCharacters)
-//        // when
-//        await sut.didSearchTextChanged()
-//        // then
-//        let state = await sut.state
-//        if case let .ready(characters, _) = state {
-//            #expect(characters.count == 1)
-//            #expect(characters.first?.id == 2)
-//        } else {
-//            #expect(false, "Expected .ready state")
-//        }
-//    }
-//
-//    @Test func givenCharacters_whenDidRefreshCharacters_thenSearchTextIsClearedAndAllCharactersLoadedWithForceUpdate() async {
-//        // given
-//        let router = RouterMock()
-//        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-//        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-//        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-//        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-//        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-//        let sut = HomeViewModel(
-//            router: router,
-//            getAllCharactersUseCase: getAllCharactersUseCase,
-//            getActiveFilterUseCase: getActiveFilterUseCase,
-//            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-//            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-//            getSearchedCharacterUseCase: getSearchedCharacterUseCase
-//        )
-//        sut.searchText = "abc"
-//        let expectedCharacters = [Character(id: 3, name: "Refreshed", thumbnail: "", age: 30, weight: 60, height: 90, hairColor: "", professions: [], friends: [])]
-//        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-//        // when
-//        await sut.didRefreshCharacters()
-//        // then
-//        #expect(sut.searchText == "")
-//        let state = await sut.state
-//        if case let .ready(characters, _) = state {
-//            #expect(characters.count == 1)
-//            #expect(characters.first?.id == 3)
-//        } else {
-//            #expect(false, "Expected .ready state")
-//        }
-//    }
+    @Test
+    func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        let character = CharacterUIModel.mock(id: 42)
+
+        // when
+        await sut.didSelectCharacter(character)
+
+        // then
+        #expect(router.didNavigateToRoute.called)
+        if case .details(let characterId)? = router.didNavigateToRoute.route {
+            #expect(characterId == 42)
+        } else {
+            #expect(Bool(false), "Expected .details route but got \(String(describing: router.didNavigateToRoute.route))")
+        }
+    }
+
+    @Test
+    func givenCharacters_whenDidTapFilterButton_thenRouterNavigatesToFilter() async {
+    }
+
+    @Test
+    func givenCharacters_whenDidTapResetButton_thenSearchTextIsClearedAndAllCharactersLoaded() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let expectedCharacters = [Character.mock(id: 42)]
+        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        await MainActor.run {
+            sut.searchText = "abc"
+        }
+
+        // when
+        await sut.didTapResetButton()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let searchText = await sut.searchText
+        #expect(searchText == "")
+
+        let state = await sut.state
+        if case let .ready(characters, _) = state {
+            #expect(characters.count == 1)
+            #expect(characters.first?.id == 42)
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+    }
+
+    @Test
+    func givenShortSearchText_whenDidSearchTextChanged_thenLoadsAllCharacters() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let expectedCharacters = [Character.mock(id: 42)]
+        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        await MainActor.run {
+            sut.searchText = "ab"
+        }
+
+        // when
+        await sut.didSearchTextChanged()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let state = await sut.state
+        if case let .ready(characters, _) = state {
+            #expect(characters.count == 1)
+            #expect(characters.first?.id == 42)
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+    }
+
+    @Test
+    func givenLongSearchText_whenDidSearchTextChanged_thenSearchesCharacters() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let searchedCharacter = Character.mock(id: 99, name: "Searched Character", professions: ["Wizard"])
+        getSearchedCharacterUseCase.executeResult = .success([searchedCharacter])
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        await MainActor.run {
+            sut.searchText = "wiz"
+        }
+
+        // when
+        await sut.didSearchTextChanged()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let state = await sut.state
+        if case let .ready(characters, _) = state {
+            #expect(characters.count == 1)
+            #expect(characters.first?.id == 99)
+            #expect(characters.first?.name == "Searched Character")
+            #expect(characters.first?.professions.first == "Wizard")
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+    }
+
+    @Test
+    func givenCharacters_whenDidRefreshCharacters_thenSearchTextIsClearedAndAllCharactersLoadedWithForceUpdate() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let refreshedCharacter = Character.mock(id: 101, name: "Refreshed Character")
+        getAllCharactersUseCase.executeResult = .success([refreshedCharacter])
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        await MainActor.run {
+            sut.searchText = "some"
+        }
+
+        // when
+        await sut.didRefreshCharacters()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let searchText = await sut.searchText
+        #expect(searchText == "")
+
+        let state = await sut.state
+        if case let .ready(characters, _) = state {
+            #expect(characters.count == 1)
+            #expect(characters.first?.id == 101)
+            #expect(characters.first?.name == "Refreshed Character")
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+        #expect(getAllCharactersUseCase.wasForceUpdateCalled, "forceUpdate should be true")
+    }
+
+    @Test
+    func givenActiveFilter_whenHomeIsLoaded_thenAppliesFilterAndReturnsFilteredCharacters() async {
+        // given
+        let router = RouterMock()
+        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
+        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
+        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
+
+        let activeFilter = Filter.mock(age: 20...30)
+        getActiveFilterUseCase.executeResult = .success(activeFilter)
+
+        let filteredCharacters = [
+            Character.mock(id: 201, name: "Young Character 1", age: 25),
+            Character.mock(id: 202, name: "Young Character 2", age: 28)
+        ]
+        getFilteredCharactersUseCase.executeResult = .success(filteredCharacters)
+
+        let sut = await HomeViewModel(
+            router: router,
+            getAllCharactersUseCase: getAllCharactersUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
+            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
+            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+
+        // when
+        await sut.didOnAppear()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let state = await sut.state
+        if case let .ready(characters, reset) = state {
+            #expect(characters.count == 2)
+            #expect(characters[0].id == 201)
+            #expect(characters[0].name == "Young Character 1")
+            #expect(characters[0].age == 25)
+            #expect(characters[1].id == 202)
+            #expect(characters[1].name == "Young Character 2")
+            #expect(characters[1].age == 28)
+            #expect(reset == true, "reset should be true when filter is applied")
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+    }
 }

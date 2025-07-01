@@ -1,5 +1,5 @@
 public struct GetAllCharactersUseCaseParams {
-    let forceUpdate: Bool
+    public let forceUpdate: Bool
 
     public init(forceUpdate: Bool) {
         self.forceUpdate = forceUpdate

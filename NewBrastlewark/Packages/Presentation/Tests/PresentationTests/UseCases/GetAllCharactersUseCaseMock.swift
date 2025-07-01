@@ -2,20 +2,25 @@ import Foundation
 import Domain
 
 public final class GetAllCharactersUseCaseMock: GetAllCharactersUseCaseProtocol, @unchecked Sendable {
-    private let lock = NSLock()
+    private let queue = DispatchQueue(label: "GetAllCharactersUseCaseMock.queue")
     private var _executeResult: Result<[Character], CharactersRepositoryError> = .success([])
-    
+    private var _capturedParams: GetAllCharactersUseCaseParams?
+
     public var executeResult: Result<[Character], CharactersRepositoryError> {
         get {
-            lock.lock()
-            defer { lock.unlock() }
-            return _executeResult
+            queue.sync { _executeResult }
         }
         set {
-            lock.lock()
-            _executeResult = newValue
-            lock.unlock()
+            queue.sync { _executeResult = newValue }
         }
+    }
+
+    public var capturedParams: GetAllCharactersUseCaseParams? {
+        queue.sync { _capturedParams }
+    }
+
+    public var wasForceUpdateCalled: Bool {
+        capturedParams?.forceUpdate == true
     }
 
     public init(executeResult: Result<[Character], CharactersRepositoryError> = .success([])) {
@@ -23,6 +28,9 @@ public final class GetAllCharactersUseCaseMock: GetAllCharactersUseCaseProtocol,
     }
 
     public func execute(params: GetAllCharactersUseCaseParams) async -> Result<[Character], CharactersRepositoryError> {
+        queue.sync {
+            _capturedParams = params
+        }
         return executeResult
     }
 }

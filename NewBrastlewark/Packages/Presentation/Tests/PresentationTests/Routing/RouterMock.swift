@@ -2,7 +2,7 @@ import SwiftUI
 
 @testable import Presentation
 
-public final class RouterMock: RouterProtocol {
+public final class RouterMock: RouterProtocol, @unchecked Sendable {
     @Published public var path = NavigationPath()
 
     public private(set) var didNavigateToRoute: (called: Bool, route: Route?) = (false, nil)
@@ -12,9 +12,13 @@ public final class RouterMock: RouterProtocol {
     public private(set) var didCheckCanNavigateBack: Bool = false
     public var canNavigateBackResult: Bool = false
 
+    private let lock = NSLock()
+
     public init() {}
 
     public func navigate(to route: Route) {
+        lock.lock()
+        defer { lock.unlock() }
         didNavigateToRoute = (true, route)
     }
 
