@@ -1,8 +1,9 @@
 import Foundation
 import Domain
 
-extension DetailsViewModelProtocol {
-    static var ready: DetailsViewModelMock {
+@MainActor
+enum DetailsViewModelPreview {
+    static var ready: some DetailsViewModelProtocol & ObservableObject {
         DetailsViewModelMock(state: .ready(details:
                 .init(
                     name: "Gandalf the Grey",
@@ -24,7 +25,7 @@ extension DetailsViewModelProtocol {
                     ])))
     }
 
-    static var noFriends: DetailsViewModelMock {
+    static var noFriends: some DetailsViewModelProtocol & ObservableObject {
         DetailsViewModelMock(state: .ready(details:
                 .init(
                     name: "Gandalf the Grey",
@@ -37,4 +38,3 @@ extension DetailsViewModelProtocol {
                     friends: [])))
     }
 }
-

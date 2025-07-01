@@ -24,14 +24,14 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
     @Published public var state: DetailsState = .loading
     public var characterId: Int
 
-    private let router: RouterProtocol
+    private let router: any RouterProtocol
     private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
 
 
     public init(
         characterId: Int = 0,
-        router: RouterProtocol,
+        router: any RouterProtocol,
         getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
             self.characterId = characterId
@@ -66,7 +66,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                     }
                 }
 
-                self.state = .ready(details: mapToUIModel(character: character, friends: friends))
+                self.state = .ready(details: mapToDetailsUIModel(character: character, friends: friends))
             case .failure(_):
                 self.state = .error
             }
@@ -83,8 +83,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
 }
 
 private extension DetailsViewModel {
-    // TODO: move to a mapper
-    func mapToUIModel(character: Character, friends: [DetailsFriendUIModel]) -> DetailsUIModel {
+    func mapToDetailsUIModel(character: Character, friends: [DetailsFriendUIModel]) -> DetailsUIModel {
         DetailsUIModel(
             name: character.name,
             thumbnail: character.thumbnail,

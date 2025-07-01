@@ -11,7 +11,7 @@ public struct PresentationModule {
     }
 
     private static func registerRouter(inContainer container: Container) {
-        container.register(RouterProtocol.self) { r in
+        container.register((any RouterProtocol).self) { r in
             Router()
         }
         .inObjectScope(.container)
@@ -35,7 +35,7 @@ public struct PresentationModule {
     private static func registerViewModels(inContainer container: Container) {
         container.register(HomeViewModel.self) { r in
             HomeViewModel(
-                router: resolveOrFail(r, RouterProtocol.self),
+                router: resolveOrFail(r, (any RouterProtocol).self),
                 getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
@@ -44,14 +44,14 @@ public struct PresentationModule {
         }
         container.register(FilterViewModel.self) { r in
             FilterViewModel(
-                router: resolveOrFail(r, RouterProtocol.self),
+                router: resolveOrFail(r, (any RouterProtocol).self),
                 getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
         }
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
-                router: resolveOrFail(r, RouterProtocol.self),
+                router: resolveOrFail(r, (any RouterProtocol).self),
                 getCharacterByIdUseCase: resolveOrFail(r, GetCharacterByIdUseCaseProtocol.self),
                 getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
         }

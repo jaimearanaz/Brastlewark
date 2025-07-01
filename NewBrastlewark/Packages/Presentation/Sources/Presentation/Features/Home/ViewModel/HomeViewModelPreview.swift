@@ -1,35 +1,36 @@
 import Foundation
 import Domain
 
-extension HomeViewModelProtocol {
-    static var full: HomeViewModelMock {
+@MainActor
+enum HomeViewModelPreview {
+    static var full: some HomeViewModelProtocol & ObservableObject {
         HomeViewModelMock(state: .ready(characters: getCharacters()))
     }
 
-    static var notFull: HomeViewModelMock {
+    static var notFull: some HomeViewModelProtocol & ObservableObject {
         let characters = getCharacters()
         let halfCharacters = Array(characters.prefix(characters.count / 2))
         return HomeViewModelMock(state: .ready(characters: halfCharacters))
     }
 
-    static var filtered: HomeViewModelMock {
+    static var filtered: some HomeViewModelProtocol & ObservableObject {
         HomeViewModelMock(state: .ready(characters: getCharacters(), reset: true))
     }
 
-    static var loading: HomeViewModelMock {
-        return HomeViewModelMock(didOnAppearCallback: { })
+    static var loading: some HomeViewModelProtocol & ObservableObject {
+        return HomeViewModelMock()
     }
 
-    static var empty: HomeViewModelMock {
-        return HomeViewModelMock(state: .empty, didOnAppearCallback: { })
+    static var empty: some HomeViewModelProtocol & ObservableObject {
+        return HomeViewModelMock(state: .empty)
     }
 
-    static var noInternet: HomeViewModelMock {
-        return HomeViewModelMock(state: .error(.noInternetConnection), didOnAppearCallback: { })
+    static var noInternet: some HomeViewModelProtocol & ObservableObject {
+        return HomeViewModelMock(state: .error(.noInternetConnection))
     }
 
-    static var generalError: HomeViewModelMock {
-        return HomeViewModelMock(state: .error(.generalError), didOnAppearCallback: { })
+    static var generalError: some HomeViewModelProtocol & ObservableObject {
+        return HomeViewModelMock(state: .error(.generalError))
     }
 
     private static func getCharacters() -> [CharacterUIModel] {

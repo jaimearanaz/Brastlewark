@@ -28,7 +28,7 @@ public protocol FilterViewModelProtocol: ObservableObject {
 public final class FilterViewModel: FilterViewModelProtocol {
     @Published public var state: FilterState = .loading
 
-    private let router: RouterProtocol
+    private let router: any RouterProtocol
     private let getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol
@@ -36,7 +36,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     // MARK: - Public methods
 
     public init(
-        router: RouterProtocol,
+        router: any RouterProtocol,
         getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol) {
@@ -126,14 +126,8 @@ public final class FilterViewModel: FilterViewModelProtocol {
         let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
         Task {
-            let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
-            switch result {
-            case .success:
-                router.navigateBack()
-            case .failure:
-                break
-                // TODO: implement error handling
-            }
+            _ = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
+            router.navigateBack()
         }
     }
 }

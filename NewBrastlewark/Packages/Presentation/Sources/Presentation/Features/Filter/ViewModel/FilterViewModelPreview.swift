@@ -1,8 +1,9 @@
 import Foundation
 import Domain
 
-extension FilterViewModelProtocol {
-    static var noFilterActive: FilterViewModelMock {
+@MainActor
+enum FilterViewModelPreview {
+    static var noFilterActive: some FilterViewModelProtocol & ObservableObject {
         FilterViewModelMock(state: .ready(
             .init(
                 age: .init(
@@ -23,7 +24,7 @@ extension FilterViewModelProtocol {
         ))
     }
 
-    static var filterActive: FilterViewModelMock {
+    static var filterActive: some FilterViewModelProtocol & ObservableObject {
         FilterViewModelMock(state: .ready(
             .init(
                 age: .init(

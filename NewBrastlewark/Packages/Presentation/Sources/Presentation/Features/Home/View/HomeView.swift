@@ -168,25 +168,25 @@ private extension HomeView {
 // MARK: - Previews
 
 #Preview("Ready full") {
-    HomeView(viewModel: HomeViewModel.full)
+    HomeView(viewModel: HomeViewModelPreview.full)
 }
 
 #Preview("Ready partial") {
-    HomeView(viewModel: HomeViewModel.notFull)
+    HomeView(viewModel: HomeViewModelPreview.notFull)
 }
 
 #Preview("Loading") {
-    HomeView(viewModel: HomeViewModel.loading)
+    HomeView(viewModel: HomeViewModelPreview.loading)
 }
 
 #Preview("Empty") {
-    HomeView(viewModel: HomeViewModel.empty)
+    HomeView(viewModel: HomeViewModelPreview.empty)
 }
 
 #Preview("No Internet") {
-    HomeView(viewModel: HomeViewModel.noInternet)
+    HomeView(viewModel: HomeViewModelPreview.noInternet)
 }
 
 #Preview("General error") {
-    HomeView(viewModel: HomeViewModel.generalError)
+    HomeView(viewModel: HomeViewModelPreview.generalError)
 }

@@ -198,13 +198,13 @@ private extension DetailsView {
 }
 
 #Preview("Ready") {
-    DetailsView(viewModel: DetailsViewModel.ready)
+    DetailsView(viewModel: DetailsViewModelPreview.ready)
 }
 
 #Preview("No friends") {
-    DetailsView(viewModel: DetailsViewModel.noFriends)
+    DetailsView(viewModel: DetailsViewModelPreview.noFriends)
 }
 
 #Preview("Back Home") {
-    DetailsView(showHome: true, viewModel: DetailsViewModel.ready)
+    DetailsView(showHome: true, viewModel: DetailsViewModelPreview.ready)
 }

@@ -274,9 +274,9 @@ private extension FilterView {
 // MARK: - Previews
 
 #Preview("No filter active") {
-    FilterView(viewModel: FilterViewModel.noFilterActive)
+    FilterView(viewModel: FilterViewModelPreview.noFilterActive)
 }
 
 #Preview("Filter active") {
-    FilterView(viewModel: FilterViewModel.filterActive)
+    FilterView(viewModel: FilterViewModelPreview.filterActive)
 }

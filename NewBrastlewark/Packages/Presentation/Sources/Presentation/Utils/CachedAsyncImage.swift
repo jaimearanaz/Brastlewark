@@ -34,7 +34,6 @@ struct CachedAsyncImage<Content: View>: View {
         }
     }
     
-    @MainActor
     private func handlePhase(_ phase: AsyncImagePhase) -> some View {
         if case .success(let image) = phase {
             saveToCache(image)

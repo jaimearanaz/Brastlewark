@@ -42,7 +42,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
 
-    private let router: RouterProtocol
+    private let router: any RouterProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol
@@ -52,7 +52,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     // MARK: - Public methods
 
     public init(
-        router: RouterProtocol,
+        router: any RouterProtocol,
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
