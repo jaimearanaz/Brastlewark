@@ -41,11 +41,18 @@ struct CharacterCell: View {
                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
             )
 
-            Text(character.name)
-                .font(.caption)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: imageSize)
+            VStack(spacing: 0) {
+                Text(character.firstname)
+                    .font(.system(size: 16))
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+
+                Text(character.surname)
+                    .font(.system(size: 13))
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: imageSize)
         }
     }
 }

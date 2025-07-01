@@ -1,5 +1,5 @@
-public struct DetailsUIModel: Sendable {
-    let name: String
+public struct DetailsUIModel: Sendable, NameSplitting {
+    public let name: String
     let thumbnail: String
     let age: Int
     let weight: Double
@@ -28,9 +28,9 @@ public struct DetailsUIModel: Sendable {
     }
 }
 
-public struct DetailsFriendUIModel: Sendable {
+public struct DetailsFriendUIModel: Sendable, NameSplitting {
     let id: Int
-    let name: String
+    public let name: String
     let thumbnail: String
 
     public init(

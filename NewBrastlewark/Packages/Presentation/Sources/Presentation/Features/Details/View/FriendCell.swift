@@ -38,10 +38,19 @@ struct FriendCell: View {
                     .stroke(Color.gray.opacity(0.3), lineWidth: 2)
             }
             .frame(width: 60, height: 60)
-            Text(friend.name)
-                .font(.caption)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
+
+            VStack(spacing: 0) {
+                Text(friend.firstname)
+                    .font(.system(size: 16))
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+
+                Text(friend.surname)
+                    .font(.system(size: 13))
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
         }
         .frame(width: 80, height: 100)
     }

@@ -1,8 +1,8 @@
 import Foundation
 
-public struct CharacterUIModel: Identifiable, Sendable {
+public struct CharacterUIModel: Identifiable, Sendable, NameSplitting {
     public let id: Int
-    let name: String
+    public let name: String
     let thumbnail: String
     let age: Int
     let weight: Double

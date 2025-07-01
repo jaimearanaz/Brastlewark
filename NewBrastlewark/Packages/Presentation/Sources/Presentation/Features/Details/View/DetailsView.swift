@@ -41,7 +41,9 @@ private extension DetailsView {
                         detailsImage(details: details, geometry: geometry)
                         detailsName(details: details)
                         detailsInfo(details: details)
-                        detailsFriends(details: details)
+                        if !details.friends.isEmpty {
+                            detailsFriends(details: details)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -93,7 +95,7 @@ private extension DetailsView {
             (localizables.height, String(format: "%.1f", details.height)),
             (localizables.hairColor, details.hairColor),
             (localizables.professions, details.professions.joined(separator: ", ")),
-            (localizables.friends, "")
+            (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "")
         ]
 
         return ZStack {
@@ -129,30 +131,36 @@ private extension DetailsView {
             Text(title)
                 .fontWeight(.bold)
                 .frame(width: titleWidth, alignment: .leading)
-            Text(value)
-                .multilineTextAlignment(.leading)
-                .fixedSize(horizontal: false, vertical: true)
+            if title == localizables.friends && value == localizables.noFriends {
+                Text(value)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .foregroundColor(.gray)
+            } else {
+                Text(value)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder
     func detailsFriends(details: DetailsUIModel) -> some View {
-        if !details.friends.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 16) {
-                    ForEach(details.friends, id: \.id) { friend in
-                        FriendCell(friend: friend)
-                            .onTapGesture {
-                                viewModel.didSelectCharacter(friend.id)
-                            }
-                    }
+        VStack(alignment: .leading, spacing: 8) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 16) {
+                ForEach(details.friends, id: \.id) { friend in
+                    FriendCell(friend: friend)
+                        .onTapGesture {
+                            viewModel.didSelectCharacter(friend.id)
+                        }
                 }
-                .padding(.horizontal)
             }
-            .padding(.top)
+            .padding(.horizontal)
         }
-    }}
+        .padding(.top)
+    }
+}
 
 private extension DetailsView {
     struct Localizables {
@@ -164,9 +172,14 @@ private extension DetailsView {
         let hairColor = "DETAILS_HAIR_COLOR".localized
         let professions = "DETAILS_PROFESSIONS".localized
         let friends = "DETAILS_FRIENDS".localized
+        let noFriends = "DETAILS_NO_FRIENDS".localized
     }
 }
 
 #Preview("Ready") {
     DetailsView(viewModel: DetailsViewModel.ready)
+}
+
+#Preview("No friends") {
+    DetailsView(viewModel: DetailsViewModel.noFriends)
 }
