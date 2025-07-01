@@ -22,9 +22,6 @@ extension Filter {
 }
 
 private extension Filter {
-    
-    // TODO: refactor these two function to use one
-
     static func mapHairColor(available: Filter, active: Filter) -> [FilterItemListUIModel] {
         let availableHairColors = Set(available.hairColor)
         let activeHairColors = Set(active.hairColor)
