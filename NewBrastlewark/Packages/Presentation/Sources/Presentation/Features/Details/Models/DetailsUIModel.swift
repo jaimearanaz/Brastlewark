@@ -1,4 +1,4 @@
-public struct DetailsUIModel {
+public struct DetailsUIModel: Sendable {
     let name: String
     let thumbnail: String
     let age: Int
@@ -28,7 +28,7 @@ public struct DetailsUIModel {
     }
 }
 
-public struct DetailsFriendUIModel {
+public struct DetailsFriendUIModel: Sendable {
     let id: Int
     let name: String
     let thumbnail: String

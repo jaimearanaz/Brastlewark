@@ -1,7 +1,7 @@
 import Domain
 import SwiftUI
 
-public enum DetailsState {
+public enum DetailsState: Sendable {
     case loading
     case ready(details: DetailsUIModel)
     case error
