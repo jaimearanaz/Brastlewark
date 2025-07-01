@@ -72,7 +72,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
-        router.navigate(to: .details(characterId: character.id))
+        router.navigate(to: .details(characterId: character.id, showHome: false))
     }
 
     public func didTapFilterButton() {

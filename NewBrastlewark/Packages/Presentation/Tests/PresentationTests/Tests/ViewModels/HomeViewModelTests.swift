@@ -66,8 +66,9 @@ struct HomeViewModelTests {
 
         // then
         #expect(router.didNavigateToRoute.called)
-        if case .details(let characterId)? = router.didNavigateToRoute.route {
+        if case .details(let characterId, let showHome)? = router.didNavigateToRoute.route {
             #expect(characterId == 42)
+            #expect(showHome == false)
         } else {
             #expect(Bool(false), "Expected .details route but got \(String(describing: router.didNavigateToRoute.route))")
         }

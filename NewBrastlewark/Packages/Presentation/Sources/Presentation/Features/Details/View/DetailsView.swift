@@ -5,10 +5,12 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
     @StateObject private var viewModel: ViewModel
     @State private var maxTitleWidth: CGFloat = 0
     @State private var characterId: Int = 0
+    @State private var showHome: Bool = false
     private var localizables = Localizables()
 
-    public init(characterId: Int = 0, viewModel: ViewModel) {
+    public init(characterId: Int = 0, showHome: Bool = false, viewModel: ViewModel) {
         self.characterId = characterId
+        self.showHome = showHome
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -44,10 +46,28 @@ private extension DetailsView {
                         if !details.friends.isEmpty {
                             detailsFriends(details: details)
                         }
+                        homeButton
+                            .padding(.top, 24)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    var homeButton: some View {
+        if showHome {
+            Button(action: {
+                viewModel.didTapHomeButton()
+            }) {
+                Text(localizables.backHome)
+                    .font(.system(size: 16, weight: .medium))
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 24)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.horizontal)
         }
     }
 
@@ -173,6 +193,7 @@ private extension DetailsView {
         let professions = "DETAILS_PROFESSIONS".localized
         let friends = "DETAILS_FRIENDS".localized
         let noFriends = "DETAILS_NO_FRIENDS".localized
+        let backHome = "DETAILS_BACK_HOME".localized
     }
 }
 
@@ -182,4 +203,8 @@ private extension DetailsView {
 
 #Preview("No friends") {
     DetailsView(viewModel: DetailsViewModel.noFriends)
+}
+
+#Preview("Back Home") {
+    DetailsView(showHome: true, viewModel: DetailsViewModel.ready)
 }

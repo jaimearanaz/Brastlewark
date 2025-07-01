@@ -16,6 +16,7 @@ public protocol DetailsViewModelProtocol: ObservableObject {
     // Inputs
     func didViewLoad()
     func didSelectCharacter(_ id: Int)
+    func didTapHomeButton()
 }
 
 @MainActor
@@ -73,7 +74,11 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
     }
     
     public func didSelectCharacter(_ id: Int) {
-        router.navigate(to: .details(characterId: id))
+        router.navigate(to: .details(characterId: id, showHome: true))
+    }
+
+    public func didTapHomeButton() {
+        router.navigateToRoot()
     }
 }
 
