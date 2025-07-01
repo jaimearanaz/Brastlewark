@@ -11,8 +11,9 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
     }
 
     public var body: some View {
-        ZStack {
-            content
+        VStack(spacing: 0) {
+            searchBar
+            contentView
         }
         .navigationTitle(localizables.title)
         .toolbar {
@@ -30,33 +31,30 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
 
 private extension HomeView {
     @ViewBuilder
-    var content: some View {
+    var contentView: some View {
         switch viewModel.state {
         case .loading:
-            ProgressView()
-        case .ready(let characters, let reset):
-            VStack(spacing: 0) {
-                searchBar
-                characterList(characters: characters)
-            }
-            .refreshable {
-                viewModel.didRefreshCharacters()
-            }
+            loadingView
+        case .ready(let characters, _):
+            readyView(characters: characters)
         case .empty:
-            VStack {
-                Text(localizables.empty)
-                    .foregroundColor(.secondary)
-            }
+            emptyView
         case .error(let error):
-            VStack {
-                Text(errorMessage(for: error))
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
-            }
+            errorView(error: error)
         }
     }
 
-    func characterList(characters: [CharacterUIModel]) -> some View {
+    var loadingView: some View {
+        VStack(alignment: .center) {
+            ProgressView()
+                .scaleEffect(1.5)
+                .padding(.top, 20)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    func readyView(characters: [CharacterUIModel]) -> some View {
         ScrollView {
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -71,6 +69,46 @@ private extension HomeView {
                 }
             }
             .padding()
+        }
+        .refreshable {
+            viewModel.didRefreshCharacters()
+        }
+    }
+
+    var emptyView: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                Spacer()
+                    .frame(height: geometry.size.height / 3)
+                Text(localizables.empty)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                Spacer()
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .refreshable {
+                viewModel.didRefreshCharacters()
+            }
+        }
+    }
+
+    func errorView(error: HomeError) -> some View {
+        GeometryReader { geometry in
+            ScrollView {
+                Spacer()
+                    .frame(height: geometry.size.height / 3)
+                Text(errorMessage(for: error))
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                Spacer()
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .refreshable {
+                viewModel.didRefreshCharacters()
+            }
         }
     }
 
