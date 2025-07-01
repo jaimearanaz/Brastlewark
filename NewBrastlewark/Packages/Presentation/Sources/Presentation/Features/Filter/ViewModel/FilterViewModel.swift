@@ -1,7 +1,7 @@
 import Domain
 import SwiftUI
 
-public enum FilterState {
+public enum FilterState: Sendable {
     case loading
     case ready(FilterUIModel)
 }

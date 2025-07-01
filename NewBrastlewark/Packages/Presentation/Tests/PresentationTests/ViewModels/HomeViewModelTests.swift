@@ -1,7 +1,8 @@
 import Testing
 import Combine
-@testable import Presentation
 import Domain
+
+@testable import Presentation
 
 struct HomeViewModelTests {
     @Test

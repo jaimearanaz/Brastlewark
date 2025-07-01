@@ -1,4 +1,4 @@
-public struct FilterUIModel {
+public struct FilterUIModel: Sendable {
     var age: FilterSliderUIModel
     var weight: FilterSliderUIModel
     var height: FilterSliderUIModel
@@ -22,7 +22,7 @@ public struct FilterUIModel {
     }
 }
 
-public struct FilterSliderUIModel {
+public struct FilterSliderUIModel: Sendable {
     var available: ClosedRange<Int>
     var active: ClosedRange<Int>
 
@@ -32,7 +32,7 @@ public struct FilterSliderUIModel {
     }
 }
 
-public struct FilterItemListUIModel {
+public struct FilterItemListUIModel: Sendable {
     var title: String
     var checked: Bool
 
