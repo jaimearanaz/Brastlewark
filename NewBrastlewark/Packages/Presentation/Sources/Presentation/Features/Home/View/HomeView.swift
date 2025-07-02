@@ -144,10 +144,12 @@ private extension HomeView {
     }
 
     var isResetDisabled: Bool {
-        if case .ready(_, let reset) = viewModel.state {
+        switch viewModel.state {
+        case .loading, .empty, .error:
+            return true
+        case .ready(_, let reset):
             return !reset
         }
-        return false
     }
 }
 

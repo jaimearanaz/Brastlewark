@@ -6,87 +6,67 @@ import SnapshotTesting
 
 @MainActor
 final class HomeViewSnapshotTests: XCTestCase {
+    private let isRecording = false
+
     func testHomeViewFullSnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.full)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "full")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewNotFullSnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.notFull)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "notFull")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewFilteredSnapshot() {
         // Given
-        let view = HomeView(viewModel: HomeViewModelPreview.notFull)
-        let navigationView = NavigationStack {
-            view
-        }
+        let view = HomeView(viewModel: HomeViewModelPreview.filtered)
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "filtered")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewEmptySnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.empty)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "empty")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewLoadingSnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.loading)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "loading")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewGeneralErrorSnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.generalError)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "generalError")
+        assertSnapshot(view: view, test: #function)
     }
 
     func testHomeViewNoInternetErrorSnapshot() {
         // Given
         let view = HomeView(viewModel: HomeViewModelPreview.noInternet)
-        let navigationView = NavigationStack {
-            view
-        }
 
         // When & Then
-        let hostingController = UIHostingController(rootView: navigationView)
-        assertSnapshot(of: hostingController, as: .image(on: .iPhone13Pro), named: "generalError")
+        assertSnapshot(view: view, test: #function)
+    }
+}
+
+private extension HomeViewSnapshotTests {
+    func assertSnapshot<V: View>(view: V, test: String) {
+        assertSnapshot(view: view, folder: #filePath, test: test, isRecording: isRecording)
     }
 }
