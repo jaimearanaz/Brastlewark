@@ -36,8 +36,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6F8F7E542DE852000054CD0B"
-               BuildableName = "NewBrastlewarkTests.xctest"
-               BlueprintName = "NewBrastlewarkTests"
+               BuildableName = "NewBrastlewarkSnapshotTests.xctest"
+               BlueprintName = "NewBrastlewarkSnapshotTests"
                ReferencedContainer = "container:NewBrastlewark.xcodeproj">
             </BuildableReference>
          </TestableReference>

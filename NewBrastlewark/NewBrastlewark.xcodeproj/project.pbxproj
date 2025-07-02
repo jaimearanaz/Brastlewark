@@ -40,7 +40,7 @@
 
 /* Begin PBXFileReference section */
 		6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewBrastlewark.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -62,9 +62,9 @@
 			path = NewBrastlewark;
 			sourceTree = "<group>";
 		};
-		6F8F7E582DE852000054CD0B /* NewBrastlewarkTests */ = {
+		6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NewBrastlewarkTests;
+			path = NewBrastlewarkSnapshotTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -97,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
-				6F8F7E582DE852000054CD0B /* NewBrastlewarkTests */,
+				6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
 				6FFF0F842DEA006A00621BE5 /* Frameworks */,
 				6F8F7E472DE851FF0054CD0B /* Products */,
 			);
@@ -107,7 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */,
-				6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */,
+				6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -148,9 +148,9 @@
 			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6F8F7E542DE852000054CD0B /* NewBrastlewarkTests */ = {
+		6F8F7E542DE852000054CD0B /* NewBrastlewarkSnapshotTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkTests" */;
+			buildConfigurationList = 6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkSnapshotTests" */;
 			buildPhases = (
 				6F8F7E512DE852000054CD0B /* Sources */,
 				6F8F7E522DE852000054CD0B /* Frameworks */,
@@ -162,16 +162,16 @@
 				6F8F7E572DE852000054CD0B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				6F8F7E582DE852000054CD0B /* NewBrastlewarkTests */,
+				6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
 			);
-			name = NewBrastlewarkTests;
+			name = NewBrastlewarkSnapshotTests;
 			packageProductDependencies = (
 				6F312EC62E14586800BEA3B9 /* InlineSnapshotTesting */,
 				6F312EC82E14586800BEA3B9 /* SnapshotTesting */,
 				6F312ECA2E14586800BEA3B9 /* SnapshotTestingCustomDump */,
 			);
 			productName = NewBrastlewarkTests;
-			productReference = 6F8F7E552DE852000054CD0B /* NewBrastlewarkTests.xctest */;
+			productReference = 6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -214,7 +214,7 @@
 			projectRoot = "";
 			targets = (
 				6F8F7E452DE851FF0054CD0B /* NewBrastlewark */,
-				6F8F7E542DE852000054CD0B /* NewBrastlewarkTests */,
+				6F8F7E542DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
 			);
 		};
 /* End PBXProject section */
@@ -498,7 +498,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkTests" */ = {
+		6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkSnapshotTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F8F7E6D2DE852000054CD0B /* Debug */,
