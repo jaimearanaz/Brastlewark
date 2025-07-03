@@ -8,6 +8,20 @@ This project is a technical test developed for an iOS developer position. The de
 
 (animated GIF with app)
 
+## Table of Contents
+
+- [Basic Architecture](#basic-architecture)
+- [Layer Separation](#layer-separation)
+  - [Domain](#domain)
+  - [Data](#data)
+  - [Presentation](#presentation)
+  - [App target](#app-target)
+- [Navigation](#navigation)
+- [Dependency Injection](#dependency-injection)
+- [Testing](#testing)
+- [Third Party Libraries](#third-party-libraries)
+- [About Me](#about-me)
+
 ## Basic architecture
 
 This project is based on a few fundamental technical decisions that guide the development, structure, and behavior of the app:
@@ -246,10 +260,7 @@ Brastlewark app uses the following third party libraries through Swift Package M
 - [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing): for snapshot testing
 
 ## About me
-Jaime Aranaz
-*Freelance iOS developer*
-jaime.aranaz@gmail.com
-Madrid, Spain
+Jaime Aranaz | *Freelance iOS developer* | jaime.aranaz@gmail.com | Madrid, Spain
 
  - [LinkedIn](https://www.linkedin.com/in/jaimearanaztudela/)
  - [X](https://x.com/JaimeAranaz)
