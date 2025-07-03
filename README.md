@@ -1,8 +1,6 @@
-## What's this?
+## Welcome to Brastlewark!
 
 This project is a technical test developed for an iOS developer position. The description and requirements for the test are included in this repository as a PDF file named _“Brastlewark_mobile_test”_.
-
-### Welcome to Brastlewark!
 
 **Brastlewark** is an iOS application that displays all the inhabitants of the Gnome city called Brastlewark. Through the app, you can browse the complete city directory, search for people by name, characteristics or professions, and view detailed information and friends of each resident.
 
