@@ -7,7 +7,7 @@ This project is a technical test developed for an iOS developer position. The de
 **Brastlewark** is an iOS application that displays all the inhabitants of the Gnome city called Brastlewark. Through the app, you can browse the complete city directory, search for people by name, characteristics or professions, and view detailed information and friends of each resident.
 
 <p align="center">
-  <img src="Brastlewark.gif" alt="animated" />
+  <img src="Brastlewark.gif" alt="Animated gif" width="300" />
 </p>
 
 ## Table of Contents
