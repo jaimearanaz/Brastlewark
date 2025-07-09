@@ -30,7 +30,7 @@ struct DetailsViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -63,7 +63,7 @@ struct DetailsViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -92,7 +92,7 @@ struct DetailsViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -122,7 +122,7 @@ struct DetailsViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then

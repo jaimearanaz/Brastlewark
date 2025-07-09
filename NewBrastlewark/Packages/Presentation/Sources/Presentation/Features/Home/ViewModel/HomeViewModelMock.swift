@@ -34,7 +34,7 @@ final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
     }
 
     // Inputs
-    func didOnAppear() {
+    func viewIsReady() {
         didOnAppearCallback?()
     }
     func didSelectCharacter(_ character: CharacterUIModel) {

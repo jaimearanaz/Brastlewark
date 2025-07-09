@@ -28,7 +28,7 @@ struct HomeViewModelTests {
             getSearchedCharacterUseCase: getSearchedCharacterUseCase)
 
         // when
-        await sut.didOnAppear()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -272,7 +272,7 @@ struct HomeViewModelTests {
             getSearchedCharacterUseCase: getSearchedCharacterUseCase)
 
         // when
-        await sut.didOnAppear()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then

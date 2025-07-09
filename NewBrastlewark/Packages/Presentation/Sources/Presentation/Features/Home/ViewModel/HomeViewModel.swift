@@ -22,7 +22,7 @@ public protocol HomeViewModelProtocol: ObservableObject {
     var searchText: String { get set }
 
     // Inputs
-    func didOnAppear()
+    func viewIsReady()
     func didSelectCharacter(_ character: CharacterUIModel)
     func didTapFilterButton()
     func didTapResetButton()
@@ -72,7 +72,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
         tasks.removeAll()
     }
 
-    public func didOnAppear() {
+    public func viewIsReady() {
         loadCharacters()
     }
 

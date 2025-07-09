@@ -26,7 +26,7 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
             }
         }
         .task {
-            viewModel.didViewLoad()
+            viewModel.viewIsReady()
         }
     }
 }

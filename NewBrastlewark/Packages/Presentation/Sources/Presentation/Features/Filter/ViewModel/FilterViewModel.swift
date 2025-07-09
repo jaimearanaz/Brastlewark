@@ -12,7 +12,7 @@ public protocol FilterViewModelProtocol: ObservableObject {
     var state: FilterState { get }
 
     // Inputs
-    func didViewLoad()
+    func viewIsReady()
     func didChangeAge(_ age: ClosedRange<Int>)
     func didChangeWeight(_ weight: ClosedRange<Int>)
     func didChangeHeight(_ height: ClosedRange<Int>)
@@ -52,7 +52,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tasks.removeAll()
     }
 
-    public func didViewLoad() {
+    public func viewIsReady() {
         let getAvailableFilterUseCase = self.getAvailableFilterUseCase
         let getActiveFilterUseCase = self.getActiveFilterUseCase
         let task = Task {

@@ -14,7 +14,7 @@ public protocol DetailsViewModelProtocol: ObservableObject {
     var characterId: Int { get set }
 
     // Inputs
-    func didViewLoad()
+    func viewIsReady()
     func didSelectCharacter(_ id: Int)
     func didTapHomeButton()
 }
@@ -45,7 +45,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
         tasks.removeAll()
     }
 
-    public func didViewLoad() {
+    public func viewIsReady() {
         state = .loading
         let getCharacterByIdUseCase = getCharacterByIdUseCase
         let getSearchedCharacterUseCase = getSearchedCharacterUseCase

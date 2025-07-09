@@ -32,7 +32,7 @@ struct FilterViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -97,7 +97,7 @@ struct FilterViewModelTests {
         )
 
         // when
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
@@ -153,7 +153,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         let testRange = 20...80
@@ -189,7 +189,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
@@ -224,7 +224,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
@@ -259,7 +259,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
@@ -294,7 +294,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
@@ -330,7 +330,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
         await sut.didChangeHairColor(title: "Red", checked: true)
 
@@ -367,7 +367,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
@@ -403,7 +403,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
         await sut.didChangeProfession(title: "Baker", checked: true)
 
@@ -440,7 +440,7 @@ struct FilterViewModelTests {
             saveActiveFilterUseCase: saveActiveFilterUseCase
         )
 
-        await sut.didViewLoad()
+        await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when

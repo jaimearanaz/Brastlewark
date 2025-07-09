@@ -22,7 +22,7 @@ final class DetailsViewModelMock: DetailsViewModelProtocol, ObservableObject {
     }
 
     // Inputs
-    func didViewLoad() {
+    func viewIsReady() {
         didViewLoadCallback?()
     }
 

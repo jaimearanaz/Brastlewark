@@ -49,7 +49,7 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     }
 
     // Inputs
-    func didViewLoad() {
+    func viewIsReady() {
         didViewLoadCallback?()
     }
     func didChangeAge(_ age: ClosedRange<Int>) {

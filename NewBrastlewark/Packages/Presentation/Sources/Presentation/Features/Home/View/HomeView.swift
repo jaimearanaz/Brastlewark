@@ -21,8 +21,8 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
                 toolbarButtons
             }
         }
-        .onAppear {
-            viewModel.didOnAppear()
+        .task {
+            viewModel.viewIsReady()
         }
     }
 }

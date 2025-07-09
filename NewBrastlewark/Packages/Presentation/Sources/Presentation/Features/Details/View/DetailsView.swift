@@ -20,7 +20,7 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 viewModel.characterId = characterId
-                viewModel.didViewLoad()
+                viewModel.viewIsReady()
             }
     }
 }
