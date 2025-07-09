@@ -28,6 +28,7 @@ public protocol FilterViewModelProtocol: ObservableObject {
 public final class FilterViewModel: FilterViewModelProtocol {
     @Published public var state: FilterState = .loading
 
+    private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
@@ -46,14 +47,19 @@ public final class FilterViewModel: FilterViewModelProtocol {
             self.saveActiveFilterUseCase = saveActiveFilterUseCase
         }
 
+    deinit {
+        tasks.forEach { $0.cancel() }
+        tasks.removeAll()
+    }
+
     public func didViewLoad() {
         let getAvailableFilterUseCase = self.getAvailableFilterUseCase
         let getActiveFilterUseCase = self.getActiveFilterUseCase
-        Task {
+        let task = Task {
             async let availableResult = getAvailableFilterUseCase.execute()
             async let activeResult = getActiveFilterUseCase.execute()
             let (available, active) = await (availableResult, activeResult)
-            
+
             switch (available, active) {
             case (.success(let availableFilter), .success(let activeFilter)):
                 self.state = .ready(Filter.map(
@@ -63,6 +69,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
                 self.state = .ready(FilterUIModel())
             }
         }
+        tasks.insert(task)
     }
 
     public func didChangeAge(_ age: ClosedRange<Int>) {
@@ -125,10 +132,11 @@ public final class FilterViewModel: FilterViewModelProtocol {
         guard case .ready(let filter) = state else { return }
         let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
-        Task {
+        let task = Task {
             _ = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
             router.navigateBack()
         }
+        tasks.insert(task)
     }
 }
 

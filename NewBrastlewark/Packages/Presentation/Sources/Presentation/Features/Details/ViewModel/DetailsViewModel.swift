@@ -24,10 +24,10 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
     @Published public var state: DetailsState = .loading
     public var characterId: Int
 
+    private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
-
 
     public init(
         characterId: Int = 0,
@@ -40,11 +40,16 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
     }
 
+    deinit {
+        tasks.forEach { $0.cancel() }
+        tasks.removeAll()
+    }
+
     public func didViewLoad() {
         state = .loading
         let getCharacterByIdUseCase = getCharacterByIdUseCase
         let getSearchedCharacterUseCase = getSearchedCharacterUseCase
-        Task {
+        let task = Task {
             let result = await getCharacterByIdUseCase.execute(params: .init(id: characterId))
             switch result {
             case .success(let character):
@@ -71,8 +76,9 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                 self.state = .error
             }
         }
+        tasks.insert(task)
     }
-    
+
     public func didSelectCharacter(_ id: Int) {
         router.navigate(to: .details(characterId: id, showHome: true))
     }

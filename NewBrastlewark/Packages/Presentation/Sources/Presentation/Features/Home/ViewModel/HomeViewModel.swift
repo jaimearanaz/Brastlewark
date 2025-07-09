@@ -41,7 +41,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
 
     private let minSearchChars = 3
     private var searchCancellable: AnyCancellable?
-
+    private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
@@ -67,6 +67,11 @@ public final class HomeViewModel: HomeViewModelProtocol {
             setupSearchSubscription()
     }
 
+    deinit {
+        tasks.forEach { $0.cancel() }
+        tasks.removeAll()
+    }
+
     public func didOnAppear() {
         loadCharacters()
     }
@@ -90,7 +95,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
             return
         }
         let useCase = getSearchedCharacterUseCase
-        Task {
+        let task = Task {
             let result = await useCase.execute(params: .init(searchText: searchText))
             switch result {
             case .success(let characters):
@@ -100,6 +105,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
                 handleResultError(error)
             }
         }
+        tasks.insert(task)
     }
 
     public func didRefreshCharacters() {
@@ -122,7 +128,7 @@ private extension HomeViewModel {
     func loadCharacters() {
         state = .loading
         let getActiveFilterUseCase = getActiveFilterUseCase
-        Task {
+        let task = Task {
             let result = await getActiveFilterUseCase.execute()
             switch result {
             case .success(let filter):
@@ -135,12 +141,13 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
+        tasks.insert(task)
     }
 
     func loadAllCharacters(forceUpdate: Bool = false) {
         state = .loading
         let useCase = getAllCharactersUseCase
-        Task {
+        let task = Task {
             let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
             switch result {
             case .success(let characters):
@@ -150,12 +157,13 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
+        tasks.insert(task)
     }
 
     func loadFilteredCharacters(filter: Filter) {
         state = .loading
         let getFilteredCharactersUseCase = getFilteredCharactersUseCase
-        Task {
+        let task = Task {
             let result = await getFilteredCharactersUseCase.execute(params: .init(filter: filter))
             switch result {
             case .success(let characters):
@@ -165,6 +173,7 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
+        tasks.insert(task)
     }
 
     func handleResultError(_ error: Error) {
