@@ -1,5 +1,6 @@
 import SwiftUI
 import MultiSlider
+import Utils
 
 public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel

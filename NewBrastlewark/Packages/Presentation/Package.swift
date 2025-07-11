@@ -15,6 +15,7 @@ let package = Package(
             targets: ["Presentation"])
     ],
     dependencies: [
+        .package(path: "../Utils"),
         .package(path: "../Domain"),
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
         .package(url: "https://github.com/yonat/MultiSlider", from: "2.2.0")
@@ -22,7 +23,7 @@ let package = Package(
     targets: [
         .target(
             name: "Presentation",
-            dependencies: ["Domain", "Swinject", "MultiSlider"],
+            dependencies: ["Utils", "Domain", "Swinject", "MultiSlider"],
             resources: [
                 .process("Resources")
             ]),

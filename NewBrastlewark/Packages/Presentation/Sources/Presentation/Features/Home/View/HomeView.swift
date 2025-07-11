@@ -1,4 +1,5 @@
 import SwiftUI
+import Utils
 
 public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel

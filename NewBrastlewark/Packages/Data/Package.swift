@@ -16,6 +16,7 @@ let package = Package(
             targets: ["Data"]),
     ],
     dependencies: [
+        .package(path: "../Utils"),
         .package(path: "../Domain"),
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
     ],
@@ -24,7 +25,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Data",
-            dependencies: ["Domain", "Swinject"],
+            dependencies: ["Utils", "Domain", "Swinject"],
             resources: [
                 .process("Resources")
             ]),
