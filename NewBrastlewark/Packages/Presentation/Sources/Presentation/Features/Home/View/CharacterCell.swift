@@ -2,7 +2,8 @@ import SwiftUI
 
 struct CharacterCell: View {
     let character: CharacterUIModel
-    private let imageSize: CGFloat = 100
+    private let accessibilityIds = AccessibilytIdentifiers()
+    private let constants = Constants()
 
     init(character: CharacterUIModel) {
         self.character = character
@@ -14,25 +15,28 @@ struct CharacterCell: View {
                 switch phase {
                 case .empty:
                     ProgressView()
-                        .frame(width: imageSize, height: imageSize)
+                        .frame(width: constants.imageSize, height: constants.imageSize)
                 case .success(let image):
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width: imageSize, height: imageSize)
+                        .frame(width: constants.imageSize, height: constants.imageSize)
                         .clipped()
+                        .accessibilityIdentifier(accessibilityIds.success)
                 case .failure:
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: imageSize, height: imageSize)
+                        .frame(width: constants.imageSize, height: constants.imageSize)
                         .foregroundColor(.gray)
+                        .accessibilityIdentifier(accessibilityIds.failure)
                 @unknown default:
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: imageSize, height: imageSize)
+                        .frame(width: constants.imageSize, height: constants.imageSize)
                         .foregroundColor(.gray)
+                        .accessibilityIdentifier(accessibilityIds.defaultImage)
                 }
             }
             .clipShape(Circle())
@@ -46,14 +50,31 @@ struct CharacterCell: View {
                     .font(.system(size: 16))
                     .lineLimit(1)
                     .multilineTextAlignment(.center)
-
+                    .accessibilityIdentifier(accessibilityIds.firstname)
                 Text(character.surname)
                     .font(.system(size: 13))
                     .lineLimit(1)
                     .multilineTextAlignment(.center)
+                    .accessibilityIdentifier(accessibilityIds.surname)
             }
-            .frame(maxWidth: imageSize)
+            .frame(maxWidth: constants.imageSize)
         }
+    }
+}
+
+// MARK: - Constants
+
+private extension CharacterCell {
+    struct Constants {
+        let imageSize: CGFloat = 100
+    }
+
+    struct AccessibilytIdentifiers {
+        let success = "charactercell.image.success"
+        let failure = "charactercell.image.failure"
+        let defaultImage = "charactercell.image.default"
+        let firstname = "charactercell.firstname"
+        let surname = "charactercell.surname"
     }
 }
 

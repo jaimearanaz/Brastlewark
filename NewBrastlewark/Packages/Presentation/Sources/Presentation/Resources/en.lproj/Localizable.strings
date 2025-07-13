@@ -1,10 +1,23 @@
+// Common
+"ACTIVE" = "Active";
+"DEACTIVE" = "Deactive";
+"EMPTY" = "Empty";
+"PROFESSION_NONE" = "Not employed";
+"LOADING" = "Loading data";
+
+// Home
 "HOME_TITLE" = "Brastlewark";
 "HOME_SEARCH" = "Search";
+"HOME_SEARCH_HINT" = "Search by name or profession";
 "HOME_RESET_BUTTON" = "Reset";
+"HOME_RESET_BUTTON_HINT" = "Resets filters to default values and clears search";
 "HOME_FILTER_BUTTON" = "Filter";
+"HOME_FILTER_BUTTON_HINT" = "Opens filters screen";
 "HOME_EMPTY" = "No characters found";
 "HOME_ERROR_NO_INTERNET" = "No internet available.\nPlease check your connection.";
 "HOME_ERROR_GENERAL" = "Something went wrong, please try again.";
+
+// Filter
 "FILTER_TITLE" = "Filter";
 "FILTER_APPLY_BUTTON" = "Apply";
 "FILTER_SLIDER_AGE" = "Age";
@@ -17,7 +30,8 @@
 "FILTER_RESET_BUTTON" = "Reset";
 "FILTER_ALL_HAIR_COLORS" = "Any hair color";
 "FILTER_ALL_PROFESSIONS" = "Any profession";
-"PROFESSION_NONE" = "Not employed";
+
+// Details
 "DETAILS_TITLE" = "Details";
 "DETAILS_ERROR_GENERAL" = "Something went wrong, please try again.";
 "DETAILS_AGE" = "Age";
