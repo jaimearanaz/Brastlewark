@@ -8,6 +8,7 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
     @State private var isHairSheetPresented = false
     @State private var isProfessionSheetPresented = false
     private var localizables = Localizables()
+    private var accessibilityIds = AccessibilityIdentifiers()
 
     // MARK: - Public methods
 
@@ -52,6 +53,8 @@ private extension FilterView {
             }
         case .loading:
             ProgressView()
+                .accessibilityIdentifier(accessibilityIds.loadingView)
+                .accessibilityLabel(localizables.loading)
         }
     }
 
@@ -61,6 +64,10 @@ private extension FilterView {
                 viewModel.didTapApplyButton()
             }
             .disabled(isApplyDisabled)
+            .accessibilityIdentifier(accessibilityIds.applyButton)
+            .accessibilityLabel(localizables.apply)
+            .accessibilityHint(localizables.applyHint)
+            .accessibilityValue(isApplyDisabled ? localizables.deactive : localizables.active)
         }
     }
 
@@ -119,6 +126,33 @@ private extension FilterView {
             .frame(minHeight: 44, maxHeight: 44)
         }
         .padding(.horizontal)
+        .accessibilityElement()
+        .accessibilityIdentifier(sliderAccessibilityIdentifier(for: title))
+        .accessibilityLabel(title)
+        .accessibilityValue("\(active.lowerBound) \(localizables.to) \(active.upperBound)")
+        .accessibilityHint(localizables.adjustRange)
+        .accessibilityAddTraits([.updatesFrequently])
+        .accessibilityAdjustableAction { direction in
+            var newLower = active.lowerBound
+            var newUpper = active.upperBound
+            let step = 1
+
+            switch direction {
+            case .increment:
+                if newUpper < available.upperBound {
+                    newUpper += step
+                }
+            case .decrement:
+                if newLower > available.lowerBound {
+                    newLower -= step
+                }
+            @unknown default:
+                break
+            }
+
+            callback(newLower...newUpper)
+            isApplyDisabled = false
+        }
     }
 
     func fieldBinding(
@@ -203,6 +237,11 @@ private extension FilterView {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(PlainButtonStyle())
+            .accessibilityIdentifier(buttonAccessibilityIdentifier(for: title))
+            .accessibilityLabel(title)
+            .accessibilityValue(multipleFieldSummary(allTitle: allTitle, items: items))
+            .accessibilityHint(localizables.selectOptions)
+            .accessibilityAddTraits([.isButton, .updatesFrequently])
         }
         .padding(.horizontal)
         .sheet(isPresented: isSheetPresented) {
@@ -253,6 +292,32 @@ private extension FilterView {
             .max() ?? 0
         return (maxTitleWidth, maxSummaryWidth)
     }
+
+    func sliderAccessibilityIdentifier(for title: String) -> String {
+        switch title {
+        case localizables.age:
+            return accessibilityIds.ageSlider
+        case localizables.weight:
+            return accessibilityIds.weightSlider
+        case localizables.height:
+            return accessibilityIds.heightSlider
+        case localizables.friends:
+            return accessibilityIds.friendsSlider
+        default:
+            return ""
+        }
+    }
+
+    func buttonAccessibilityIdentifier(for title: String) -> String {
+        switch title {
+        case localizables.hairColor:
+            return accessibilityIds.hairColorButton
+        case localizables.profession:
+            return accessibilityIds.professionButton
+        default:
+            return ""
+        }
+    }
 }
 
 // MARK: - Constants
@@ -261,6 +326,7 @@ private extension FilterView {
     struct Localizables {
         let title = "FILTER_TITLE".localized
         let apply = "FILTER_APPLY_BUTTON".localized
+        let applyHint = "FILTER_APPLY_HINT".localized
         let age = "FILTER_SLIDER_AGE".localized
         let weight = "FILTER_SLIDER_WEIGHT".localized
         let height = "FILTER_SLIDER_HEIGHT".localized
@@ -269,6 +335,23 @@ private extension FilterView {
         let friends = "FILTER_SLIDER_FRIENDS".localized
         let allHairColors = "FILTER_ALL_HAIR_COLORS".localized
         let allProfessions = "FILTER_ALL_PROFESSIONS".localized
+        let to = "FILTER_TO".localized
+        let adjustRange = "FILTER_ADJUST_RANGE".localized
+        let selectOptions = "FILTER_SELECT_OPTIONS".localized
+        let active = "ACTIVE".localized
+        let deactive = "DEACTIVE".localized
+        let loading = "LOADING".localized
+    }
+
+    struct AccessibilityIdentifiers {
+        let applyButton = "filter.apply.button"
+        let ageSlider = "filter.age.slider"
+        let weightSlider = "filter.weight.slider"
+        let heightSlider = "filter.height.slider"
+        let friendsSlider = "filter.friends.slider"
+        let hairColorButton = "filter.hairColor.button"
+        let professionButton = "filter.profession.button"
+        let loadingView = "filter.loading.view"
     }
 }
 

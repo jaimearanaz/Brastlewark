@@ -4,6 +4,9 @@
 "EMPTY" = "Empty";
 "PROFESSION_NONE" = "Not employed";
 "LOADING" = "Loading data";
+"SELECTED" = "Selected";
+"NOT_SELECTED" = "Not selected";
+
 
 // Home
 "HOME_TITLE" = "Brastlewark";
@@ -20,16 +23,23 @@
 // Filter
 "FILTER_TITLE" = "Filter";
 "FILTER_APPLY_BUTTON" = "Apply";
+"FILTER_APPLY_HINT" = "Applies the selected filters";
 "FILTER_SLIDER_AGE" = "Age";
 "FILTER_SLIDER_WEIGHT" = "Weight";
 "FILTER_SLIDER_HEIGHT" = "Height";
 "FILTER_HAIR_COLOR" = "Hair color";
 "FILTER_HAIR_PROFESSION" = "Profession";
+"FILTER_ALL_HAIR_COLORS" = "Any hair color";
+"FILTER_ALL_PROFESSIONS" = "Any profession";
+"FILTER_TO" = "to";
+"FILTER_ADJUST_RANGE" = "Adjust filter range for this filter";
+"FILTER_SELECT_OPTIONS" = "Select one or more values for this filter";
 "FILTER_SLIDER_FRIENDS" = "Friends";
 "FILTER_ACCEPT_BUTTON" = "Accept";
 "FILTER_RESET_BUTTON" = "Reset";
-"FILTER_ALL_HAIR_COLORS" = "Any hair color";
-"FILTER_ALL_PROFESSIONS" = "Any profession";
+"FILTER_OPTION_TOGGLE_HINT" = "Select or unselect this option to be applied in the filter";
+"FILTER_RESET_HINT" = "Mark all elements as not selected, what means that the filter will ignore all these options";
+"FILTER_ACCEPT_HINT" = "Applies the selected options";
 
 // Details
 "DETAILS_TITLE" = "Details";

@@ -1,3 +1,5 @@
+import Foundation
+
 public struct FilterUIModel: Sendable {
     var age: FilterSliderUIModel
     var weight: FilterSliderUIModel
@@ -32,7 +34,8 @@ public struct FilterSliderUIModel: Sendable {
     }
 }
 
-public struct FilterItemListUIModel: Sendable {
+public struct FilterItemListUIModel: Sendable, Identifiable {
+    public var id: UUID = UUID()
     var title: String
     var checked: Bool
 
