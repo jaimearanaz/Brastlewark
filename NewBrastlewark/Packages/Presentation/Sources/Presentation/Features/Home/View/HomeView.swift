@@ -6,6 +6,7 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
     private var localizables = Localizables()
     private var accessibilityIds = AccessibilytIdentifiers()
     private var constants = Constants()
+    @FocusState private var isTextFieldFocused: Bool
 
     // MARK: - Public methods
 
@@ -147,13 +148,14 @@ private extension HomeView {
                 .accessibilityHidden(true)
 
             ZStack(alignment: .leading) {
-                if viewModel.searchText.isEmpty {
+                if viewModel.searchText.isEmpty && !isTextFieldFocused {
                     Text(localizables.searchHint)
                         .foregroundColor(.gray)
                         .accessibilityHidden(true)
                 }
 
                 TextField("", text: $viewModel.searchText)
+                    .focused($isTextFieldFocused)
                     .accessibilityElement()
                     .accessibilityIdentifier(accessibilityIds.searchBar)
                     .accessibilityLabel(localizables.search)
