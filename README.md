@@ -218,7 +218,7 @@ public enum Route: Hashable {
     case details(characterId: Int, showHome: Bool)
 }
 ```
-## Accessibility
+## Accessibility 👀
 
 To ensure that all users can interact with the app without barriers, Brastlewark takes advantage of SwiftUI’s built-in accessibility features. The app supports Apple’s VoiceOver and other assistive technologies by using appropriate accessibility elements.
 
