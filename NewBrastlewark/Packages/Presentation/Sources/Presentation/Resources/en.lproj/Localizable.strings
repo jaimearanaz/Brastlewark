@@ -52,3 +52,5 @@
 "DETAILS_FRIENDS" = "Friends";
 "DETAILS_NO_FRIENDS" = "No friends found";
 "DETAILS_BACK_HOME" = "Back to Home";
+"DETAILS_BACK_HOME_HINT" = "Returns to Home screen";
+"DETAILS_IMAGE_OF" = "Image of"; 

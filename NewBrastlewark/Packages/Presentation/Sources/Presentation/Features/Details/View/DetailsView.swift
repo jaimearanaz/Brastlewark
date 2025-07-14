@@ -8,6 +8,8 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
     @State private var characterId: Int = 0
     @State private var showHome: Bool = false
     private var localizables = Localizables()
+    private var accessibilityIds = AccessibilityIdentifiers()
+    private var constants = Constants()
 
     public init(characterId: Int = 0, showHome: Bool = false, viewModel: ViewModel) {
         self.characterId = characterId
@@ -31,28 +33,47 @@ private extension DetailsView {
     var content: some View {
         switch viewModel.state {
         case .loading:
-            ProgressView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            loadingView
         case .error:
-            Text(localizables.error)
-                .foregroundColor(.red)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            errorView
         case .ready(let details):
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        detailsImage(details: details, geometry: geometry)
-                        detailsName(details: details)
-                        detailsInfo(details: details)
-                        if !details.friends.isEmpty {
-                            detailsFriends(details: details)
-                        }
-                        homeButton
-                            .padding(.top, 24)
+            readyView(details: details)
+        }
+    }
+
+    var loadingView: some View {
+        ProgressView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .accessibilityIdentifier(accessibilityIds.loadingView)
+            .accessibilityLabel(localizables.loading)
+            .accessibilityAddTraits(.updatesFrequently)
+    }
+
+    var errorView: some View {
+        Text(localizables.error)
+            .foregroundColor(.red)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .accessibilityIdentifier(accessibilityIds.errorView)
+            .accessibilityLabel(localizables.error)
+            .accessibilityAddTraits(.isStaticText)
+    }
+
+    func readyView(details: DetailsUIModel) -> some View {
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    detailsImage(details: details, geometry: geometry)
+                    detailsName(details: details)
+                    detailsInfo(details: details)
+                    if !details.friends.isEmpty {
+                        detailsFriends(details: details)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    homeButton
+                        .padding(.top, 24)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .accessibilityIdentifier(accessibilityIds.detailsScroll)
         }
     }
 
@@ -69,6 +90,9 @@ private extension DetailsView {
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.horizontal)
+            .accessibilityIdentifier(accessibilityIds.homeButton)
+            .accessibilityLabel(localizables.backHome)
+            .accessibilityHint(localizables.backHomeHint)
         }
     }
 
@@ -79,20 +103,18 @@ private extension DetailsView {
                 switch phase {
                 case .empty:
                     ProgressView()
+                        .accessibilityIdentifier(accessibilityIds.characterImageLoading)
                 case .success(let image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
+                        .accessibilityIdentifier(accessibilityIds.characterImageSuccess)
                 case .failure:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(.gray)
+                    fallbackImage()
+                        .accessibilityIdentifier(accessibilityIds.characterImageFailure)
                 @unknown default:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(.gray)
+                    fallbackImage()
+                        .accessibilityIdentifier(accessibilityIds.characterImageDefault)
                 }
             }
             .frame(
@@ -100,28 +122,41 @@ private extension DetailsView {
                 height: geometry.size.height * 0.25
             )
             .clipped()
+            .accessibilityIdentifier(accessibilityIds.characterImage)
+            .accessibilityLabel("\(localizables.imageOf) \(details.name)")
+            .accessibilityAddTraits(.isImage)
         }
+    }
+
+    func fallbackImage() -> some View {
+        Image(systemName: constants.defaultImage)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .foregroundColor(.gray)
     }
 
     func detailsName(details: DetailsUIModel) -> some View {
         Text(details.name)
             .font(.system(size: 32, weight: .bold))
             .padding(.horizontal)
+            .accessibilityIdentifier(accessibilityIds.characterName)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    func detailsRows(forDetails details: DetailsUIModel) -> [(String, String, String)] {
+        [(localizables.age, "\(details.age)", accessibilityIds.ageRow),
+        (localizables.weight, String(format: "%.1f", details.weight), accessibilityIds.weightRow),
+        (localizables.height, String(format: "%.1f", details.height), accessibilityIds.heightRow),
+        (localizables.hairColor, details.hairColor, accessibilityIds.hairColorRow),
+        (localizables.professions, details.professions.joined(separator: ", "), accessibilityIds.professionsRow),
+        (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "", accessibilityIds.friendsRow)]
     }
 
     func detailsInfo(details: DetailsUIModel) -> some View {
-        let rows: [(String, String)] = [
-            (localizables.age, "\(details.age)"),
-            (localizables.weight, String(format: "%.1f", details.weight)),
-            (localizables.height, String(format: "%.1f", details.height)),
-            (localizables.hairColor, details.hairColor),
-            (localizables.professions, details.professions.joined(separator: ", ")),
-            (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "")
-        ]
-
+        let rows = detailsRows(forDetails: details)
         return ZStack {
             VStack {
-                ForEach(rows, id: \.0) { title, _ in
+                ForEach(rows, id: \.0) { title, _, _ in
                     Text(title)
                         .fontWeight(.bold)
                         .background(
@@ -138,16 +173,21 @@ private extension DetailsView {
                 }
             }
             VStack(alignment: .leading, spacing: 16) {
-                ForEach(rows, id: \.0) { title, value in
-                    detailRow(title: title, value: value, titleWidth: maxTitleWidth)
+                ForEach(rows, id: \.0) { title, value, accessibilityId in
+                    detailRow(
+                        title: title,
+                        value: value,
+                        titleWidth: maxTitleWidth,
+                        accessibilityId: accessibilityId)
                 }
             }
             .padding(.horizontal)
+            .accessibilityIdentifier(accessibilityIds.infoSection)
         }
     }
 
     @ViewBuilder
-    func detailRow(title: String, value: String, titleWidth: CGFloat) -> some View {
+    func detailRow(title: String, value: String, titleWidth: CGFloat, accessibilityId: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Text(title)
                 .fontWeight(.bold)
@@ -164,6 +204,10 @@ private extension DetailsView {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement()
+        .accessibilityIdentifier(accessibilityId)
+        .accessibilityLabel("\(title): \(value)")
+        .accessibilityAddTraits(.isStaticText)
     }
 
     @ViewBuilder
@@ -175,15 +219,22 @@ private extension DetailsView {
                         .onTapGesture {
                             viewModel.didSelectCharacter(friend.id)
                         }
+                        .accessibilityIdentifier("\(accessibilityIds.friend).\(friend.id)")
+                        .accessibilityAddTraits(.isButton)
                 }
             }
             .padding(.horizontal)
         }
         .padding(.top)
+        .accessibilityIdentifier(accessibilityIds.friendsSection)
     }
 }
 
 private extension DetailsView {
+    struct Constants {
+        let defaultImage = "person.circle.fill"
+    }
+
     struct Localizables {
         let title = "DETAILS_TITLE".localized
         let error = "DETAILS_ERROR_GENERAL".localized
@@ -195,6 +246,32 @@ private extension DetailsView {
         let friends = "DETAILS_FRIENDS".localized
         let noFriends = "DETAILS_NO_FRIENDS".localized
         let backHome = "DETAILS_BACK_HOME".localized
+        let backHomeHint = "DETAILS_BACK_HOME_HINT".localized
+        let loading = "LOADING".localized
+        let imageOf = "DETAILS_IMAGE_OF".localized
+    }
+
+    struct AccessibilityIdentifiers {
+        let loadingView = "details.loading.view"
+        let errorView = "details.error.view"
+        let characterImage = "details.character.image"
+        let characterImageLoading = "details.character.image.loading"
+        let characterImageSuccess = "details.character.image.success"
+        let characterImageFailure = "details.character.image.failure"
+        let characterImageDefault = "details.character.image.default"
+        let characterName = "details.character.name"
+        let detailsScroll = "details.scroll"
+        let infoSection = "details.info.section"
+        let ageRow = "details.row.age"
+        let weightRow = "details.row.weight"
+        let heightRow = "details.row.height"
+        let hairColorRow = "details.row.hairColor"
+        let professionsRow = "details.row.professions"
+        let friendsRow = "details.row.friends"
+        let friendsHeader = "details.friends.header"
+        let friendsSection = "details.friends.section"
+        let friend = "details.friend"
+        let homeButton = "details.home.button"
     }
 }
 
