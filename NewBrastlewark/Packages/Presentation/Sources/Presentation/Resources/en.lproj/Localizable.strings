@@ -24,6 +24,8 @@
 "FILTER_TITLE" = "Filter";
 "FILTER_APPLY_BUTTON" = "Apply";
 "FILTER_APPLY_HINT" = "Applies the selected filters";
+"FILTER_RESET_BUTTON" = "Reset";
+"FILTER_RESET_HINT" = "Resets all filters to initial values";
 "FILTER_SLIDER_AGE" = "Age";
 "FILTER_SLIDER_WEIGHT" = "Weight";
 "FILTER_SLIDER_HEIGHT" = "Height";

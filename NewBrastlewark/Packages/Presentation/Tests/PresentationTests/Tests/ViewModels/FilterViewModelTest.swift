@@ -171,6 +171,76 @@ struct FilterViewModelTests {
     }
 
     @Test
+    func givenFilter_whenTapsOnReset_thenFilterIsSetToAvailableFilterValues() async {
+        // given
+        let router = RouterMock()
+        let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
+        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
+        let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
+
+        let availableFilter = Filter.mock(
+            age: 0...100,
+            weight: 20...150,
+            height: 100...200,
+            hairColor: ["Red", "Brown", "Black"],
+            profession: ["Miner", "Baker", "Woodcarver"],
+            friends: 0...10
+        )
+        getAvailableFilterUseCase.executeResult = .success(availableFilter)
+
+        let activeFilter = Filter.mock(
+            age: 30...60,
+            weight: 50...120,
+            height: 130...180,
+            hairColor: ["Red"],
+            profession: ["Baker"],
+            friends: 2...8
+        )
+        getActiveFilterUseCase.executeResult = .success(activeFilter)
+
+        let sut = await FilterViewModel(
+            router: router,
+            getAvailableFilterUseCase: getAvailableFilterUseCase,
+            getActiveFilterUseCase: getActiveFilterUseCase,
+            saveActiveFilterUseCase: saveActiveFilterUseCase
+        )
+
+        await sut.viewIsReady()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        await sut.didChangeAge(25...75)
+
+        // when
+        await sut.didTapResetButton()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then
+        let state = await sut.state
+        if case let .ready(filter) = state {
+            #expect(filter.age.available == 0...100)
+            #expect(filter.age.active == 0...100)
+            #expect(filter.weight.available == 20...150)
+            #expect(filter.weight.active == 20...150)
+            #expect(filter.height.available == 100...200)
+            #expect(filter.height.active == 100...200)
+            #expect(filter.friends.available == 0...10)
+            #expect(filter.friends.active == 0...10)
+
+            #expect(filter.hairColor.count == 3)
+            #expect(filter.hairColor.contains { $0.title == "Red" && !$0.checked })
+            #expect(filter.hairColor.contains { $0.title == "Brown" && !$0.checked })
+            #expect(filter.hairColor.contains { $0.title == "Black" && !$0.checked })
+
+            #expect(filter.profession.count == 3)
+            #expect(filter.profession.contains { $0.title == "Miner" && !$0.checked })
+            #expect(filter.profession.contains { $0.title == "Baker" && !$0.checked })
+            #expect(filter.profession.contains { $0.title == "Woodcarver" && !$0.checked })
+        } else {
+            #expect(Bool(false), "Expected .ready state but got \(state)")
+        }
+    }
+
+    @Test
     func givenFilter_whenAgeChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()

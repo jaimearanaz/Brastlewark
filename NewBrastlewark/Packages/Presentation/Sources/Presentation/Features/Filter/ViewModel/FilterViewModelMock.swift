@@ -4,7 +4,6 @@ import SwiftUI
 final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     // Outputs
     @Published var state: FilterState
-    var dismiss: (() -> Void)?
 
     // Input callbacks
     var didViewLoadCallback: (() -> Void)?
@@ -17,11 +16,11 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     var didChangeProfessionCallback: ((String, Bool) -> Void)?
     var didResetProfessionCallback: (() -> Void)?
     var didTapApplyButtonCallback: (() -> Void)?
+    var didTapResetButtonCallback: (() -> Void)?
     var didTapCancelButtonCallback: (() -> Void)?
 
     init(
         state: FilterState = .ready(FilterUIModel()),
-        dismiss: (() -> Void)? = nil,
         didViewLoadCallback: (() -> Void)? = nil,
         didChangeAgeCallback: ((ClosedRange<Int>) -> Void)? = nil,
         didChangeWeightCallback: ((ClosedRange<Int>) -> Void)? = nil,
@@ -32,9 +31,9 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         didChangeProfessionCallback: ((String, Bool) -> Void)? = nil,
         didResetProfessionCallback: (() -> Void)? = nil,
         didTapApplyButtonCallback: (() -> Void)? = nil,
+        didTapResetButtonCallback: (() -> Void)? = nil,
         didTapCancelButtonCallback: (() -> Void)? = nil) {
         self.state = state
-        self.dismiss = dismiss
         self.didViewLoadCallback = didViewLoadCallback
         self.didChangeAgeCallback = didChangeAgeCallback
         self.didChangeWeightCallback = didChangeWeightCallback
@@ -45,6 +44,7 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
         self.didChangeProfessionCallback = didChangeProfessionCallback
         self.didResetProfessionCallback = didResetProfessionCallback
         self.didTapApplyButtonCallback = didTapApplyButtonCallback
+        self.didTapResetButtonCallback = didTapResetButtonCallback
         self.didTapCancelButtonCallback = didTapCancelButtonCallback
     }
 
@@ -78,6 +78,9 @@ final class FilterViewModelMock: FilterViewModelProtocol, ObservableObject {
     }
     func didTapApplyButton() {
         didTapApplyButtonCallback?()
+    }
+    func didTapResetButton() {
+        didTapResetButtonCallback?()
     }
     func didTapCancelButton() {
         didTapCancelButtonCallback?()

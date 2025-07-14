@@ -22,6 +22,7 @@ public protocol FilterViewModelProtocol: ObservableObject {
     func didResetProfession()
     func didChangeFriends(_ friends: ClosedRange<Int>)
     func didTapApplyButton()
+    func didTapResetButton()
 }
 
 @MainActor
@@ -135,6 +136,23 @@ public final class FilterViewModel: FilterViewModelProtocol {
         let task = Task {
             _ = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
             router.navigateBack()
+        }
+        tasks.insert(task)
+    }
+
+    public func didTapResetButton() {
+        guard case .ready(let filter) = state else { return }
+        let getAvailableFilterUseCase = self.getAvailableFilterUseCase
+        let task = Task {
+            let availableResult = await getAvailableFilterUseCase.execute()
+            switch availableResult {
+            case (.success(let availableFilter)):
+                self.state = .ready(Filter.map(
+                    available: availableFilter,
+                    active: defaultActiveFilter(available: availableFilter)))
+            default:
+                self.state = .ready(FilterUIModel())
+            }
         }
         tasks.insert(task)
     }

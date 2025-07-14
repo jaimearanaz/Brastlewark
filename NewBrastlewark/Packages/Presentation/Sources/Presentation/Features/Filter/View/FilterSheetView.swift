@@ -15,7 +15,7 @@ struct FilterSheetView: View {
             content
                 .navigationTitle(title)
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItem(placement: .topBarTrailing) {
                         toolbarButtons
                     }
                 }
@@ -105,4 +105,43 @@ private extension FilterSheetView {
         let resetButton = "filter.reset.button"
         let acceptButton = "filter.accept.button"
     }
+}
+
+// MARK: - Previews
+
+#Preview("Hair Colors") {
+    FilterSheetView(
+        title: "Hair Color",
+        items: FilterSheetViewPreview.hairColors,
+        onToggle: { _, _ in },
+        onReset: { }
+    )
+}
+
+#Preview("Professions") {
+    FilterSheetView(
+        title: "Profession",
+        items: FilterSheetViewPreview.professions,
+        onToggle: { _, _ in },
+        onReset: { }
+    )
+}
+
+private struct FilterSheetViewPreview {
+    static let hairColors: [FilterItemListUIModel] = [
+        .init(title: "Red", checked: true),
+        .init(title: "Pink", checked: false),
+        .init(title: "Green", checked: true),
+        .init(title: "Black", checked: false),
+        .init(title: "Gray", checked: false)
+    ]
+
+    static let professions: [FilterItemListUIModel] = [
+        .init(title: "Metalworker", checked: true),
+        .init(title: "Woodcarver", checked: true),
+        .init(title: "Stonecarver", checked: false),
+        .init(title: "Brewer", checked: false),
+        .init(title: "Baker", checked: false),
+        .init(title: "Farmer", checked: true)
+    ]
 }

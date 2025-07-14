@@ -60,15 +60,29 @@ private extension FilterView {
 
     var toolbarButtons: some View {
         HStack(spacing: 16) {
-            Button(localizables.apply) {
-                viewModel.didTapApplyButton()
-            }
-            .disabled(isApplyDisabled)
-            .accessibilityIdentifier(accessibilityIds.applyButton)
-            .accessibilityLabel(localizables.apply)
-            .accessibilityHint(localizables.applyHint)
-            .accessibilityValue(isApplyDisabled ? localizables.deactive : localizables.active)
+            resetButton
+            applyButton
         }
+    }
+
+    var resetButton: some View {
+        Button(localizables.reset) {
+            viewModel.didTapResetButton()
+        }
+        .accessibilityIdentifier(accessibilityIds.resetButton)
+        .accessibilityLabel(localizables.reset)
+        .accessibilityHint(localizables.resetHint)
+    }
+
+    var applyButton: some View {
+        Button(localizables.apply) {
+            viewModel.didTapApplyButton()
+        }
+        .disabled(isApplyDisabled)
+        .accessibilityIdentifier(accessibilityIds.applyButton)
+        .accessibilityLabel(localizables.apply)
+        .accessibilityHint(localizables.applyHint)
+        .accessibilityValue(isApplyDisabled ? localizables.deactive : localizables.active)
     }
 
     @ViewBuilder
@@ -327,6 +341,8 @@ private extension FilterView {
         let title = "FILTER_TITLE".localized
         let apply = "FILTER_APPLY_BUTTON".localized
         let applyHint = "FILTER_APPLY_HINT".localized
+        let reset = "FILTER_RESET_BUTTON".localized
+        let resetHint = "FILTER_RESET_HINT".localized
         let age = "FILTER_SLIDER_AGE".localized
         let weight = "FILTER_SLIDER_WEIGHT".localized
         let height = "FILTER_SLIDER_HEIGHT".localized
@@ -345,6 +361,7 @@ private extension FilterView {
 
     struct AccessibilityIdentifiers {
         let applyButton = "filter.apply.button"
+        let resetButton = "filter.reset.button"
         let ageSlider = "filter.age.slider"
         let weightSlider = "filter.weight.slider"
         let heightSlider = "filter.height.slider"
