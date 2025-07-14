@@ -17,6 +17,7 @@ This project is a technical test developed for an iOS developer position. The de
   - [Presentation](#presentation)
   - [App target](#app-target)
 - [Navigation](#navigation)
+- [Accesibility](#accessibility)
 - [Dependency Injection](#dependency-injection)
 - [Testing](#testing)
 - [Third Party Libraries](#third-party-libraries)
@@ -27,14 +28,14 @@ This project is a technical test developed for an iOS developer position. The de
 This project is based on a set of fundamental technical decisions and principles that guided the development of the app:
 
 -   **Clean Architecture**: the application is divided into three main layers with strict boundaries and responsibilities — Data, Domain, and Presentation — promoting a clear separation of concerns and long-term maintainability.
--   **MVVM pattern**: views react to state changes, while view models hold state and handle user interactions. The app is entirely built with SwiftUI, using the `ObservableObject` protocol and `@Published` properties.
--   **SOLID principles**: a set of key software engineering principles followed throughout the codebase — single responsibility, open/closed principle, protocol-oriented communication, and concise, clear interfaces.
--   **Dependency injection**: all components receive their required dependencies fully constructed and ready to use at initialization. This improves decoupling, configurability, and testability.
--   **Layer-Specific models**: each layer owns its own data models, tailored specifically to its needs. Mappers are used to translate models between layers, ensuring clarity and separation of concerns.
+-   **MVVM Pattern**: views react to state changes, while view models hold state and handle user interactions. The app is entirely built with SwiftUI, using the `ObservableObject` protocol and `@Published` properties.
+-   **SOLID Principles**: a set of key software engineering principles followed throughout the codebase — single responsibility, open/closed principle, protocol-oriented communication, and concise, clear interfaces.
+-   **Dependency Injection**: all components receive their required dependencies fully constructed and ready to use at initialization. This improves decoupling, configurability, and testability.
+-   **Layer-Specific Models**: each layer owns its own data models, tailored specifically to its needs. Mappers are used to translate models between layers, ensuring clarity and separation of concerns.
 -   **Asynchronous handling**: time-consuming tasks are executed in background threads to keep the main UI thread responsive, showing loading states. The app uses Swift’s `async/await` and `Task` to manage this effectively.
 -   **Error handling**: errors are caught and handled appropriately, offering recovery or retry options whenever possible. Each layer defines its own error types according to its role and purpose.
 -   **Protocols**: Swift’s protocols are extensively used to define clear, focused interfaces. This hides implementation details, encourages abstraction, and keeps layers decoupled, modular, and testable.
--   **Unit testing**: individual units of code are tested to ensure correctness and prevent regressions, supporting safe refactors and the evolution of features without breaking existing behavior.
+-   **Unit Testing**: individual units of code are tested to ensure correctness and prevent regressions, supporting safe refactors and the evolution of features without breaking existing behavior.
 
 ## Layer separation 📦
 
@@ -217,6 +218,11 @@ public enum Route: Hashable {
     case details(characterId: Int, showHome: Bool)
 }
 ```
+## Accessibility
+
+To ensure that all users can interact with the app without barriers, Brastlewark takes advantage of SwiftUI’s built-in accessibility features. The app supports Apple’s VoiceOver and other assistive technologies by using appropriate accessibility elements.
+
+Modifiers such as `accessibilityLabel`, `accessibilityHint`, `accessibilityValue`, or `accessibilityAction` are implemented thoughtfully, according to the purpose and behavior of each UI element.
 
 ## Dependency injection 🪄
 
@@ -238,11 +244,11 @@ public enum DIContainer {
 }
 ```
 
-## Testing 🤓
+## Testing 🧑‍✈️
 
 Proper test coverage is essential for building high-quality software. Tests ensure that the system meets its requirements, behaves as expected, and helps prevent regressions when inevitable changes occur.
 
-In the Brastlewark app, testing is implemented through two main approaches: **unit testing** and **snapshot-based UI testing**.
+In the Brastlewark app, testing is implemented through two main approaches: **unit testing** and **snapshot-based UI testing**. Additionally, all SwiftUI views include `.accessibilityIdentifier()` modifiers, allowing testing tools to reliably locate and verify UI elements in the presentation layer.
 
 ### Unit tests
 
@@ -260,7 +266,6 @@ Snapshot testing ensures that UI elements render as expected on the device scree
 
 For snapshot testing, the project uses the third-party library [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing) by Point-Free.
 
-
 ## Third party libraries 📚
 Brastlewark app uses the following third party libraries through Swift Package Manager:
 - [MultiSlider](https://github.com/yonat/MultiSlider): for the double sliders used in filter view
@@ -268,14 +273,12 @@ Brastlewark app uses the following third party libraries through Swift Package M
 - [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing): for snapshot testing
 
 ## About me 🙋‍♂️
-**Jaime Aranaz**  
-*Freelance iOS developer*  
-📍 Madrid, Spain  
+**Jaime Aranaz**
+*Freelance iOS developer* 
+jaime.aranaz@gmail.com 
+📍 Madrid, Spain
 
-jaime.aranaz@gmail.com  
-[jaimearanaz.com](https://www.jaimearanaz.es/en)  
-[LinkedIn](https://www.linkedin.com/in/jaimearanaztudela/)  
-[X](https://x.com/JaimeAranaz)  
-
-  
-
+You can find me here:
+ - [LinkedIn](https://www.linkedin.com/in/jaimearanaztudela/)
+ - [Website](https://www.jaimearanaz.com/)
+ - [X](https://x.com/JaimeAranaz)
