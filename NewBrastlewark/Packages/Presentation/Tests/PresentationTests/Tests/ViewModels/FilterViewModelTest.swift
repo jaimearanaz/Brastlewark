@@ -9,6 +9,7 @@ struct FilterViewModelTests {
     func givenNoActiveFilter_whenFilterIsLoaded_ThenUsesDefaultFilter() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -26,6 +27,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -59,12 +61,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.screenViewed))
     }
 
     @Test
     func givenActiveFilter_whenFilterIsLoaded_ThenUsesActiveFilterValues() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -91,6 +95,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -100,7 +105,6 @@ struct FilterViewModelTests {
         await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
 
-        // then
         let state = await sut.state
         if case let .ready(filter) = state {
             #expect(filter.age.available == 0...100)
@@ -137,6 +141,7 @@ struct FilterViewModelTests {
     func givenFilter_whenTapsOnApply_thenFilterIsSavedAndDismiss() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -148,6 +153,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -168,12 +174,14 @@ struct FilterViewModelTests {
         let capturedParams = saveActiveFilterUseCase.capturedParams
         #expect(capturedParams != nil, "Filter should have been saved")
         #expect(capturedParams?.filter.age == testRange, "Saved filter should have the modified age range")
+        #expect(await tracker.didTrackEvent(.applyTapped))
     }
 
     @Test
     func givenFilter_whenTapsOnReset_thenFilterIsSetToAvailableFilterValues() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -200,6 +208,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -238,12 +247,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.resetTapped))
     }
 
     @Test
     func givenFilter_whenAgeChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -254,6 +265,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -265,6 +277,7 @@ struct FilterViewModelTests {
         // when
         let newAgeRange = 25...75
         await sut.didChangeAge(newAgeRange)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -273,12 +286,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.ageChanged(age: newAgeRange)))
     }
 
     @Test
     func givenFilter_whenWeightChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -289,6 +304,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -300,6 +316,7 @@ struct FilterViewModelTests {
         // when
         let newWeightRange = 40...100
         await sut.didChangeWeight(newWeightRange)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -308,12 +325,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.weightChanged(weight: newWeightRange)))
     }
 
     @Test
     func givenFilter_whenHeightChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -324,6 +343,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -335,6 +355,7 @@ struct FilterViewModelTests {
         // when
         let newHeightRange = 120...180
         await sut.didChangeHeight(newHeightRange)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -343,12 +364,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.heightChanged(height: newHeightRange)))
     }
 
     @Test
     func givenFilter_whenHairColorChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -359,6 +382,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -368,7 +392,10 @@ struct FilterViewModelTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
-        await sut.didChangeHairColor(title: "Red", checked: true)
+        let hairColorTitle = "Red"
+        let isChecked = true
+        await sut.didChangeHairColor(title: hairColorTitle, checked: isChecked)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -379,12 +406,15 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.hairColorChanged(title: hairColorTitle, checked: isChecked)))
+
     }
 
     @Test
     func givenFilter_whenHairColorIsReset_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -395,6 +425,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -403,9 +434,11 @@ struct FilterViewModelTests {
         await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
         await sut.didChangeHairColor(title: "Red", checked: true)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
         await sut.didResetHairColor()
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -416,12 +449,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.hairColorReset))
     }
 
     @Test
     func givenFilter_whenProfessionChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -432,6 +467,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -441,7 +477,10 @@ struct FilterViewModelTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
-        await sut.didChangeProfession(title: "Baker", checked: true)
+        let professionTitle = "Baker"
+        let isChecked = true
+        await sut.didChangeProfession(title: professionTitle, checked: isChecked)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -452,12 +491,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.professionChanged(title: professionTitle, checked: isChecked)))
     }
 
     @Test
     func givenFilter_whenProfessionIsReset_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -468,6 +509,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -476,9 +518,11 @@ struct FilterViewModelTests {
         await sut.viewIsReady()
         try? await Task.sleep(nanoseconds: 100_000_000)
         await sut.didChangeProfession(title: "Baker", checked: true)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // when
         await sut.didResetProfession()
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -489,12 +533,14 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.professionReset))
     }
 
     @Test
     func givenFilter_whenFriendsChanges_thenFilterIsUpdated() async {
         // given
         let router = RouterMock()
+        let tracker = FilterTrackerMock()
         let getAvailableFilterUseCase = GetAvailableFilterUseCaseMock()
         let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
         let saveActiveFilterUseCase = SaveActiveFilterUseCaseMock()
@@ -505,6 +551,7 @@ struct FilterViewModelTests {
 
         let sut = await FilterViewModel(
             router: router,
+            tracker: tracker,
             getAvailableFilterUseCase: getAvailableFilterUseCase,
             getActiveFilterUseCase: getActiveFilterUseCase,
             saveActiveFilterUseCase: saveActiveFilterUseCase
@@ -516,6 +563,7 @@ struct FilterViewModelTests {
         // when
         let newFriendsRange = 2...8
         await sut.didChangeFriends(newFriendsRange)
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
         let state = await sut.state
@@ -524,5 +572,6 @@ struct FilterViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.friendsChanged(friends: newFriendsRange)))
     }
 }

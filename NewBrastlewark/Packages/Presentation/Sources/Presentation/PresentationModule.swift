@@ -44,6 +44,9 @@ public struct PresentationModule {
         container.register(HomeTrackerProtocol.self) { r in
             HomeTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
         }
+        container.register(FilterTrackerProtocol.self) { r in
+            FilterTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        }
     }
 
     private static func registerViewModels(inContainer container: Container) {
@@ -60,6 +63,7 @@ public struct PresentationModule {
         container.register(FilterViewModel.self) { r in
             FilterViewModel(
                 router: resolveOrFail(r, (any RouterProtocol).self),
+                tracker: resolveOrFail(r, FilterTrackerProtocol.self),
                 getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
