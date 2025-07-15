@@ -5,9 +5,17 @@ import Swinject
 @MainActor
 public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
+        registerAnalytics(inContainer: container)
         registerRouter(inContainer: container)
         registerViewModels(inContainer: container)
         registerViews(inContainer: container)
+    }
+
+    private static func registerAnalytics(inContainer container: Container) {
+        container.register(AnalyticsProtocol.self) { _ in
+            Analytics()
+        }
+        .inObjectScope(.container)
     }
 
     private static func registerRouter(inContainer container: Container) {
@@ -32,10 +40,17 @@ public struct PresentationModule {
         }
     }
 
+    private static func registerTrackers(inContainer container: Container) {
+        container.register(HomeTrackerProtocol.self) { r in
+            HomeTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        }
+    }
+
     private static func registerViewModels(inContainer container: Container) {
         container.register(HomeViewModel.self) { r in
             HomeViewModel(
                 router: resolveOrFail(r, (any RouterProtocol).self),
+                tracker: resolveOrFail(r, HomeTrackerProtocol.self),
                 getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),

@@ -43,6 +43,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     private var searchCancellable: AnyCancellable?
     private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
+    private let tracker: HomeTrackerProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
     private let getActiveFilterUseCase: GetActiveFilterUseCaseProtocol
     private let getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol
@@ -53,12 +54,14 @@ public final class HomeViewModel: HomeViewModelProtocol {
 
     public init(
         router: any RouterProtocol,
+        tracker: HomeTrackerProtocol,
         getAllCharactersUseCase: GetAllCharactersUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
         getFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol,
         deleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
             self.router = router
+            self.tracker = tracker
             self.getAllCharactersUseCase = getAllCharactersUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
             self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
@@ -73,18 +76,22 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func viewIsReady() {
+        tracker.track(event: .screenViewed)
         loadCharacters()
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
+        tracker.track(event: .characterSelected(characterId: character.id))
         router.navigate(to: .details(characterId: character.id, showHome: false))
     }
 
     public func didTapFilterButton() {
+        tracker.track(event: .filterTapped)
         router.navigate(to: .filter)
     }
 
     public func didTapResetButton() {
+        tracker.track(event: .resetTapped)
         searchText = ""
         loadAllCharacters()
     }
@@ -94,6 +101,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
             loadAllCharacters()
             return
         }
+        tracker.track(event: .searchChanged(text: searchText))
         let useCase = getSearchedCharacterUseCase
         let task = Task {
             let result = await useCase.execute(params: .init(searchText: searchText))
@@ -110,6 +118,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
 
     public func didRefreshCharacters() {
         searchText = ""
+        tracker.track(event: .refreshed)
         loadAllCharacters(forceUpdate: true)
     }
 }
@@ -152,7 +161,12 @@ private extension HomeViewModel {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                self.state = charactersUi.isEmpty ? .empty : .ready(characters: charactersUi)
+                if charactersUi.isEmpty {
+                    self.state = .empty
+                    tracker.track(event: .emptyScreenViewed)
+                } else {
+                    self.state = .ready(characters: charactersUi)
+                }
             case .failure(let error):
                 handleResultError(error)
             }
@@ -168,7 +182,12 @@ private extension HomeViewModel {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                self.state = charactersUi.isEmpty ? .empty : .ready(characters: charactersUi, reset: true)
+                if charactersUi.isEmpty {
+                    self.state = .empty
+                    tracker.track(event: .emptyScreenViewed)
+                } else {
+                    self.state = .ready(characters: charactersUi, reset: true)
+                }
             case .failure(let error):
                 handleResultError(error)
             }
@@ -179,9 +198,11 @@ private extension HomeViewModel {
     func handleResultError(_ error: Error) {
         switch error {
         case CharactersRepositoryError.noInternetConnection, FilterRepositoryError.noInternetConnection:
-            self.state = .error(.noInternetConnection)
+            state = .error(.noInternetConnection)
+            tracker.track(event: .errorScreenViewed)
         default:
-            self.state = .error(.generalError)
+            state = .error(.generalError)
+            tracker.track(event: .errorScreenViewed)
         }
     }
 }
