@@ -10,14 +10,17 @@ This project is a technical test developed for an iOS developer position. The de
 
 ## Table of Contents
 
-- [Basic Architecture](#basic-architecture)
+## Table of Contents
+
+- [Basic Architecture](#basic-architecture-and-key-principles)
 - [Layer Separation](#layer-separation)
   - [Domain](#domain)
   - [Data](#data)
   - [Presentation](#presentation)
   - [App target](#app-target)
 - [Navigation](#navigation)
-- [Accesibility](#accessibility)
+- [Accessibility](#accessibility)
+- [Events Tracking](#events-tracking)
 - [Dependency Injection](#dependency-injection)
 - [Testing](#testing)
 - [Third Party Libraries](#third-party-libraries)
@@ -218,11 +221,6 @@ public enum Route: Hashable {
     case details(characterId: Int, showHome: Bool)
 }
 ```
-## Accessibility 👀
-
-To ensure that all users can interact with the app without barriers, Brastlewark takes advantage of SwiftUI’s built-in accessibility features. The app supports Apple’s VoiceOver and other assistive technologies by using appropriate accessibility elements.
-
-Modifiers such as `accessibilityLabel`, `accessibilityHint`, `accessibilityValue`, or `accessibilityAction` are implemented thoughtfully, according to the purpose and behavior of each UI element.
 
 ## Dependency injection 🪄
 
@@ -244,7 +242,31 @@ public enum DIContainer {
 }
 ```
 
-## Testing 🧑‍✈️
+## Accessibility 👀
+
+To ensure that all users can interact with the app without barriers, Brastlewark takes advantage of SwiftUI’s built-in accessibility features. The app supports Apple’s VoiceOver and other assistive technologies by using appropriate accessibility elements.
+
+Modifiers such as `accessibilityLabel`, `accessibilityHint`, `accessibilityValue`, or `accessibilityAction` are implemented thoughtfully, according to the purpose and behavior of each UI element.
+
+## Events tracking 📊
+
+Tracking user interactions and events is essential for understanding how well your app is performing and whether it’s fulfilling its purpose. In Brastlewark, each view model receives an instance of a `Tracker` class, which defines all the relevant events for that particular feature.
+
+```swift
+public enum HomeTrackingEvent: Sendable {
+    case screenViewed
+    case searchChanged(text: String)
+    case filterTapped
+    case resetTapped
+    case refreshed
+    case characterSelected(characterId: Int)
+    case emptyScreenViewed
+    case errorScreenViewed
+}
+```
+The app also defines an `AnalyticsProtocol` that is ready to be implemented using any preferred analytics or event tracking framework.
+
+## Testing 🤓
 
 Proper test coverage is essential for building high-quality software. Tests ensure that the system meets its requirements, behaves as expected, and helps prevent regressions when inevitable changes occur.
 
