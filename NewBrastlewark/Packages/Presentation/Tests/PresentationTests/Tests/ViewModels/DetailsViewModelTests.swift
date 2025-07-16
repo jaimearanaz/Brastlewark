@@ -9,6 +9,7 @@ struct DetailsViewModelTests {
     func givenCharacterId_whenDidViewLoad_thenLoadsCharacterDetailsAndFriends() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
@@ -25,6 +26,7 @@ struct DetailsViewModelTests {
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -44,12 +46,14 @@ struct DetailsViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.screenViewed(characterId: 42)))
     }
 
     @Test
     func givenNoCharacterFound_whenDidViewLoad_thenShowsError() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
@@ -58,6 +62,7 @@ struct DetailsViewModelTests {
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -73,12 +78,14 @@ struct DetailsViewModelTests {
         } else {
             #expect(Bool(false), "Expected .error state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.errorScreenViewed))
     }
 
     @Test
     func givenRepositoryError_whenDidViewLoad_thenShowsError() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
@@ -87,6 +94,7 @@ struct DetailsViewModelTests {
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -102,12 +110,14 @@ struct DetailsViewModelTests {
         } else {
             #expect(Bool(false), "Expected .error state but got \(state)")
         }
+        #expect(await tracker.didTrackEvent(.errorScreenViewed))
     }
 
     @Test
     func givenCharacterWithNoFriends_whenDidViewLoad_thenShowsDetailsWithEmptyFriendsList() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
@@ -117,6 +127,7 @@ struct DetailsViewModelTests {
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -139,12 +150,14 @@ struct DetailsViewModelTests {
     func givenCharacterId_whenDidSelectCharacter_thenNavigatesToDetailsWithCorrectId() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -160,18 +173,21 @@ struct DetailsViewModelTests {
         } else {
             #expect(Bool(false), "Expected .details route but got \(String(describing: router.didNavigateToRoute.route))")
         }
+        #expect(await tracker.didTrackEvent(.friendSelected(characterId: 99)))
     }
 
     @Test
     func givenCharacterId_whenDidTapHomeButton_thenNavigatesToRoot() async {
         // given
         let router = RouterMock()
+        let tracker = DetailsTrackerMock()
         let getCharacterByIdUseCase = GetCharacterByIdUseCaseMock()
         let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
 
         let sut = await DetailsViewModel(
             characterId: 42,
             router: router,
+            tracker: tracker,
             getCharacterByIdUseCase: getCharacterByIdUseCase,
             getSearchedCharacterUseCase: getSearchedCharacterUseCase
         )
@@ -180,6 +196,7 @@ struct DetailsViewModelTests {
         await sut.didTapHomeButton()
 
         // then
+        #expect(await tracker.didTrackEvent(.homeTapped))
         #expect(router.didNavigateToRoot)
     }
 }

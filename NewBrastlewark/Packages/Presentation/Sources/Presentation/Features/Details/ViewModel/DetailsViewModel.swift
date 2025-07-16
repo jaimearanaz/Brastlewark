@@ -26,16 +26,19 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
 
     private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
+    private let tracker: DetailsTrackerProtocol
     private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol
     private let getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol
 
     public init(
         characterId: Int = 0,
         router: any RouterProtocol,
+        tracker: DetailsTrackerProtocol,
         getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol,
         getSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol) {
             self.characterId = characterId
             self.router = router
+            self.tracker = tracker
             self.getCharacterByIdUseCase = getCharacterByIdUseCase
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
     }
@@ -47,6 +50,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
 
     public func viewIsReady() {
         state = .loading
+        tracker.track(event: .screenViewed(characterId: characterId))
         let getCharacterByIdUseCase = getCharacterByIdUseCase
         let getSearchedCharacterUseCase = getSearchedCharacterUseCase
         let task = Task {
@@ -55,6 +59,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
             case .success(let character):
                 guard let character = character else {
                     self.state = .error
+                    tracker.track(event: .errorScreenViewed)
                     return
                 }
                 var friends: [DetailsFriendUIModel] = []
@@ -74,16 +79,19 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                 self.state = .ready(details: mapToDetailsUIModel(character: character, friends: friends))
             case .failure(_):
                 self.state = .error
+                tracker.track(event: .errorScreenViewed)
             }
         }
         tasks.insert(task)
     }
 
     public func didSelectCharacter(_ id: Int) {
+        tracker.track(event: .friendSelected(characterId: id))
         router.navigate(to: .details(characterId: id, showHome: true))
     }
 
     public func didTapHomeButton() {
+        tracker.track(event: .homeTapped)
         router.navigateToRoot()
     }
 }

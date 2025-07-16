@@ -7,6 +7,7 @@ public struct PresentationModule {
     public static func registerDependencies(inContainer container: Container) {
         registerAnalytics(inContainer: container)
         registerRouter(inContainer: container)
+        registerTrackers(inContainer: container)
         registerViewModels(inContainer: container)
         registerViews(inContainer: container)
     }
@@ -47,6 +48,9 @@ public struct PresentationModule {
         container.register(FilterTrackerProtocol.self) { r in
             FilterTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
         }
+        container.register(DetailsTrackerProtocol.self) { r in
+            DetailsTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        }
     }
 
     private static func registerViewModels(inContainer container: Container) {
@@ -71,6 +75,7 @@ public struct PresentationModule {
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
                 router: resolveOrFail(r, (any RouterProtocol).self),
+                tracker: resolveOrFail(r, DetailsTrackerProtocol.self),
                 getCharacterByIdUseCase: resolveOrFail(r, GetCharacterByIdUseCaseProtocol.self),
                 getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
         }
