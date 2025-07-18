@@ -1,33 +1,39 @@
 import Testing
 import Combine
 import Domain
+import Swinject
 
 @testable import Presentation
 
+@MainActor
 struct HomeViewModelTests {
+    private var sut: HomeViewModel!
+    private var routerMock: RouterMock!
+    private var trackerMock: HomeTrackerMock!
+    private var getAllCharactersUseCaseMock: GetAllCharactersUseCaseMock!
+    private var getActiveFilterUseCaseMock: GetActiveFilterUseCaseMock!
+    private var getFilteredCharactersUseCaseMock: GetFilteredCharactersUseCaseMock!
+    private var deleteActiveFilterUseCaseMock: DeleteActiveFilterUseCaseMock!
+    private var getSearchedCharacterUseCaseMock: GetSearchedCharacterUseCaseMock!
+
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        self.sut = container.resolve(HomeViewModel.self)!
+        self.routerMock = (container.resolve((any RouterProtocol).self) as! RouterMock)
+        self.trackerMock = (container.resolve(HomeTrackerProtocol.self) as! HomeTrackerMock)
+        self.getAllCharactersUseCaseMock = (container.resolve(GetAllCharactersUseCaseProtocol.self) as! GetAllCharactersUseCaseMock)
+        self.getActiveFilterUseCaseMock = (container.resolve(GetActiveFilterUseCaseProtocol.self) as! GetActiveFilterUseCaseMock)
+        self.getFilteredCharactersUseCaseMock = (container.resolve(GetFilteredCharactersUseCaseProtocol.self) as! GetFilteredCharactersUseCaseMock)
+        self.deleteActiveFilterUseCaseMock = (container.resolve(DeleteActiveFilterUseCaseProtocol.self) as! DeleteActiveFilterUseCaseMock)
+        self.getSearchedCharacterUseCaseMock = (container.resolve(GetSearchedCharacterUseCaseProtocol.self) as! GetSearchedCharacterUseCaseMock)
+    }
+
     @Test
     func givenNoActiveFilter_whenDidOnAppear_thenLoadsAllCharacters() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
-        getActiveFilterUseCase.executeResult = .success(nil)
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
         let expectedCharacters = [Character.mock(id: 42)]
-        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getAllCharactersUseCaseMock.executeResult = .success(expectedCharacters)
 
         // when
         await sut.viewIsReady()
@@ -41,95 +47,46 @@ struct HomeViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
-        #expect(await tracker.didTrackEvent(.screenViewed))
+        #expect(await trackerMock.didTrackEvent(.screenViewed))
     }
 
     @Test
     func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
-
         let character = CharacterUIModel.mock(id: 42)
 
         // when
         await sut.didSelectCharacter(character)
 
         // then
-        #expect(router.didNavigateToRoute.called)
-        if case .details(let characterId, let showHome)? = router.didNavigateToRoute.route {
+        #expect(routerMock.didNavigateToRoute.called)
+        if case .details(let characterId, let showHome)? = routerMock.didNavigateToRoute.route {
             #expect(characterId == 42)
             #expect(showHome == false)
         } else {
-            #expect(Bool(false), "Expected .details route but got \(String(describing: router.didNavigateToRoute.route))")
+            #expect(Bool(false), "Expected .details route but got \(String(describing: routerMock.didNavigateToRoute.route))")
         }
     }
 
     @Test
     func givenCharacters_whenDidTapFilterButton_thenRouterNavigatesToFilter() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        // No additional setup needed
 
         // when
         await sut.didTapFilterButton()
 
         // then
-        #expect(router.didNavigateToRoute.called)
-        #expect(router.didNavigateToRoute.route == .filter)
-        #expect(await tracker.didTrackEvent(.filterTapped))
+        #expect(routerMock.didNavigateToRoute.called)
+        #expect(routerMock.didNavigateToRoute.route == .filter)
+        #expect(await trackerMock.didTrackEvent(.filterTapped))
     }
 
     @Test
     func givenCharacters_whenDidTapResetButton_thenSearchTextIsClearedAndAllCharactersLoaded() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
         let expectedCharacters = [Character.mock(id: 42)]
-        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getAllCharactersUseCaseMock.executeResult = .success(expectedCharacters)
 
         await MainActor.run {
             sut.searchText = "abc"
@@ -151,31 +108,14 @@ struct HomeViewModelTests {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
 
-        #expect(await tracker.didTrackEvent(.resetTapped))
+        #expect(await trackerMock.didTrackEvent(.resetTapped))
     }
 
     @Test
     func givenShortSearchText_whenDidSearchTextChanged_thenLoadsAllCharacters() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
         let expectedCharacters = [Character.mock(id: 42)]
-        getAllCharactersUseCase.executeResult = .success(expectedCharacters)
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getAllCharactersUseCaseMock.executeResult = .success(expectedCharacters)
 
         await MainActor.run {
             sut.searchText = "ab"
@@ -198,25 +138,8 @@ struct HomeViewModelTests {
     @Test
     func givenLongSearchText_whenDidSearchTextChanged_thenSearchesCharacters() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
         let searchedCharacter = Character.mock(id: 99, name: "Searched Character", professions: ["Wizard"])
-        getSearchedCharacterUseCase.executeResult = .success([searchedCharacter])
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getSearchedCharacterUseCaseMock.executeResult = .success([searchedCharacter])
 
         await MainActor.run {
             sut.searchText = "wiz"
@@ -241,25 +164,8 @@ struct HomeViewModelTests {
     @Test
     func givenCharacters_whenDidRefreshCharacters_thenSearchTextIsClearedAndAllCharactersLoadedWithForceUpdate() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
         let refreshedCharacter = Character.mock(id: 101, name: "Refreshed Character")
-        getAllCharactersUseCase.executeResult = .success([refreshedCharacter])
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getAllCharactersUseCaseMock.executeResult = .success([refreshedCharacter])
 
         await MainActor.run {
             sut.searchText = "some"
@@ -281,37 +187,20 @@ struct HomeViewModelTests {
         } else {
             #expect(Bool(false), "Expected .ready state but got \(state)")
         }
-        #expect(getAllCharactersUseCase.wasForceUpdateCalled, "forceUpdate should be true")
+        #expect(getAllCharactersUseCaseMock.wasForceUpdateCalled, "forceUpdate should be true")
     }
 
     @Test
     func givenActiveFilter_whenHomeIsLoaded_thenAppliesFilterAndReturnsFilteredCharacters() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
         let activeFilter = Filter.mock(age: 20...30)
-        getActiveFilterUseCase.executeResult = .success(activeFilter)
+        getActiveFilterUseCaseMock.executeResult = .success(activeFilter)
 
         let filteredCharacters = [
             Character.mock(id: 201, name: "Young Character 1", age: 25),
             Character.mock(id: 202, name: "Young Character 2", age: 28)
         ]
-        getFilteredCharactersUseCase.executeResult = .success(filteredCharacters)
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getFilteredCharactersUseCaseMock.executeResult = .success(filteredCharacters)
 
         // when
         await sut.viewIsReady()
@@ -336,25 +225,8 @@ struct HomeViewModelTests {
     @Test
     func givenEmptyCharactersList_whenHomeIsLoaded_thenStateIsEmptyAndShowsEmptyScreen() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
-        getActiveFilterUseCase.executeResult = .success(nil)
-        getAllCharactersUseCase.executeResult = .success([])
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        getAllCharactersUseCaseMock.executeResult = .success([])
 
         // when
         await sut.viewIsReady()
@@ -365,33 +237,16 @@ struct HomeViewModelTests {
         if case .empty = state {
             #expect(true)
         } else {
-            #expect(Bool(false), "Expected .empry state but got \(state)")
+            #expect(Bool(false), "Expected .empty state but got \(state)")
         }
-        #expect(await tracker.didTrackEvent(.emptyScreenViewed))
+        #expect(await trackerMock.didTrackEvent(.emptyScreenViewed))
     }
 
     @Test
     func givenNetworkError_whenHomeIsLoaded_thenStateIsErrorAndShowsErrorScreen() async {
         // given
-        let router = RouterMock()
-        let tracker = HomeTrackerMock()
-        let getAllCharactersUseCase = GetAllCharactersUseCaseMock()
-        let getActiveFilterUseCase = GetActiveFilterUseCaseMock()
-        let getFilteredCharactersUseCase = GetFilteredCharactersUseCaseMock()
-        let deleteActiveFilterUseCase = DeleteActiveFilterUseCaseMock()
-        let getSearchedCharacterUseCase = GetSearchedCharacterUseCaseMock()
-
-        getActiveFilterUseCase.executeResult = .success(nil)
-        getAllCharactersUseCase.executeResult = .failure(CharactersRepositoryError.noInternetConnection)
-
-        let sut = await HomeViewModel(
-            router: router,
-            tracker: tracker,
-            getAllCharactersUseCase: getAllCharactersUseCase,
-            getActiveFilterUseCase: getActiveFilterUseCase,
-            getFilteredCharactersUseCase: getFilteredCharactersUseCase,
-            deleteActiveFilterUseCase: deleteActiveFilterUseCase,
-            getSearchedCharacterUseCase: getSearchedCharacterUseCase)
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        getAllCharactersUseCaseMock.executeResult = .failure(CharactersRepositoryError.noInternetConnection)
 
         // when
         await sut.viewIsReady()
@@ -404,6 +259,6 @@ struct HomeViewModelTests {
         } else {
             #expect(Bool(false), "Expected .error state but got \(state)")
         }
-        #expect(await tracker.didTrackEvent(.errorScreenViewed))
+        #expect(await trackerMock.didTrackEvent(.errorScreenViewed))
     }
 }
