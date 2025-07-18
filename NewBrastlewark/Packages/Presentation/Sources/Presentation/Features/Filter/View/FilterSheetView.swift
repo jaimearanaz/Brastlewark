@@ -41,7 +41,7 @@ private extension FilterSheetView {
         }) {
             HStack {
                 Text(item.title)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.primary)
                 Spacer()
                 if item.checked {
                     Image(systemName: constants.checkmarkImage)
