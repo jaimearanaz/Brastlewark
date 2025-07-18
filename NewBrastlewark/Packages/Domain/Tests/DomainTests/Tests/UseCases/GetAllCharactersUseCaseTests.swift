@@ -1,22 +1,30 @@
 import Foundation
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct GetAllCharactersUseCaseTests {
+final class GetAllCharactersUseCaseTests {
+    var sut: GetAllCharactersUseCaseProtocol!
+    var charactersRepositoryMock: CharactersRepositoryMock!
+
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(GetAllCharactersUseCaseProtocol.self)!
+        charactersRepositoryMock = (container.resolve(CharactersRepositoryProtocol.self) as! CharactersRepositoryMock)
+    }
+
     @Test
     func given_repositoryReturnsCharacters_when_execute_then_returnsSuccessWithCharacters() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let expectedCharacters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = expectedCharacters
-        repository.getAllCharactersError = nil
-        let useCase = GetAllCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = expectedCharacters
+        charactersRepositoryMock.getAllCharactersError = nil
         let params = GetAllCharactersUseCaseParams(forceUpdate: false)
-        
+
         // when
-        let result = await useCase.execute(params: params)
-        
+        let result = await sut.execute(params: params)
+
         // then
         switch result {
         case .success(let characters):
@@ -24,20 +32,18 @@ struct GetAllCharactersUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = CharactersRepositoryMock()
-        repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
-        let useCase = GetAllCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
         let params = GetAllCharactersUseCaseParams(forceUpdate: true)
-        
+
         // when
-        let result = await useCase.execute(params: params)
-        
+        let result = await sut.execute(params: params)
+
         // then
         switch result {
         case .failure(let error):
@@ -45,6 +51,6 @@ struct GetAllCharactersUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 }

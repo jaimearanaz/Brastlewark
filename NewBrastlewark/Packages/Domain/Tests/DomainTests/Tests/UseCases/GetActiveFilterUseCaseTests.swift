@@ -1,12 +1,21 @@
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct GetActiveFilterUseCaseTests {
+final class GetActiveFilterUseCaseTests {
+    var sut: GetActiveFilterUseCaseProtocol!
+    var filterRepositoryMock: FilterRepositoryMock!
+
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(GetActiveFilterUseCaseProtocol.self)!
+        filterRepositoryMock = (container.resolve(FilterRepositoryProtocol.self) as! FilterRepositoryMock)
+    }
+
     @Test
     func given_repositoryReturnsFilter_when_execute_then_returnsSuccessWithFilter() async throws {
         // given
-        let repository = FilterRepositoryMock()
         let expectedFilter = Filter(
             age: 10...20,
             weight: 30...50,
@@ -14,13 +23,12 @@ struct GetActiveFilterUseCaseTests {
             hairColor: ["red"],
             profession: ["baker"],
             friends: 1...5)
-        repository.getActiveFilterResult = expectedFilter
-        repository.getActiveFilterError = nil
-        let useCase = GetActiveFilterUseCase(repository: repository)
-        
+        filterRepositoryMock.getActiveFilterResult = expectedFilter
+        filterRepositoryMock.getActiveFilterError = nil
+
         // when
-        let result = await useCase.execute()
-        
+        let result = await sut.execute()
+
         // then
         switch result {
         case .success(let filter):
@@ -28,19 +36,17 @@ struct GetActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getActiveFilterCalled))
+        #expect(Bool(filterRepositoryMock.getActiveFilterCalled))
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = FilterRepositoryMock()
-        repository.getActiveFilterError = FilterRepositoryError.unableToFetchFilter
-        let useCase = GetActiveFilterUseCase(repository: repository)
-        
+        filterRepositoryMock.getActiveFilterError = FilterRepositoryError.unableToFetchFilter
+
         // when
-        let result = await useCase.execute()
-        
+        let result = await sut.execute()
+
         // then
         switch result {
         case .failure(let error):
@@ -48,6 +54,6 @@ struct GetActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getActiveFilterCalled))
+        #expect(Bool(filterRepositoryMock.getActiveFilterCalled))
     }
 }

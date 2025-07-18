@@ -1,20 +1,28 @@
 import Foundation
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct GetSearchedCharacterUseCaseTests {
+final class GetSearchedCharacterUseCaseTests {
+    var sut: GetSearchedCharacterUseCaseProtocol!
+    var charactersRepositoryMock: CharactersRepositoryMock!
+    
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(GetSearchedCharacterUseCaseProtocol.self)!
+        charactersRepositoryMock = (container.resolve(CharactersRepositoryProtocol.self) as! CharactersRepositoryMock)
+    }
+    
     @Test
     func given_repositoryReturnsCharacters_when_executeWithMatchingName_then_returnsCharactersWithName() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let params = GetSearchedCharacterUseCaseParams(searchText: "Fizwood")
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -24,20 +32,18 @@ struct GetSearchedCharacterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 
     @Test
     func given_repositoryReturnsCharacters_when_executeWithMatchingProfession_then_returnsCharactersWithProfession() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let params = GetSearchedCharacterUseCaseParams(searchText: "Tinker")
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -47,20 +53,18 @@ struct GetSearchedCharacterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 
     @Test
     func given_repositoryReturnsCharacters_when_executeWithEmptySearchText_then_returnsAllCharacters() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let params = GetSearchedCharacterUseCaseParams(searchText: "")
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -69,19 +73,17 @@ struct GetSearchedCharacterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = CharactersRepositoryMock()
-        repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
-        let useCase = GetSearchedCharacterUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
         let params = GetSearchedCharacterUseCaseParams(searchText: "Alice")
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -90,6 +92,6 @@ struct GetSearchedCharacterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 }

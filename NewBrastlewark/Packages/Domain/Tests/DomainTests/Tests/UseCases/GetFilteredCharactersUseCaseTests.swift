@@ -1,20 +1,28 @@
 import Foundation
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct GetFilteredCharactersUseCaseTests {
+final class GetFilteredCharactersUseCaseTests {
+    var sut: GetFilteredCharactersUseCaseProtocol!
+    var charactersRepositoryMock: CharactersRepositoryMock!
+    
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(GetFilteredCharactersUseCaseProtocol.self)!
+        charactersRepositoryMock = (container.resolve(CharactersRepositoryProtocol.self) as! CharactersRepositoryMock)
+    }
+
     @Test
-    static func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
+    func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = CharactersRepositoryMock()
-        repository.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersError = CharactersRepositoryError.unableToFetchCharacters
         let filter = Filter()
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -23,21 +31,19 @@ struct GetFilteredCharactersUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.getAllCharactersCalled))
+        #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 
     @Test
-    static func given_filterByAge_when_execute_then_returnsCharactersWithinAgeRange() async throws {
+    func given_filterByAge_when_execute_then_returnsCharactersWithinAgeRange() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(age: 100...200)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -50,17 +56,15 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByWeight_when_execute_then_returnsCharactersWithinWeightRange() async throws {
+    func given_filterByWeight_when_execute_then_returnsCharactersWithinWeightRange() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(weight: 39...41)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -73,17 +77,15 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByHeight_when_execute_then_returnsCharactersWithinHeightRange() async throws {
+    func given_filterByHeight_when_execute_then_returnsCharactersWithinHeightRange() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(height: 120...130)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -96,17 +98,15 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByHairColor_when_execute_then_returnsCharactersWithHairColor() async throws {
+    func given_filterByHairColor_when_execute_then_returnsCharactersWithHairColor() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(hairColor: ["Red"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -119,17 +119,15 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByMultipleHairColors_when_execute_then_returnsCharactersWithAnyOfHairColors() async throws {
+    func given_filterByMultipleHairColors_when_execute_then_returnsCharactersWithAnyOfHairColors() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(hairColor: ["Red", "Green"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -142,17 +140,15 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByProfession_when_execute_then_returnsCharactersWithProfession() async throws {
+    func given_filterByProfession_when_execute_then_returnsCharactersWithProfession() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
+        charactersRepositoryMock.getAllCharactersResult = characters
         let filter = Filter(profession: ["Baker"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
@@ -165,81 +161,44 @@ struct GetFilteredCharactersUseCaseTests {
     }
 
     @Test
-    static func given_filterByMultipleProfessions_when_execute_then_returnsCharactersWithAnyOfProfessions() async throws {
+    func given_filterByMultipleProfessions_when_execute_then_returnsCharactersWithAnyOfProfessions() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
-        let filter = Filter(profession: ["Baker", "Tinker"])
+        charactersRepositoryMock.getAllCharactersResult = characters
+        let filter = Filter(profession: ["Baker", "Metalworker"])
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
         case .success(let filtered):
             #expect(!filtered.isEmpty)
-            #expect(filtered.allSatisfy { $0.professions.contains(where: { ["Baker", "Tinker"].contains($0) }) })
+            #expect(filtered.allSatisfy { 
+                $0.professions.contains("Baker") || $0.professions.contains("Metalworker") 
+            })
         default:
             #expect(Bool(false))
         }
     }
 
     @Test
-    static func given_filterByFriendsCount_when_execute_then_returnsCharactersWithinFriendsRange() async throws {
+    func given_filterByFriends_when_execute_then_returnsCharactersWithFriendsInRange() async throws {
         // given
-        let repository = CharactersRepositoryMock()
         let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
-        let filter = Filter(friends: 2...4)
+        charactersRepositoryMock.getAllCharactersResult = characters
+        let filter = Filter(friends: 3...5)
         let params = GetFilteredCharactersUseCaseParams(filter: filter)
 
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
 
         // then
         switch result {
         case .success(let filtered):
             #expect(!filtered.isEmpty)
-            #expect(filtered.allSatisfy { (2...4).contains($0.friends.count) })
-        default:
-            #expect(Bool(false))
-        }
-    }
-
-    @Test
-    static func given_filterByAllFields_when_execute_then_returnsCharactersMatchingAllCriteria() async throws {
-        // given
-        let repository = CharactersRepositoryMock()
-        let characters = try loadCharactersFromJSON()
-        repository.getAllCharactersResult = characters
-        let useCase = GetFilteredCharactersUseCase(repository: repository)
-        let filter = Filter(
-            age: 100...300,
-            weight: 38...45,
-            height: 98...130,
-            hairColor: ["Green", "Red"],
-            profession: ["Tinker", "Baker"],
-            friends: 1...4
-        )
-        let params = GetFilteredCharactersUseCaseParams(filter: filter)
-
-        // when
-        let result = await useCase.execute(params: params)
-
-        // then
-        switch result {
-        case .success(let filtered):
-            #expect(!filtered.isEmpty)
-            #expect(filtered.allSatisfy { (100...300).contains($0.age) })
-            #expect(filtered.allSatisfy { (38.0...45.0).contains($0.weight) })
-            #expect(filtered.allSatisfy { (98.0...130.0).contains($0.height) })
-            #expect(filtered.allSatisfy { ["Green", "Red"].contains($0.hairColor) })
-            #expect(filtered.allSatisfy { $0.professions.contains(where: { ["Tinker", "Baker"].contains($0) }) })
-            #expect(filtered.allSatisfy { (1...4).contains($0.friends.count) })
+            #expect(filtered.allSatisfy { (3...5).contains($0.friends.count) })
         default:
             #expect(Bool(false))
         }

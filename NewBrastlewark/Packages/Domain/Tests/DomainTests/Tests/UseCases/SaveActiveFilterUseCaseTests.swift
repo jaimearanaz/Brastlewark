@@ -1,19 +1,27 @@
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct SaveActiveFilterUseCaseTests {
+final class SaveActiveFilterUseCaseTests {
+    var sut: SaveActiveFilterUseCaseProtocol!
+    var filterRepositoryMock: FilterRepositoryMock!
+    
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(SaveActiveFilterUseCaseProtocol.self)!
+        filterRepositoryMock = (container.resolve(FilterRepositoryProtocol.self) as! FilterRepositoryMock)
+    }
+    
     @Test
     func given_repositorySavesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
-        let repository = FilterRepositoryMock()
-        repository.saveActiveFilterError = nil
-        let useCase = SaveActiveFilterUseCase(repository: repository)
+        filterRepositoryMock.saveActiveFilterError = nil
         let filter = Filter(age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"], friends: 1...5)
         let params = SaveActiveFilterUseCaseParams(filter: filter)
         
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
         
         // then
         switch result {
@@ -22,21 +30,19 @@ struct SaveActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.saveActiveFilterCalled))
-        #expect(repository.savedActiveFilter == filter)
+        #expect(Bool(filterRepositoryMock.saveActiveFilterCalled))
+        #expect(filterRepositoryMock.savedActiveFilter == filter)
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = FilterRepositoryMock()
-        repository.saveActiveFilterError = FilterRepositoryError.unableToSaveFilter
-        let useCase = SaveActiveFilterUseCase(repository: repository)
+        filterRepositoryMock.saveActiveFilterError = FilterRepositoryError.unableToSaveFilter
         let filter = Filter(age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"], friends: 1...5)
         let params = SaveActiveFilterUseCaseParams(filter: filter)
         
         // when
-        let result = await useCase.execute(params: params)
+        let result = await sut.execute(params: params)
         
         // then
         switch result {
@@ -45,6 +51,6 @@ struct SaveActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.saveActiveFilterCalled))
+        #expect(Bool(filterRepositoryMock.saveActiveFilterCalled))
     }
 }

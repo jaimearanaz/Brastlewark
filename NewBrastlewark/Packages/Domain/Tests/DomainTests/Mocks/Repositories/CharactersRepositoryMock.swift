@@ -3,7 +3,6 @@ import Foundation
 @testable import Domain
 
 final class CharactersRepositoryMock: CharactersRepositoryProtocol {
-    // MARK: - getAllCharacters
     var getAllCharactersResult: [Character] = []
     var getAllCharactersError: Error?
     var getAllCharactersCalled = false

@@ -1,37 +1,43 @@
 import Testing
+import Swinject
 
 @testable import Domain
 
-struct DeleteActiveFilterUseCaseTests {
+final class DeleteActiveFilterUseCaseTests {
+    var sut: DeleteActiveFilterUseCaseProtocol!
+    var filterRepositoryMock: FilterRepositoryMock!
+
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(DeleteActiveFilterUseCaseProtocol.self)!
+        filterRepositoryMock = (container.resolve(FilterRepositoryProtocol.self) as! FilterRepositoryMock)
+    }
+
     @Test
     func given_repositoryDeletesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
-        let repository = FilterRepositoryMock()
-        repository.deleteActiveFilterError = nil
-        let useCase = DeleteActiveFilterUseCase(repository: repository)
+        filterRepositoryMock.deleteActiveFilterError = nil
 
         // when
-        let result = await useCase.execute()
+        let result = await sut.execute()
 
         // then
         switch result {
         case .success:
-            #expect(true)
+            #expect(Bool(true))
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.deleteActiveFilterCalled))
+        #expect(Bool(filterRepositoryMock.deleteActiveFilterCalled))
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        let repository = FilterRepositoryMock()
-        repository.deleteActiveFilterError = FilterRepositoryError.unableToDeleteFilter
-        let useCase = DeleteActiveFilterUseCase(repository: repository)
+        filterRepositoryMock.deleteActiveFilterError = FilterRepositoryError.unableToDeleteFilter
 
         // when
-        let result = await useCase.execute()
+        let result = await sut.execute()
 
         // then
         switch result {
@@ -40,6 +46,6 @@ struct DeleteActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(repository.deleteActiveFilterCalled))
+        #expect(Bool(filterRepositoryMock.deleteActiveFilterCalled))
     }
 }
