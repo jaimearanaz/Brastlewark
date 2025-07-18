@@ -4,16 +4,25 @@ import XCTest
 @testable import Data
 
 final class CharactersRepositoryTests: XCTestCase {
+    private var sut: CharactersRepositoryProtocol!
+    private var cacheMock: CacheMock!
+    private var networkServiceMock: NetworkServiceMock!
+
+    override func setUp() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(CharactersRepositoryProtocol.self)! as! CharactersRepository
+        cacheMock = (container.resolve(CharactersCacheProtocol.self) as! CacheMock)
+        networkServiceMock = (container.resolve(NetworkServiceProtocol.self) as! NetworkServiceMock)
+    }
+
     func test_given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
         // given
-        let cache = CacheMock()
         let entity = try loadOneCharacterFromJSON()
-        cache.storedCharacters = [entity]
-        cache.valid = true
-        let repo = CharactersRepository(networkService: nil, cache: cache)
+        cacheMock.storedCharacters = [entity]
+        cacheMock.valid = true
 
         // when
-        let result = try await repo.getAllCharacters()
+        let result = try await sut.getAllCharacters(forceUpdate: false)
 
         // then
         XCTAssertEqual(result.count, 1)
@@ -22,54 +31,47 @@ final class CharactersRepositoryTests: XCTestCase {
 
     func test_given_invalidCache_and_networkSuccess_when_getAllCharacters_then_returnsNetworkCharactersAndSavesToCache() async throws {
         // given
-        let cache = CacheMock()
-        cache.valid = false
         let entity = try loadOneCharacterFromJSON()
-        let network = NetworkServiceMock()
-        network.result = [entity]
-        let repo = CharactersRepository(networkService: network, cache: cache)
+        networkServiceMock.result = [entity]
+        cacheMock.valid = false
 
         // when
-        let result = try await repo.getAllCharacters()
+        let result = try await sut.getAllCharacters(forceUpdate: false)
 
         // then
         XCTAssertEqual(result.count, 1)
         XCTAssertEqual(result.first?.id, entity.id)
-        XCTAssertTrue(cache.saveCalled)
-        XCTAssertEqual(cache.storedCharacters?.first?.id, entity.id)
+        XCTAssertTrue(cacheMock.saveCalled)
+        XCTAssertEqual(cacheMock.storedCharacters?.first?.id, entity.id)
     }
 
     func test_given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsError() async {
         // given
-        let cache = CacheMock()
-        cache.valid = false
-        let network = NetworkServiceMock()
-        network.error = NetworkErrors.general
-        let repo = CharactersRepository(networkService: network, cache: cache)
+        cacheMock.valid = false
+        networkServiceMock.error = NetworkErrors.general
 
         // when
         do {
-            _ = try await repo.getAllCharacters()
+            _ = try await sut.getAllCharacters(forceUpdate: false)
             XCTFail("Should throw error")
         } catch {
             // then
-            // Success: error thrown
+            XCTAssertTrue(true)
         }
     }
 
     func test_given_nilNetworkService_when_getAllCharacters_then_throwsError() async {
         // given
-        let cache = CacheMock()
-        cache.valid = false
-        let repo = CharactersRepository(networkService: nil, cache: cache)
+        networkServiceMock = nil
+        cacheMock.valid = false
 
         // when
         do {
-            _ = try await repo.getAllCharacters()
+            _ = try await sut.getAllCharacters(forceUpdate: false)
             XCTFail("Should throw error")
         } catch {
             // then
-            // Success: error thrown
+            XCTAssertTrue(true)
         }
     }
 }

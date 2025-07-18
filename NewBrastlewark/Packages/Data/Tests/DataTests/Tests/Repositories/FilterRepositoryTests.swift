@@ -5,14 +5,20 @@ import Testing
 @testable import Data
 
 struct FilterRepositoryTests {
+    private var sut: FilterRepositoryProtocol!
+    
+    init() {
+        let container = DependencyRegistry.createFreshContainer()
+        sut = container.resolve(FilterRepositoryProtocol.self)! as! FilterRepository
+    }
+
     @Test
     func given_characters_when_getAvailableFilter_then_returnsCorrectFilter() async throws {
         // given
-        let repo = FilterRepository()
         let characters = try loadCharactersFromJSON().map { CharacterEntityMapper.map(entity: $0) }
 
         // when
-        let filter = try await repo.getAvailableFilter(fromCharacters: characters)
+        let filter = try await sut.getAvailableFilter(fromCharacters: characters)
 
         // then
         #expect(filter.age.lowerBound == 166)
@@ -45,7 +51,6 @@ struct FilterRepositoryTests {
     @Test
     func when_saveActiveFilter_and_getActiveFilter_then_returnsSavedFilter() async throws {
         // given
-        let repo = FilterRepository()
         let filter = Filter(
             age: 1...2,
             weight: 3...4,
@@ -55,8 +60,8 @@ struct FilterRepositoryTests {
             friends: 7...8)
 
         // when
-        try await repo.saveActiveFilter(filter)
-        let result = try await repo.getActiveFilter()
+        try await sut.saveActiveFilter(filter)
+        let result = try await sut.getActiveFilter()
 
         // then
         #expect(result == filter)
@@ -65,7 +70,6 @@ struct FilterRepositoryTests {
     @Test
     func when_saveActiveFilter_and_deleteActiveFilter_then_getActiveFilterReturnsNil() async throws {
         // given
-        let repo = FilterRepository()
         let filter = Filter(
             age: 1...2,
             weight: 3...4,
@@ -75,9 +79,9 @@ struct FilterRepositoryTests {
             friends: 7...8)
 
         // when
-        try await repo.saveActiveFilter(filter)
-        try await repo.deleteActiveFilter()
-        let result = try await repo.getActiveFilter()
+        try await sut.saveActiveFilter(filter)
+        try await sut.deleteActiveFilter()
+        let result = try await sut.getActiveFilter()
 
         // then
         #expect(result == nil)
@@ -86,11 +90,10 @@ struct FilterRepositoryTests {
     @Test
     func given_emptyCharacters_when_getAvailableFilter_then_returnsZeroRangesAndSets() async throws {
         // given
-        let repo = FilterRepository()
         let characters: [Character] = []
 
         // when
-        let filter = try await repo.getAvailableFilter(fromCharacters: characters)
+        let filter = try await sut.getAvailableFilter(fromCharacters: characters)
 
         // then
         #expect(filter.age.lowerBound == 0)

@@ -5,14 +5,19 @@ import Testing
 @testable import Data
 
 struct PersistentCharactersCacheTests {
+    private var sut: CharactersCacheProtocol!
+
+    init() {
+        self.sut = makeInMemoryCache()
+    }
+
     @Test
     func given_emptyCache_when_get_then_returnsNil() async {
         // given
-        let cache = makeInMemoryCache()
-        await cache.clearCache()
+        await sut.clearCache()
 
         // when
-        let result = await cache.get()
+        let result = await sut.get()
 
         // then
         #expect(result == nil)
