@@ -16,12 +16,16 @@ final class PersistentCharactersCache: CharactersCacheProtocol {
         set { UserDefaults.standard.set(newValue, forKey: "characters_cache_timestamp") }
     }
 
-    init(cacheValidityInSeconds: TimeInterval = 10, modelContainer: ModelContainer? = nil) {
+    init?(cacheValidityInSeconds: TimeInterval = 10, modelContainer: ModelContainer? = nil) {
         self.cacheValidity = cacheValidityInSeconds
         if let modelContainer = modelContainer {
             self.modelContainer = modelContainer
         } else {
-            self.modelContainer = try! ModelContainer(for: CharacterModel.self)
+            do {
+                self.modelContainer = try ModelContainer(for: CharacterModel.self)
+            } catch {
+                return nil
+            }
         }
     }
 

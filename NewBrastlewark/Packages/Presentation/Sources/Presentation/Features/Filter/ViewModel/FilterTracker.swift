@@ -23,7 +23,9 @@ final class FilterTracker: FilterTrackerProtocol {
         self.analytics = analytics
     }
 
+    // swiftlint:disable todo
     func track(event: FilterTrackingEvent) {
         // TODO: implement with analytics service
     }
+    // swiftlint:enable todo
 }

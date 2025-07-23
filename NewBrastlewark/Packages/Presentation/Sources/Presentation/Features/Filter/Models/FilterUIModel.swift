@@ -35,7 +35,7 @@ public struct FilterSliderUIModel: Sendable {
 }
 
 public struct FilterItemListUIModel: Sendable, Identifiable {
-    public var id: UUID = UUID()
+    public var id = UUID()
     var title: String
     var checked: Bool
 

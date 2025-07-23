@@ -6,6 +6,7 @@ protocol NetworkStatusProtocol {
 }
 
 class NetworkStatus: NetworkStatusProtocol {
+    // swiftlint:disable force_unwrapping
     func isInternetAvailable() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
@@ -27,5 +28,5 @@ class NetworkStatus: NetworkStatusProtocol {
 
         return (isReachable && !needsConnection)
     }
+    // swiftlint:enable force_unwrapping
 }
-

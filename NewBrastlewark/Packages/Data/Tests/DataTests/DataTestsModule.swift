@@ -15,7 +15,7 @@ public struct DataTestsModule {
                 cache: resolveOrFail(r, CharactersCacheProtocol.self))
         }
         .inObjectScope(.container)
-        container.register(FilterRepositoryProtocol.self) { r in
+        container.register(FilterRepositoryProtocol.self) { _ in
             FilterRepository()
         }
         .inObjectScope(.container)

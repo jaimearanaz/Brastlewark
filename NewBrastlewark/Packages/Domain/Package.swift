@@ -11,7 +11,7 @@ let package = Package(
     products: [
         .library(
             name: "Domain",
-            targets: ["Domain"]),
+            targets: ["Domain"])
     ],
     dependencies: [
         .package(path: "../Utils"),
@@ -28,8 +28,6 @@ let package = Package(
                 .copy("Resources/characters.json"),
                 .copy("Resources/one_character.json")
             ]
-        ),
+        )
     ]
 )
-
-

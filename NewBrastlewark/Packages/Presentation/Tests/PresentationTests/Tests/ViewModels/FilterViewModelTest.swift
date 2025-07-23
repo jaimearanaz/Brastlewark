@@ -5,6 +5,7 @@ import Swinject
 
 @testable import Presentation
 
+// swiftlint:disable force_cast file_length force_unwrapping
 @MainActor
 struct FilterViewModelTests {
     private var sut: FilterViewModel!
@@ -212,7 +213,11 @@ struct FilterViewModelTests {
         }
         #expect(await trackerMock.didTrackEvent(.resetTapped))
     }
+}
 
+// MARK: - Filter Change Tests
+@MainActor
+extension FilterViewModelTests {
     @Test
     func givenFilter_whenAgeChanges_thenFilterIsUpdated() async {
         // given
@@ -426,3 +431,4 @@ struct FilterViewModelTests {
         #expect(await trackerMock.didTrackEvent(.friendsChanged(friends: newFriendsRange)))
     }
 }
+// swiftlint:enable force_cast force_unwrapping

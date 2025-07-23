@@ -6,7 +6,7 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
     @StateObject private var viewModel: ViewModel
     @State private var maxTitleWidth: CGFloat = 0
     @State private var characterId: Int = 0
-    @State private var showHome: Bool = false
+    @State private var showHome = false
     private var localizables = Localizables()
     private var accessibilityIds = AccessibilityIdentifiers()
     private var constants = Constants()
@@ -29,8 +29,7 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
 }
 
 private extension DetailsView {
-    @ViewBuilder
-    var content: some View {
+    @ViewBuilder var content: some View {
         switch viewModel.state {
         case .loading:
             loadingView
@@ -77,12 +76,11 @@ private extension DetailsView {
         }
     }
 
-    @ViewBuilder
-    var homeButton: some View {
+    @ViewBuilder var homeButton: some View {
         if showHome {
-            Button(action: {
+            Button {
                 viewModel.didTapHomeButton()
-            }) {
+            } label: {
                 Text(localizables.backHome)
                     .font(.system(size: 16, weight: .medium))
                     .padding(.vertical, 12)
@@ -143,6 +141,7 @@ private extension DetailsView {
             .accessibilityAddTraits(.isHeader)
     }
 
+    // swiftlint:disable large_tuple
     func detailsRows(forDetails details: DetailsUIModel) -> [(String, String, String)] {
         [(localizables.age, "\(details.age)", accessibilityIds.ageRow),
         (localizables.weight, String(format: "%.1f", details.weight), accessibilityIds.weightRow),
@@ -151,6 +150,7 @@ private extension DetailsView {
         (localizables.professions, details.professions.joined(separator: ", "), accessibilityIds.professionsRow),
         (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "", accessibilityIds.friendsRow)]
     }
+    // swiftlint:enable large_tuple
 
     func detailsInfo(details: DetailsUIModel) -> some View {
         let rows = detailsRows(forDetails: details)

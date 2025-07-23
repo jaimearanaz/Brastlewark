@@ -130,6 +130,7 @@
 				6F8F7E432DE851FF0054CD0B /* Frameworks */,
 				6F8F7E442DE851FF0054CD0B /* Resources */,
 				6F8F7E912DE852790054CD0B /* Embed Frameworks */,
+				6FAFDC342E2C02B900378C23 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -235,6 +236,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6FAFDC342E2C02B900378C23 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SWIFTLINT_BIN=\"/usr/local/bin/swiftlint\"\nCONFIG_PATH=\"${SRCROOT}/../.swiftlint.yml\"\nTARGET_DIR=\"${SRCROOT}/Packages\"\n\nif [ -x \"$SWIFTLINT_BIN\" ]; then\n  \"$SWIFTLINT_BIN\" --config \"$CONFIG_PATH\" \"$TARGET_DIR\"\nelse\n  echo \"warning: SwiftLint no está instalado\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6F8F7E422DE851FF0054CD0B /* Sources */ = {
@@ -390,6 +412,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NewBrastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -420,6 +443,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X7FQ3DUR48;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NewBrastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

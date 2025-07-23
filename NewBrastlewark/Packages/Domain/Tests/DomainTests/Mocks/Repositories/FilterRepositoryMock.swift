@@ -3,7 +3,7 @@ import Foundation
 @testable import Domain
 
 final class FilterRepositoryMock: FilterRepositoryProtocol {
-    var getAvailableFilterResult: Filter = Filter(age: 0...0, weight: 0...0, height: 0...0, friends: 0...0)
+    var getAvailableFilterResult = Filter(age: 0...0, weight: 0...0, height: 0...0, friends: 0...0)
     var getAvailableFilterError: Error?
     var getAvailableFilterCalled = false
     func getAvailableFilter(fromCharacters: [Character]) async throws -> Filter {

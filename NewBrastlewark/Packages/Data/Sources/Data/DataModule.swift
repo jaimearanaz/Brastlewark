@@ -14,7 +14,7 @@ public struct DataModule {
                 cache: resolveOrFail(r, CharactersCacheProtocol.self))
         }
         .inObjectScope(.container)
-        container.register(FilterRepositoryProtocol.self) { r in
+        container.register(FilterRepositoryProtocol.self) { _ in
             FilterRepository()
         }
         .inObjectScope(.container)
@@ -28,7 +28,10 @@ public struct DataModule {
                 networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
         }
         container.register(CharactersCacheProtocol.self) { _ in
-            PersistentCharactersCache()
+            guard let cache = PersistentCharactersCache() else {
+                fatalError("Persistent cache is not initialized")
+            }
+            return cache
         }
         .inObjectScope(.container)
     }

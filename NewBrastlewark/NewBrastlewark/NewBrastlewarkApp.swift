@@ -10,7 +10,7 @@ struct NewBrastlewarkApp: App {
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Item.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
@@ -20,12 +20,14 @@ struct NewBrastlewarkApp: App {
         }
     }()
 
+    // swiftlint:disable force_cast
     init() {
         guard let resolvedRouter = DIContainer.shared.resolve((any RouterProtocol).self) else {
             fatalError("Could not resolve Router from DIContainer")
         }
         _router = StateObject(wrappedValue: resolvedRouter as! Router)
     }
+    // swiftlint:enable force_cast
 
     var body: some Scene {
         WindowGroup {

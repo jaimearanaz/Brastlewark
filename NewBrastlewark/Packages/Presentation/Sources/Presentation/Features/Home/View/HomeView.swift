@@ -34,8 +34,7 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
 // MARK: - Private methods
 
 private extension HomeView {
-    @ViewBuilder
-    var contentView: some View {
+    @ViewBuilder var contentView: some View {
         switch viewModel.state {
         case .loading:
             loadingView

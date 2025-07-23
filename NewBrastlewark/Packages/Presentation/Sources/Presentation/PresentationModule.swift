@@ -20,7 +20,7 @@ public struct PresentationModule {
     }
 
     private static func registerRouter(inContainer container: Container) {
-        container.register((any RouterProtocol).self) { r in
+        container.register((any RouterProtocol).self) { _ in
             Router()
         }
         .inObjectScope(.container)

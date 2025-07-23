@@ -13,7 +13,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Data",
-            targets: ["Data"]),
+            targets: ["Data"])
     ],
     dependencies: [
         .package(path: "../Utils"),
@@ -37,6 +37,6 @@ let package = Package(
                 .copy("Resources/one_character.json"),
                 .copy("Resources/empty_professions_character.json")
             ]
-        ),
+        )
     ]
 )

@@ -3,7 +3,8 @@ import SwiftData
 
 @Model
 final class CharacterModel {
-    @Attribute(.unique) var id: Int
+    @Attribute(.unique)
+    var id: Int
     var name: String
     var thumbnail: String
     var age: Int

@@ -5,6 +5,7 @@ import Swinject
 
 @testable import Presentation
 
+// swiftlint:disable force_cast force_unwrapping
 @MainActor
 struct HomeViewModelTests {
     private var sut: HomeViewModel!
@@ -262,3 +263,4 @@ struct HomeViewModelTests {
         #expect(await trackerMock.didTrackEvent(.errorScreenViewed))
     }
 }
+// swiftlint:enable force_cast force_unwrapping

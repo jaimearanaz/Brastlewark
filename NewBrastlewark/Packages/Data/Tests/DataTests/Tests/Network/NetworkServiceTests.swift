@@ -3,6 +3,7 @@ import Testing
 
 @testable import Data
 
+// swiftlint:disable force_try force_unwrapping
 struct NetworkServiceTests {
     @Test
     func given_noInternet_when_getCharacters_then_returnsNoNetworkError() async {
@@ -197,6 +198,7 @@ struct NetworkServiceTests {
         }
     }
 }
+// swiftlint:enable force_try force_unwrapping
 
 private extension NetworkServiceTests {
     private func makeMockSession() -> URLSession {

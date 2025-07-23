@@ -6,11 +6,11 @@ public final class RouterMock: RouterProtocol, @unchecked Sendable {
     @Published public var path = NavigationPath()
 
     public private(set) var didNavigateToRoute: (called: Bool, route: Route?) = (false, nil)
-    public private(set) var didNavigateBack: Bool = false
-    public private(set) var didNavigateToRoot: Bool = false
+    public private(set) var didNavigateBack = false
+    public private(set) var didNavigateToRoot = false
     public private(set) var didPopToView: (called: Bool, count: Int?) = (false, nil)
-    public private(set) var didCheckCanNavigateBack: Bool = false
-    public var canNavigateBackResult: Bool = false
+    public private(set) var didCheckCanNavigateBack = false
+    public var canNavigateBackResult = false
 
     private let lock = NSLock()
 

@@ -3,6 +3,7 @@ import Swinject
 
 @testable import Domain
 
+// swiftlint:disable force_cast force_unwrapping
 final class DeleteActiveFilterUseCaseTests {
     var sut: DeleteActiveFilterUseCaseProtocol!
     var filterRepositoryMock: FilterRepositoryMock!
@@ -49,3 +50,4 @@ final class DeleteActiveFilterUseCaseTests {
         #expect(Bool(filterRepositoryMock.deleteActiveFilterCalled))
     }
 }
+// swiftlint:enable force_cast force_unwrapping

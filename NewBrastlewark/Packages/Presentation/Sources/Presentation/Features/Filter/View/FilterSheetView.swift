@@ -8,7 +8,8 @@ struct FilterSheetView: View {
     private let localizables = Localizables()
     private let accessibilityIds = AccessibilityIdentifiers()
     private let constants = Constants()
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     var body: some View {
         NavigationStack {
@@ -36,9 +37,9 @@ private extension FilterSheetView {
     }
 
     func itemView(for item: FilterItemListUIModel) -> some View {
-        Button(action: {
+        Button {
             onToggle(item.title, !item.checked)
-        }) {
+        } label: {
             HStack {
                 Text(item.title)
                     .foregroundColor(Color.primary)
@@ -57,7 +58,7 @@ private extension FilterSheetView {
     }
 
     var toolbarButtons: some View {
-        HStack (spacing: 16) {
+        HStack(spacing: 16) {
             resetButton
             acceptButton
         }

@@ -4,6 +4,7 @@ import Testing
 
 @testable import Data
 
+// swiftlint:disable force_cast force_unwrapping
 struct FilterRepositoryTests {
     private var sut: FilterRepositoryProtocol!
     
@@ -108,3 +109,4 @@ struct FilterRepositoryTests {
         #expect(filter.friends.upperBound == 0)
     }
 }
+// swiftlint:enable force_cast force_unwrapping

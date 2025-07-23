@@ -20,7 +20,9 @@ final class HomeTracker: HomeTrackerProtocol {
         self.analytics = analytics
     }
 
+    // swiftlint:disable todo
     func track(event: HomeTrackingEvent) {
         // TODO: implement with analytics service
     }
+    // swiftlint:enable todo
 }

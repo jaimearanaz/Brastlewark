@@ -1,14 +1,14 @@
 import Domain
 
 final class FilterRepository: FilterRepositoryProtocol {
-    private var activeFilter: Filter? = nil
+    private var activeFilter: Filter?
 
     func getAvailableFilter(fromCharacters characters: [Character]) async throws -> Filter {
         var professions = Set<String>()
         var hairColors = Set<String>()
         var names = Set<String>()
 
-        characters.forEach ({
+        characters.forEach({
             $0.professions.forEach { professions.insert($0.localized) }
             hairColors.insert($0.hairColor)
             names.insert($0.name)

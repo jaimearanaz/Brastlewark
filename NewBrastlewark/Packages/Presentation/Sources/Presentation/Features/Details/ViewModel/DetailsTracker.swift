@@ -16,7 +16,9 @@ final class DetailsTracker: DetailsTrackerProtocol {
         self.analytics = analytics
     }
 
+    // swiftlint:disable todo
     func track(event: DetailsTrackingEvent) {
         // TODO: implement with analytics service
     }
+    // swiftlint:enable todo
 }

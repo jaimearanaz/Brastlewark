@@ -3,6 +3,7 @@ import XCTest
 
 @testable import Data
 
+// swiftlint:disable force_cast force_unwrapping
 final class CharactersRepositoryTests: XCTestCase {
     private var sut: CharactersRepositoryProtocol!
     private var cacheMock: CacheMock!
@@ -75,3 +76,4 @@ final class CharactersRepositoryTests: XCTestCase {
         }
     }
 }
+// swiftlint:enable force_cast force_unwrapping

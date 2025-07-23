@@ -1,0 +1,46 @@
+included:
+  - NewBrastlewark/NewBrastlewark
+  - NewBrastlewark/Packages/Data
+  - NewBrastlewark/Packages/Domain
+  - NewBrastlewark/Packages/Presentation
+  - NewBrastlewark/Packages/Utils
+
+excluded:
+  - Pods
+  - Carthage
+  - .build
+  - fastlane
+  - DerivedData
+  - .swiftpm
+  - NewBrastlewark/SourcePackages
+  - NewBrastlewark/.build
+  - NewBrastlewark/Packages/**/.build
+  - NewBrastlewark/Packages/**/.swiftpm
+  - NewBrastlewark/Packages/**/Checkouts
+
+opt_in_rules:
+  - attributes
+  - closure_spacing
+  - explicit_init
+  - empty_count
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - cyclomatic_complexity 
+  - function_body_length
+  - file_length
+  - type_body_length
+  - identifier_name
+  - trailing_whitespace
+  - vertical_whitespace
+  - vertical_parameter_alignment
+  - unused_closure_parameter
+  - redundant_optional_initialization
+  - redundant_type_annotation
+
+disabled_rules:
+  - line_length
+  - trailing_whitespace
+  - identifier_name
+
+reporter: xcode

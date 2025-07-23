@@ -4,6 +4,7 @@ import Swinject
 
 @testable import Domain
 
+// swiftlint:disable force_cast force_unwrapping
 final class GetCharacterByIdUseCaseTests {
     var sut: GetCharacterByIdUseCaseProtocol!
     var charactersRepositoryMock: CharactersRepositoryMock!
@@ -75,3 +76,4 @@ final class GetCharacterByIdUseCaseTests {
         #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
     }
 }
+// swiftlint:enable force_cast force_unwrapping

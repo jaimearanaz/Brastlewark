@@ -5,6 +5,7 @@ import Swinject
 
 @testable import Presentation
 
+// swiftlint:disable force_cast force_unwrapping
 @MainActor
 struct DetailsViewModelTests {
     private var sut: DetailsViewModel!
@@ -148,3 +149,4 @@ struct DetailsViewModelTests {
         #expect(routerMock.didNavigateToRoot)
     }
 }
+// swiftlint:enable force_cast force_unwrapping

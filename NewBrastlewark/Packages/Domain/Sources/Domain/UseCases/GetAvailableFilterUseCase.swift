@@ -13,7 +13,7 @@ final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol {
     private let filterRepository: FilterRepositoryProtocol
 
     init(charactersRepository: CharactersRepositoryProtocol,
-        filterRepository: FilterRepositoryProtocol) {
+         filterRepository: FilterRepositoryProtocol) {
         self.charactersRepository = charactersRepository
         self.filterRepository = filterRepository
     }

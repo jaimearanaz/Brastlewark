@@ -77,7 +77,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                 }
 
                 self.state = .ready(details: mapToDetailsUIModel(character: character, friends: friends))
-            case .failure(_):
+            case .failure:
                 self.state = .error
                 tracker.track(event: .errorScreenViewed)
             }

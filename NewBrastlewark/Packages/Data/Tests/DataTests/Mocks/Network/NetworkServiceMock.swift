@@ -6,6 +6,7 @@ class NetworkServiceMock: NetworkServiceProtocol {
     var error: NetworkErrors?
     var result: [CharacterEntity]?
 
+    // swiftlint:disable force_unwrapping
     func getCharacters() async throws -> [CharacterEntity] {
         guard error == nil else {
             throw error!
@@ -16,4 +17,5 @@ class NetworkServiceMock: NetworkServiceProtocol {
         }
         return result
     }
+    // swiftlint:enable force_unwrapping
 }

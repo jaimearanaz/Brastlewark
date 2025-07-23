@@ -46,8 +46,8 @@ private extension GetFilteredCharactersUseCase {
             filtered = filtered.filter { filter.hairColor.contains($0.hairColor) }
         }
         if !filter.profession.isEmpty {
-            filtered = filtered.filter { filter.profession.map{ $0.uppercased() }
-                .containsOneOrMoreOfElements(in: $0.professions.map{ $0.uppercased() }) }
+            filtered = filtered.filter { filter.profession.map { $0.uppercased() }
+                .containsOneOrMoreOfElements(in: $0.professions.map { $0.uppercased() }) }
         }
         if filter.friends != 0...0 {
             filtered = filtered.filter { filter.friends.contains($0.friends.count) }

@@ -32,6 +32,6 @@ public class Router: RouterProtocol {
     }
 
     public func canNavigateBack() -> Bool {
-        return path.count > 0
+        return !path.isEmpty
     }
 }

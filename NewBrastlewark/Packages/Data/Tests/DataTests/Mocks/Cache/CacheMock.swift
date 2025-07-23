@@ -2,8 +2,8 @@ import Foundation
 @testable import Data
 
 final class CacheMock: CharactersCacheProtocol {
-    var storedCharacters: [CharacterEntity]? = nil
-    var valid: Bool = false
+    var storedCharacters: [CharacterEntity]?
+    var valid = false
     var clearCalled = false
     var saveCalled = false
 

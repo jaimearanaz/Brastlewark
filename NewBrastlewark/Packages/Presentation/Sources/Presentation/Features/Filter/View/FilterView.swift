@@ -36,8 +36,7 @@ public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>:
 // MARK: - Private methods
 
 private extension FilterView {
-    @ViewBuilder
-    var content: some View {
+    @ViewBuilder var content: some View {
         switch viewModel.state {
         case .ready(let filter):
             GeometryReader { geometry in
@@ -223,6 +222,7 @@ private extension FilterView {
         )
     }
 
+    // swiftlint:disable function_parameter_count
     @ViewBuilder
     func multipleFieldRow(
         title: String,
@@ -236,7 +236,9 @@ private extension FilterView {
         onReset: @escaping () -> Void
     ) -> some View {
         HStack(spacing: 16) {
-            Button(action: { isSheetPresented.wrappedValue = true }) {
+            Button {
+                isSheetPresented.wrappedValue = true
+            } label: {
                 HStack(spacing: 16) {
                     Text(title)
                         .foregroundColor(.accentColor)
@@ -273,6 +275,7 @@ private extension FilterView {
             )
         }
     }
+    // swiftlint:enable function_parameter_count
 
     func multipleFieldSummary(allTitle: String, items: [FilterItemListUIModel]) -> String {
         let selected = items.filter { $0.checked }

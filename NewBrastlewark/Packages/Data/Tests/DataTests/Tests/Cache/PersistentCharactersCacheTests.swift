@@ -85,12 +85,14 @@ struct PersistentCharactersCacheTests {
     }
 }
 
+// swiftlint:disable force_try force_unwrapping
 private extension PersistentCharactersCacheTests {
     func makeInMemoryCache() -> PersistentCharactersCache {
         let inMemoryContainer = try! ModelContainer(
             for: CharacterModel.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
-        return PersistentCharactersCache(cacheValidityInSeconds: 10, modelContainer: inMemoryContainer)
+        return PersistentCharactersCache(cacheValidityInSeconds: 10, modelContainer: inMemoryContainer)!
     }
 }
+// swiftlint:enable force_try force_unwrapping
