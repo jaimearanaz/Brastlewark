@@ -1,6 +1,6 @@
 ## Welcome to Brastlewark! 👋
 
-This project is a technical test developed for an iOS developer position. The description and requirements for the test are included in this repository as a [PDF file](https://github.com/jaimearanaz/NewBrastlewark/blob/main/Brastlewark_mobile_test.pdf).
+This app was built as a technical test for an iOS Software Engineer position. It was designed with production-level standards, showcasing scalable architecture, testability, and clean UI flow. The description and requirements for the test are included in this repository as a [PDF file](https://github.com/jaimearanaz/NewBrastlewark/blob/main/Brastlewark_mobile_test.pdf).
 
 **Brastlewark** is an iOS application that displays all the inhabitants of the Gnome city called Brastlewark. Through the app, you can browse the complete city directory, search for people by name, characteristics or professions, and view detailed information and friends of each resident.
 
@@ -10,9 +10,7 @@ This project is a technical test developed for an iOS developer position. The de
 
 ## Table of Contents
 
-## Table of Contents
-
-- [Basic Architecture](#basic-architecture-and-key-principles)
+- [Architecture overview](#basic-architecture-and-key-principles)
 - [Layer Separation](#layer-separation)
   - [Domain](#domain)
   - [Data](#data)
@@ -26,7 +24,7 @@ This project is a technical test developed for an iOS developer position. The de
 - [Third Party Libraries](#third-party-libraries)
 - [About Me](#about-me)
 
-## Basic architecture and key principles 💪
+## Architecture overview and key principles 💪
 
 This project is based on a set of fundamental technical decisions and principles that guided the development of the app:
 
@@ -193,7 +191,7 @@ The final layer in this Xcode project is the **main target**, which represents t
 
 Additionally, the main target handles the app’s navigation structure and UI flow.
 
-## Navigation ⛵️
+## Navigation 🌎
 
 Navigation in the Brastlewark app is managed by injecting a class called `Router` into every view model. This approach delegates all navigation logic away from views and view models into a dedicated, centralized component.
 
@@ -222,7 +220,7 @@ public enum Route: Hashable {
 }
 ```
 
-## Dependency injection 🪄
+## Dependency injections 💫
 
 Dependency injection is a fundamental mechanism to achieve a truly **Clean Architecture**, where each component receives its configured and ready-to-use dependencies, without worrying about how they are created or where they come from. In addition, injected dependencies significantly simplify **testing and mocking**.
 
@@ -290,15 +288,16 @@ For snapshot testing, the project uses the third-party library [SnapshotTesting]
 
 ## Third party libraries 📚
 Brastlewark app uses the following third party libraries through Swift Package Manager:
-- [MultiSlider](https://github.com/yonat/MultiSlider): for the double sliders used in filter view
-- [Swinject](https://github.com/Swinject/Swinject): for dependency injection across the app
+- [MultiSlider](https://github.com/yonat/MultiSlider): used for the double sliders used in filter view
+- [Swinject](https://github.com/Swinject/Swinject): to implement dependency injection across the app
 - [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing): for snapshot testing
+- [SwiftLint](https://github.com/realm/SwiftLint): to enforce Swift style and conventions
 
 ## About me 🙋‍♂️
-**Jaime Aranaz**
-*Freelance iOS developer* 
-jaime.aranaz@gmail.com 
-📍 Madrid, Spain
+**Jaime Aranaz**  
+*Freelance iOS developer*  
+jaime.aranaz@gmail.com  
+📍 Madrid, Spain  
 
 You can find me here:
  - [LinkedIn](https://www.linkedin.com/in/jaimearanaztudela/)
