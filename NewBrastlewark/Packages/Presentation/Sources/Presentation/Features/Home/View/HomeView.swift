@@ -2,7 +2,7 @@ import SwiftUI
 import Utils
 
 public struct HomeView<ViewModel: HomeViewModelProtocol>: View {
-    @Bindable private var viewModel: ViewModel
+    @State private var viewModel: ViewModel
     private var localizables = Localizables()
     private var accessibilityIds = AccessibilytIdentifiers()
     private var constants = Constants()
@@ -11,7 +11,7 @@ public struct HomeView<ViewModel: HomeViewModelProtocol>: View {
     // MARK: - Public methods
 
     public init(viewModel: ViewModel) {
-        self.viewModel = viewModel
+        _viewModel = State(initialValue: viewModel)
     }
 
     public var body: some View {
@@ -141,7 +141,9 @@ private extension HomeView {
     }
 
     var searchBar: some View {
-        HStack {
+        @Bindable var viewModel = viewModel
+
+        return HStack {
             Image(systemName: constants.magnifyigGlass)
                 .foregroundColor(.gray)
                 .accessibilityHidden(true)
