@@ -4,11 +4,11 @@ public enum GetAvailableFilterUseCaseError: Error {
     case unableToGetAvailableFilter
 }
 
-public protocol GetAvailableFilterUseCaseProtocol {
+public protocol GetAvailableFilterUseCaseProtocol: Sendable {
     func execute() async -> Result<Filter, GetAvailableFilterUseCaseError>
 }
 
-final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol {
+final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol, @unchecked Sendable {
     private let charactersRepository: CharactersRepositoryProtocol
     private let filterRepository: FilterRepositoryProtocol
 

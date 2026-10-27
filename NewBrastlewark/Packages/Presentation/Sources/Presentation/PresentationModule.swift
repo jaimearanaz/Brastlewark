@@ -1,5 +1,5 @@
 import Domain
-import SwiftUICore
+import SwiftUI
 import Swinject
 
 @MainActor

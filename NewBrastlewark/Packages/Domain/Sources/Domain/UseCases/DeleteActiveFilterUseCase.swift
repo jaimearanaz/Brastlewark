@@ -1,8 +1,8 @@
-public protocol DeleteActiveFilterUseCaseProtocol {
+public protocol DeleteActiveFilterUseCaseProtocol: Sendable {
     func execute() async -> Result<Void, FilterRepositoryError>
 }
 
-final class DeleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol {
+final class DeleteActiveFilterUseCase: DeleteActiveFilterUseCaseProtocol, @unchecked Sendable {
     private let repository: FilterRepositoryProtocol
 
     init(repository: FilterRepositoryProtocol) {

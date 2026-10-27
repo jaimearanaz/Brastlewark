@@ -5,8 +5,8 @@ import Utils
 public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject>: View {
     @StateObject private var viewModel: ViewModel
     @State private var maxTitleWidth: CGFloat = 0
-    @State private var characterId: Int = 0
-    @State private var showHome = false
+    @State private var characterId: Int
+    @State private var showHome: Bool
     private var localizables = Localizables()
     private var accessibilityIds = AccessibilityIdentifiers()
     private var constants = Constants()

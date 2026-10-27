@@ -6,11 +6,11 @@ public struct GetCharacterByIdUseCaseParams {
     }
 }
 
-public protocol GetCharacterByIdUseCaseProtocol {
+public protocol GetCharacterByIdUseCaseProtocol: Sendable {
     func execute(params: GetCharacterByIdUseCaseParams) async -> Result<Character?, CharactersRepositoryError>
 }
 
-final class GetCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol {
+final class GetCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol, @unchecked Sendable {
     private let repository: CharactersRepositoryProtocol
 
     init(repository: CharactersRepositoryProtocol) {

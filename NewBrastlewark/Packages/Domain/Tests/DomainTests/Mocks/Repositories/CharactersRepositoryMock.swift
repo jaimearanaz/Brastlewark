@@ -2,7 +2,7 @@ import Foundation
 
 @testable import Domain
 
-final class CharactersRepositoryMock: CharactersRepositoryProtocol {
+final class CharactersRepositoryMock: CharactersRepositoryProtocol, @unchecked Sendable {
     var getAllCharactersResult: [Character] = []
     var getAllCharactersError: Error?
     var getAllCharactersCalled = false

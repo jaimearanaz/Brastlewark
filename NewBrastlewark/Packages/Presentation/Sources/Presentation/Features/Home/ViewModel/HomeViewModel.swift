@@ -1,5 +1,5 @@
 import Combine
-import SwiftUICore
+import SwiftUI
 import Domain
 import Foundation
 
