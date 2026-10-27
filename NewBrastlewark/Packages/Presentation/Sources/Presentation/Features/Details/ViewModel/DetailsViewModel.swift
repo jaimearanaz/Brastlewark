@@ -1,5 +1,5 @@
 import Domain
-import SwiftUI
+import Observation
 
 public enum DetailsState: Sendable {
     case loading
@@ -8,7 +8,7 @@ public enum DetailsState: Sendable {
 }
 
 @MainActor
-public protocol DetailsViewModelProtocol: ObservableObject {
+public protocol DetailsViewModelProtocol: AnyObject, Observable {
     // Outputs
     var state: DetailsState { get }
     var characterId: Int { get set }
@@ -20,11 +20,12 @@ public protocol DetailsViewModelProtocol: ObservableObject {
 }
 
 @MainActor
+@Observable
 public final class DetailsViewModel: DetailsViewModelProtocol {
-    @Published public var state: DetailsState = .loading
+    public var state: DetailsState = .loading
     public var characterId: Int
 
-    private var tasks = Set<Task<Void, Never>>()
+    @ObservationIgnored nonisolated(unsafe) private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let tracker: DetailsTrackerProtocol
     private let getCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol

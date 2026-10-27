@@ -3,7 +3,7 @@ import Domain
 
 @MainActor
 enum DetailsViewModelPreview {
-    static var ready: some DetailsViewModelProtocol & ObservableObject {
+    static var ready: some DetailsViewModelProtocol {
         DetailsViewModelMock(state: .ready(details:
                 .init(
                     name: "Gandalf the Grey",
@@ -25,7 +25,7 @@ enum DetailsViewModelPreview {
                     ])))
     }
 
-    static var noFriends: some DetailsViewModelProtocol & ObservableObject {
+    static var noFriends: some DetailsViewModelProtocol {
         DetailsViewModelMock(state: .ready(details:
                 .init(
                     name: "Gandalf the Grey",

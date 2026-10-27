@@ -1,16 +1,17 @@
-import SwiftUI
 import Domain
+import Observation
 
 @MainActor
-final class DetailsViewModelMock: DetailsViewModelProtocol, ObservableObject {
+@Observable
+final class DetailsViewModelMock: DetailsViewModelProtocol {
     // Outputs
-    @Published var state: DetailsState
+    var state: DetailsState
     var characterId: Int = 0
 
     // Input callbacks
-    var didViewLoadCallback: (() -> Void)?
-    var didSelectCharacterCallback: ((Int) -> Void)?
-    var didTapHomeButtonCallback: (() -> Void)?
+    @ObservationIgnored var didViewLoadCallback: (() -> Void)?
+    @ObservationIgnored var didSelectCharacterCallback: ((Int) -> Void)?
+    @ObservationIgnored var didTapHomeButtonCallback: (() -> Void)?
 
     init(
         state: DetailsState = .loading,

@@ -2,8 +2,8 @@ import SwiftUI
 import MultiSlider
 import Utils
 
-public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject>: View {
-    @StateObject private var viewModel: ViewModel
+public struct DetailsView<ViewModel: DetailsViewModelProtocol>: View {
+    private let viewModel: ViewModel
     @State private var maxTitleWidth: CGFloat = 0
     @State private var characterId: Int
     @State private var showHome: Bool
@@ -14,7 +14,7 @@ public struct DetailsView<ViewModel: DetailsViewModelProtocol & ObservableObject
     public init(characterId: Int = 0, showHome: Bool = false, viewModel: ViewModel) {
         self.characterId = characterId
         self.showHome = showHome
-        _viewModel = StateObject(wrappedValue: viewModel)
+        self.viewModel = viewModel
     }
 
     public var body: some View {
