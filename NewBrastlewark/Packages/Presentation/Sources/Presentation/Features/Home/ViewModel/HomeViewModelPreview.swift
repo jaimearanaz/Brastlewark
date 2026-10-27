@@ -3,33 +3,33 @@ import Domain
 
 @MainActor
 enum HomeViewModelPreview {
-    static var full: some HomeViewModelProtocol & ObservableObject {
+    static var full: some HomeViewModelProtocol {
         HomeViewModelMock(state: .ready(characters: getCharacters()))
     }
 
-    static var notFull: some HomeViewModelProtocol & ObservableObject {
+    static var notFull: some HomeViewModelProtocol {
         let characters = getCharacters()
         let halfCharacters = Array(characters.prefix(characters.count / 2))
         return HomeViewModelMock(state: .ready(characters: halfCharacters))
     }
 
-    static var filtered: some HomeViewModelProtocol & ObservableObject {
+    static var filtered: some HomeViewModelProtocol {
         HomeViewModelMock(state: .ready(characters: getCharacters(), reset: true))
     }
 
-    static var loading: some HomeViewModelProtocol & ObservableObject {
+    static var loading: some HomeViewModelProtocol {
         return HomeViewModelMock()
     }
 
-    static var empty: some HomeViewModelProtocol & ObservableObject {
+    static var empty: some HomeViewModelProtocol {
         return HomeViewModelMock(state: .empty)
     }
 
-    static var noInternet: some HomeViewModelProtocol & ObservableObject {
+    static var noInternet: some HomeViewModelProtocol {
         return HomeViewModelMock(state: .error(.noInternetConnection))
     }
 
-    static var generalError: some HomeViewModelProtocol & ObservableObject {
+    static var generalError: some HomeViewModelProtocol {
         return HomeViewModelMock(state: .error(.generalError))
     }
 

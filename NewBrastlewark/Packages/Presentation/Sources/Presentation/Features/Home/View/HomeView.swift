@@ -1,8 +1,8 @@
 import SwiftUI
 import Utils
 
-public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: View {
-    @StateObject private var viewModel: ViewModel
+public struct HomeView<ViewModel: HomeViewModelProtocol>: View {
+    @Bindable private var viewModel: ViewModel
     private var localizables = Localizables()
     private var accessibilityIds = AccessibilytIdentifiers()
     private var constants = Constants()
@@ -11,7 +11,7 @@ public struct HomeView<ViewModel: HomeViewModelProtocol & ObservableObject>: Vie
     // MARK: - Public methods
 
     public init(viewModel: ViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        self.viewModel = viewModel
     }
 
     public var body: some View {

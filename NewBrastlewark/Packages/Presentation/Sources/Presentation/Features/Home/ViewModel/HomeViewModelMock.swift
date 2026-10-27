@@ -1,9 +1,10 @@
-import SwiftUI
+import Observation
 
-final class HomeViewModelMock: HomeViewModelProtocol, ObservableObject {
+@Observable
+final class HomeViewModelMock: HomeViewModelProtocol {
     // Outputs
-    @Published var state: HomeState
-    @Published var searchText: String
+    var state: HomeState
+    var searchText: String
 
     // Input callbacks
     var didOnAppearCallback: (() -> Void)?

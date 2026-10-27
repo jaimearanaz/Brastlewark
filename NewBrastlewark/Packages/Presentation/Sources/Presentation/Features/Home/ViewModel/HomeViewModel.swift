@@ -1,7 +1,7 @@
 import Combine
-import SwiftUI
 import Domain
 import Foundation
+import Observation
 
 public enum HomeError: Sendable {
     case noInternetConnection
@@ -16,7 +16,7 @@ public enum HomeState: Sendable {
 }
 
 @MainActor
-public protocol HomeViewModelProtocol: ObservableObject {
+public protocol HomeViewModelProtocol: AnyObject, Observable {
     // Outputs
     var state: HomeState { get }
     var searchText: String { get set }
@@ -31,17 +31,20 @@ public protocol HomeViewModelProtocol: ObservableObject {
 }
 
 @MainActor
+@Observable
 public final class HomeViewModel: HomeViewModelProtocol {
-    @Published public var state: HomeState = .loading
-    @Published public var searchText = "" {
+    public var state: HomeState = .loading
+    public var searchText = "" {
         didSet {
             didSearchTextChanged()
+            searchSubject.send(searchText)
         }
     }
 
     private let minSearchChars = 3
-    private var searchCancellable: AnyCancellable?
-    private var tasks = Set<Task<Void, Never>>()
+    @ObservationIgnored private let searchSubject = PassthroughSubject<String, Never>()
+    @ObservationIgnored private var searchCancellable: AnyCancellable?
+    @ObservationIgnored nonisolated(unsafe) private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let tracker: HomeTrackerProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
@@ -127,7 +130,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
 
 private extension HomeViewModel {
     func setupSearchSubscription() {
-        searchCancellable = $searchText
+        searchCancellable = searchSubject
             .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.didSearchTextChanged()
