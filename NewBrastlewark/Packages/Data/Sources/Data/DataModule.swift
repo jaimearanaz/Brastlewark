@@ -24,7 +24,7 @@ public struct DataModule {
         container.register(NetworkStatusProtocol.self) { _ in NetworkStatus() }
         container.register(NetworkServiceProtocol.self) { r in
             NetworkService(
-                baseUrl: "https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json",
+                baseUrl: "https://raw.githubusercontent.com/jaimearanaz/Brastlewark/refs/heads/main/data/brastlewark.json",
                 networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
         }
         container.register(CharactersCacheProtocol.self) { _ in
