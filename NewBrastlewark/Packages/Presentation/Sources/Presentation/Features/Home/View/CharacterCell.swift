@@ -74,11 +74,11 @@ private extension CharacterCell {
     }
 
     func fallbackImage() -> some View {
-        Image(systemName: constants.neutralImage)
+        Image(constants.defaultImage, bundle: .module)
             .resizable()
-            .scaledToFit()
+            .scaledToFill()
             .frame(width: constants.imageSize, height: constants.imageSize)
-            .foregroundColor(.gray)
+            .clipped()
     }
 }
 
@@ -87,7 +87,7 @@ private extension CharacterCell {
 private extension CharacterCell {
     struct Constants {
         let imageSize: CGFloat = 100
-        let neutralImage = "person.circle.fill"
+        let defaultImage = "genericGnome"
     }
 
     struct AccessibilytIdentifiers {

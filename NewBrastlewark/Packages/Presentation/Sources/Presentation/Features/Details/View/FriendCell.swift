@@ -65,10 +65,10 @@ private extension FriendCell {
     }
 
     func fallbackImage() -> some View {
-        Image(systemName: constants.personIcon)
+        Image(constants.defaultImage, bundle: .module)
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .foregroundColor(.gray)
+            .scaledToFill()
+            .clipShape(Circle())
     }
 
     var infoView: some View {
@@ -96,7 +96,7 @@ private extension FriendCell {
         let imageSize: CGFloat = 60
         let cellWidth: CGFloat = 80
         let cellHeight: CGFloat = 100
-        let personIcon = "person.circle.fill"
+        let defaultImage = "genericGnome"
     }
 
     struct AccessibilityIdentifiers {

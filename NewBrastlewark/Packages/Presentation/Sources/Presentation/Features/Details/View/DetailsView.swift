@@ -123,14 +123,22 @@ private extension DetailsView {
             .accessibilityIdentifier(accessibilityIds.characterImage)
             .accessibilityLabel("\(localizables.imageOf) \(details.name)")
             .accessibilityAddTraits(.isImage)
+        } else {
+            fallbackImage()
+                .frame(
+                    width: geometry.size.width,
+                    height: geometry.size.height * 0.25
+                )
+                .accessibilityIdentifier(accessibilityIds.characterImageDefault)
+                .accessibilityLabel("\(localizables.imageOf) \(details.name)")
+                .accessibilityAddTraits(.isImage)
         }
     }
 
     func fallbackImage() -> some View {
-        Image(systemName: constants.defaultImage)
+        Image(constants.defaultImage, bundle: .module)
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .foregroundColor(.gray)
+            .scaledToFit()
     }
 
     func detailsName(details: DetailsUIModel) -> some View {
@@ -232,7 +240,7 @@ private extension DetailsView {
 
 private extension DetailsView {
     struct Constants {
-        let defaultImage = "person.circle.fill"
+        let defaultImage = "genericGnome"
     }
 
     struct Localizables {
