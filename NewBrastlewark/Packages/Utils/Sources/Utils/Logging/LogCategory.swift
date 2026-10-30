@@ -1,13 +1,7 @@
-public enum LogCategory: String, CaseIterable, Sendable {
-    case network = "data.network"
-    case decoding = "data.decoding"
-    case persistence = "data.persistence"
-    case repository = "data.repository"
-    case domain
-    case viewModel = "presentation.viewmodel"
-    case interaction = "presentation.interaction"
-    case navigation = "presentation.navigation"
-    case lifecycle = "app.lifecycle"
-    case performance
-    case diagnostics
+public struct LogCategory: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
 }
