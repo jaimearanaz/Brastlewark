@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftData
 import Domain
 import Data
 import Presentation
@@ -10,18 +9,6 @@ struct NewBrastlewarkApp: App {
     private let homeViewModel: HomeViewModel
     private let filterViewModel: FilterViewModel
     private let detailsViewModel: DetailsViewModel
-
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
 
     init() {
         guard let router = DIContainer.shared.resolve((any RouterProtocol).self) as? Router,
@@ -56,6 +43,5 @@ struct NewBrastlewarkApp: App {
                     }
             }
         }
-        .modelContainer(sharedModelContainer)
     }
 }
