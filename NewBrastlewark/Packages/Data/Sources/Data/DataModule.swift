@@ -2,9 +2,17 @@ import Domain
 import Swinject
 
 public struct DataModule {
-    public static func registerDependencies(inContainer container: Container) {
+    public enum Source {
+        case remote
+        case local
+    }
+
+    public static func registerDependencies(
+        inContainer container: Container,
+        source: Source = .remote
+    ) {
         registerRepositories(in: container)
-        registerOthers(in: container)
+        registerOthers(in: container, source: source)
     }
 
     private static func registerRepositories(in container: Container) {
@@ -20,12 +28,17 @@ public struct DataModule {
         .inObjectScope(.container)
     }
 
-    private static func registerOthers(in container: Container) {
+    private static func registerOthers(in container: Container, source: Source) {
         container.register(NetworkStatusProtocol.self) { _ in NetworkStatus() }
         container.register(NetworkServiceProtocol.self) { r in
-            NetworkService(
-                baseUrl: "https://raw.githubusercontent.com/jaimearanaz/Brastlewark/refs/heads/main/data/brastlewark.json",
-                networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
+            switch source {
+            case .remote:
+                NetworkService(
+                    baseUrl: "https://raw.githubusercontent.com/jaimearanaz/Brastlewark/refs/heads/main/data/brastlewark.json",
+                    networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
+            case .local:
+                LocalService()
+            }
         }
         container.register(CharactersCacheProtocol.self) { _ in
             guard let cache = PersistentCharactersCache() else {
