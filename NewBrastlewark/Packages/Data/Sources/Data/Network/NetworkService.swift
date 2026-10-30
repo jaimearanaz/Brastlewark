@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 
 protocol NetworkServiceProtocol {
     func getCharacters() async throws -> [CharacterEntity]
@@ -10,7 +9,6 @@ class NetworkService: NetworkServiceProtocol {
     var retries: Int
     var networkStatus: NetworkStatusProtocol
     var urlSession: URLSession
-    var cancellable: AnyCancellable?
 
     init(baseUrl: String,
          retries: Int = 3,
@@ -23,55 +21,51 @@ class NetworkService: NetworkServiceProtocol {
     }
 
     func getCharacters() async throws -> [CharacterEntity] {
-        try await withCheckedThrowingContinuation { continuation in
-            guard networkStatus.isInternetAvailable() else {
-                continuation.resume(throwing: NetworkErrors.noNetwork)
-                return
-            }
-            guard url.isValidNetworkURL, let url = URL(string: url) else {
-                continuation.resume(throwing: NetworkErrors.wrongUrl)
-                return
-            }
-            cancellable = urlSession.dataTaskPublisher(for: url)
-                .mapError { error -> NetworkErrors in
-                    if error.errorCode == -1001 {
-                        return .timeout
-                    } else {
-                        return .general
-                    }
-                }
-                .retry(retries)
-                .tryMap { (data, response) -> CityEntity in
-                    guard let response = response as? HTTPURLResponse else {
-                        throw NetworkErrors.general
-                    }
-                    if response.statusCode == 200 {
-                        let decoder = JSONDecoder()
-                        if let city = try? decoder.decode(CityEntity.self, from: data) {
-                            return city
-                        } else {
-                            throw NetworkErrors.wrongJson
-                        }
-                    } else {
-                        throw NetworkErrors.statusError(response.statusCode)
-                    }
-                }
-                .map { $0.brastlewark }
-                .sink(receiveCompletion: { [weak self] completion in
-                    if case let .failure(error) = completion {
-                        if let networkError = error as? NetworkErrors {
-                            continuation.resume(throwing: networkError)
-                        } else if let urlError = error as? URLError, urlError.code == .timedOut {
-                            continuation.resume(throwing: NetworkErrors.timeout)
-                        } else {
-                            continuation.resume(throwing: NetworkErrors.general)
-                        }
-                    }
-                    self?.cancellable = nil
-                }, receiveValue: { [weak self] characters in
-                    continuation.resume(returning: characters)
-                    self?.cancellable = nil
-                })
+        guard networkStatus.isInternetAvailable() else {
+            throw NetworkErrors.noNetwork
         }
+        guard url.isValidNetworkURL, let url = URL(string: url) else {
+            throw NetworkErrors.wrongUrl
+        }
+
+        let (data, response) = try await fetchData(from: url)
+
+        guard let response = response as? HTTPURLResponse else {
+            throw NetworkErrors.general
+        }
+        guard response.statusCode == 200 else {
+            throw NetworkErrors.statusError(response.statusCode)
+        }
+        guard let city = try? JSONDecoder().decode(CityEntity.self, from: data) else {
+            throw NetworkErrors.wrongJson
+        }
+
+        return city.brastlewark
+    }
+
+    private func fetchData(from url: URL) async throws -> (Data, URLResponse) {
+        let maximumRetries = max(0, retries)
+        var attempt = 0
+
+        while true {
+            do {
+                return try await urlSession.data(from: url)
+            } catch {
+                if Task.isCancelled {
+                    throw CancellationError()
+                }
+                guard attempt < maximumRetries else {
+                    throw mapTransportError(error)
+                }
+                attempt += 1
+            }
+        }
+    }
+
+    private func mapTransportError(_ error: Error) -> NetworkErrors {
+        guard let urlError = error as? URLError else {
+            return .general
+        }
+        return urlError.code == .timedOut ? .timeout : .general
     }
 }
