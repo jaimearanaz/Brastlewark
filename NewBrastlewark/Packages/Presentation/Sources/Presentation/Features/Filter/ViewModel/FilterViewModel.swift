@@ -88,7 +88,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeAge(_ age: ClosedRange<Int>) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .ageChanged(age: age))
         filter.age.active = age
         state = .ready(filter)
@@ -96,7 +98,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeWeight(_ weight: ClosedRange<Int>) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .weightChanged(weight: weight))
         filter.weight.active = weight
         state = .ready(filter)
@@ -104,7 +108,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeHeight(_ height: ClosedRange<Int>) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .heightChanged(height: height))
         filter.height.active = height
         state = .ready(filter)
@@ -112,7 +118,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeHairColor(title: String, checked: Bool) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         if let index = filter.hairColor.firstIndex(where: { $0.title == title }) {
             filter.hairColor[index].checked = checked
             tracker.track(event: .hairColorChanged(title: title, checked: checked))
@@ -122,7 +130,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didResetHairColor() {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .hairColorReset)
         for index in filter.hairColor.indices {
             filter.hairColor[index].checked = false
@@ -132,7 +142,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeProfession(title: String, checked: Bool) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         if let index = filter.profession.firstIndex(where: { $0.title == title }) {
             filter.profession[index].checked = checked
             tracker.track(event: .professionChanged(title: title, checked: checked))
@@ -142,7 +154,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didResetProfession() {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .professionReset)
         for index in filter.profession.indices {
             filter.profession[index].checked = false
@@ -152,7 +166,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeFriends(_ friends: ClosedRange<Int>) {
-        guard case .ready(var filter) = state else { return }
+        guard case .ready(var filter) = state else {
+            return
+        }
         tracker.track(event: .friendsChanged(friends: friends))
         filter.friends.active = friends
         state = .ready(filter)
@@ -160,13 +176,17 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didTapApplyButton() {
-        guard hasChanges, case .ready(let filter) = state else { return }
+        guard hasChanges, case .ready(let filter) = state else {
+            return
+        }
         tracker.track(event: .applyTapped)
         let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
         let task = Task {
             let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
-            guard !Task.isCancelled, case .success = result else { return }
+            guard !Task.isCancelled, case .success = result else {
+                return
+            }
 
             hasChanges = false
             delegate?.filterDidChangeAndApply()
@@ -176,7 +196,9 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didTapResetButton() {
-        guard case .ready = state else { return }
+        guard case .ready = state else {
+            return
+        }
         tracker.track(event: .resetTapped)
         let getAvailableFilterUseCase = self.getAvailableFilterUseCase
         let task = Task {

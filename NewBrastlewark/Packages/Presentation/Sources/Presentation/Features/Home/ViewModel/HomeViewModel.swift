@@ -76,7 +76,9 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func viewIsReady() {
-        guard needsReload else { return }
+        guard needsReload else {
+            return
+        }
 
         needsReload = false
         tracker.track(event: .screenViewed)
@@ -119,7 +121,9 @@ private extension HomeViewModel {
         searchTask?.cancel()
 
         searchTask = Task { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
 
             if debounce {
                 do {
@@ -129,7 +133,9 @@ private extension HomeViewModel {
                 }
             }
 
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else {
+                return
+            }
 
             if text.count < minSearchChars {
                 loadAllCharacters()
@@ -140,13 +146,17 @@ private extension HomeViewModel {
     }
 
     func searchCharacters(matching text: String) async {
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled else {
+            return
+        }
 
         loadTask?.cancel()
         tracker.track(event: .searchChanged(text: text))
         let result = await getSearchedCharacterUseCase.execute(params: .init(searchText: text))
 
-        guard !Task.isCancelled, text == searchText else { return }
+        guard !Task.isCancelled, text == searchText else {
+            return
+        }
 
         switch result {
         case .success(let characters):
@@ -163,7 +173,9 @@ private extension HomeViewModel {
         let getActiveFilterUseCase = getActiveFilterUseCase
         let task = Task {
             let result = await getActiveFilterUseCase.execute()
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else {
+                return
+            }
 
             switch result {
             case .success(let filter):
@@ -185,7 +197,9 @@ private extension HomeViewModel {
         let useCase = getAllCharactersUseCase
         let task = Task {
             let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else {
+                return
+            }
 
             switch result {
             case .success(let characters):
@@ -209,7 +223,9 @@ private extension HomeViewModel {
         let getFilteredCharactersUseCase = getFilteredCharactersUseCase
         let task = Task {
             let result = await getFilteredCharactersUseCase.execute(params: .init(filter: filter))
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else {
+                return
+            }
 
             switch result {
             case .success(let characters):

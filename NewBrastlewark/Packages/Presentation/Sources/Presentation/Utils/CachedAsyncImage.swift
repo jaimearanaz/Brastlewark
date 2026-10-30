@@ -52,7 +52,9 @@ struct CachedAsyncImage<Content: View>: View {
     }
     
     private func saveToCache(_ image: Image) {
-        guard cachedImage == nil else { return }
+        guard cachedImage == nil else {
+            return
+        }
         
         Task {
             if let uiImage = await convertToUIImage(image) {

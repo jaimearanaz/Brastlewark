@@ -176,7 +176,9 @@ private extension FilterView {
                 [CGFloat(field.lowerBound), CGFloat(field.upperBound)]
             },
             set: { newValue in
-                guard newValue.count == 2 else { return }
+                guard newValue.count == 2 else {
+                    return
+                }
                 let newRange = Int(newValue[0])...Int(newValue[1])
                 callback(newRange)
                 isApplyDisabled = false
