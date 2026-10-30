@@ -91,6 +91,79 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func givenRunningCharactersLoad_whenNewLoadStarts_thenPreviousLoadIsCancelled() async {
+        // given
+        getAllCharactersUseCaseMock.suspendFirstExecution = true
+        sut.didRefreshCharacters()
+        await waitUntil { getAllCharactersUseCaseMock.executionCount == 1 }
+
+        // when
+        sut.didRefreshCharacters()
+        await waitUntil {
+            getAllCharactersUseCaseMock.executionCount == 2 &&
+            getAllCharactersUseCaseMock.cancellationCount == 1
+        }
+
+        // then
+        #expect(getAllCharactersUseCaseMock.executionCount == 2)
+        #expect(getAllCharactersUseCaseMock.cancellationCount == 1)
+    }
+
+    @Test
+    func givenRunningSearch_whenNewSearchStarts_thenPreviousSearchIsCancelled() async {
+        // given
+        getSearchedCharacterUseCaseMock.suspendFirstExecution = true
+        sut.searchText = "Ana"
+        sut.didSearchTextChanged()
+        await waitUntil { getSearchedCharacterUseCaseMock.executionCount == 1 }
+
+        // when
+        sut.searchText = "Ana Gonz"
+        sut.didSearchTextChanged()
+        await waitUntil {
+            getSearchedCharacterUseCaseMock.executionCount == 2 &&
+            getSearchedCharacterUseCaseMock.cancellationCount == 1
+        }
+
+        // then
+        #expect(getSearchedCharacterUseCaseMock.executionCount == 2)
+        #expect(getSearchedCharacterUseCaseMock.cancellationCount == 1)
+    }
+
+    @Test
+    func givenLoadedHome_whenFilterDelegateIsInvoked_thenCharactersReloadIsMarked() async {
+        // given
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        getAllCharactersUseCaseMock.executeResult = .success([Character.mock(id: 42)])
+        sut.viewIsReady()
+        await waitUntil { !sut.needsReload }
+
+        // when
+        sut.filterDidChangeAndApply()
+
+        // then
+        #expect(sut.needsReload)
+    }
+
+    @Test
+    func givenCharactersReloadIsMarked_whenHomeAppears_thenCharactersLoadStarts() async {
+        // given
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        getAllCharactersUseCaseMock.executeResult = .success([Character.mock(id: 42)])
+        sut.viewIsReady()
+        await waitUntil { getAllCharactersUseCaseMock.executionCount == 1 }
+        sut.filterDidChangeAndApply()
+
+        // when
+        sut.viewIsReady()
+        await waitUntil { getAllCharactersUseCaseMock.executionCount == 2 }
+
+        // then
+        #expect(getAllCharactersUseCaseMock.executionCount == 2)
+        #expect(!sut.needsReload)
+    }
+
+    @Test
     func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() async {
         // given
         let character = CharacterUIModel.mock(id: 42)
@@ -300,6 +373,13 @@ struct HomeViewModelTests {
             #expect(Bool(false), "Expected .error state but got \(state)")
         }
         #expect(await trackerMock.didTrackEvent(.errorScreenViewed))
+    }
+
+    private func waitUntil(_ condition: () -> Bool) async {
+        for _ in 0..<200 {
+            if condition() { return }
+            try? await Task.sleep(for: .milliseconds(1))
+        }
     }
 }
 // swiftlint:enable force_cast force_unwrapping

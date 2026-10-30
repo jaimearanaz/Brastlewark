@@ -160,6 +160,24 @@ struct FilterViewModelTests {
     }
 
     @Test
+    func givenModifiedFilter_whenApplyIsTapped_thenFilterDelegateIsCalled() async {
+        // given
+        getAvailableFilterUseCaseMock.executeResult = .success(Filter.mock(age: 0...100))
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        saveActiveFilterUseCaseMock.executeResult = .success(())
+        sut.viewIsReady()
+        try? await Task.sleep(for: .milliseconds(100))
+        sut.didChangeAge(20...80)
+
+        // when
+        sut.didTapApplyButton()
+        try? await Task.sleep(for: .milliseconds(100))
+
+        // then
+        #expect(delegateMock.filterDidChangeAndApplyCalled)
+    }
+
+    @Test
     func givenFilter_whenTapsOnReset_thenFilterIsSetToAvailableFilterValues() async {
         // given
         let availableFilter = Filter.mock(

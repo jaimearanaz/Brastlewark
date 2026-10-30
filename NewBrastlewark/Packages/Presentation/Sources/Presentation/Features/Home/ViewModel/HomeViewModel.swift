@@ -40,7 +40,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     private let minSearchChars = 3
-    @ObservationIgnored private var needsReload = true
+    @ObservationIgnored private(set) var needsReload = true
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
     private let router: any RouterProtocol
