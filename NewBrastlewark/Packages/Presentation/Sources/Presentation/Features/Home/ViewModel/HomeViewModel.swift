@@ -80,26 +80,22 @@ public final class HomeViewModel: HomeViewModelProtocol {
             return
         }
 
-        log("view ready, initial load started", .viewModel, .debug)
         needsReload = false
         tracker.track(event: .screenViewed)
         loadCharacters()
     }
 
     public func didSelectCharacter(_ character: CharacterUIModel) {
-        log("character selected, id: \(character.id)", .interaction, .debug)
         tracker.track(event: .characterSelected(characterId: character.id))
         router.navigate(to: .details(characterId: character.id, showHome: false))
     }
 
     public func didTapFilterButton() {
-        log("filter button tapped", .interaction, .debug)
         tracker.track(event: .filterTapped)
         router.navigate(to: .filter)
     }
 
     public func didTapResetButton() {
-        log("reset button tapped", .interaction, .debug)
         tracker.track(event: .resetTapped)
         searchText = ""
         searchTask?.cancel()
@@ -107,12 +103,10 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func didSearchTextChanged() {
-        log("search submitted, query length: \(searchText.count)", .interaction, .debug)
         scheduleSearch(for: searchText, debounce: false)
     }
 
     public func didRefreshCharacters() {
-        log("characters refresh requested", .interaction, .debug)
         searchText = ""
         searchTask?.cancel()
         tracker.track(event: .refreshed)
@@ -157,7 +151,6 @@ private extension HomeViewModel {
         }
 
         loadTask?.cancel()
-        log("search started, query: \(text)", .viewModel, .debug)
         tracker.track(event: .searchChanged(text: text))
         let result = await getSearchedCharacterUseCase.execute(params: .init(searchText: text))
 
@@ -169,14 +162,12 @@ private extension HomeViewModel {
         case .success(let characters):
             let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
             state = .ready(characters: charactersUi)
-            log("search completed, state: ready, results: \(charactersUi.count)", .viewModel, .info)
         case .failure(let error):
             handleResultError(error)
         }
     }
 
     func loadCharacters() {
-        log("load characters", .viewModel, .debug)
         loadTask?.cancel()
         state = .loading
         let getActiveFilterUseCase = getActiveFilterUseCase
@@ -203,7 +194,6 @@ private extension HomeViewModel {
     func loadAllCharacters(forceUpdate: Bool = false) {
         loadTask?.cancel()
         state = .loading
-        log("loading all characters, force update: \(forceUpdate)", .viewModel, .debug)
         let useCase = getAllCharactersUseCase
         let task = Task {
             let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
@@ -216,11 +206,9 @@ private extension HomeViewModel {
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
                 if charactersUi.isEmpty {
                     self.state = .empty
-                    log("state changed to empty", .viewModel, .notice)
                     tracker.track(event: .emptyScreenViewed)
                 } else {
                     self.state = .ready(characters: charactersUi)
-                    log("state changed to ready, results: \(charactersUi.count)", .viewModel, .info)
                 }
             case .failure(let error):
                 handleResultError(error)
@@ -232,7 +220,6 @@ private extension HomeViewModel {
     func loadFilteredCharacters(filter: Filter) {
         loadTask?.cancel()
         state = .loading
-        log("loading filtered characters", .viewModel, .debug)
         let getFilteredCharactersUseCase = getFilteredCharactersUseCase
         let task = Task {
             let result = await getFilteredCharactersUseCase.execute(params: .init(filter: filter))
@@ -245,11 +232,9 @@ private extension HomeViewModel {
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
                 if charactersUi.isEmpty {
                     self.state = .empty
-                    log("filtered result changed state to empty", .viewModel, .notice)
                     tracker.track(event: .emptyScreenViewed)
                 } else {
                     self.state = .ready(characters: charactersUi, reset: true)
-                    log("filtered result changed state to ready, results: \(charactersUi.count)", .viewModel, .info)
                 }
             case .failure(let error):
                 handleResultError(error)
@@ -262,11 +247,9 @@ private extension HomeViewModel {
         switch error {
         case CharactersRepositoryError.noInternetConnection, FilterRepositoryError.noInternetConnection:
             state = .error(.noInternetConnection)
-            log("state changed to error, reason: no internet", .viewModel, .error)
             tracker.track(event: .errorScreenViewed)
         default:
             state = .error(.generalError)
-            log("state changed to error, type: \(String(describing: type(of: error)))", .viewModel, .error)
             tracker.track(event: .errorScreenViewed)
         }
     }
@@ -276,14 +259,9 @@ private extension HomeViewModel {
 
 extension HomeViewModel: FilterDelegate {
     public func filterDidChangeAndApply() {
-        log("applied filter requires reload", .viewModel, .debug)
         searchTask?.cancel()
         loadTask?.cancel()
         needsReload = true
         state = .loading
     }
-}
-
-extension HomeViewModel: PresentationLoggable {
-    nonisolated static let logSource = "HomeViewModel"
 }
