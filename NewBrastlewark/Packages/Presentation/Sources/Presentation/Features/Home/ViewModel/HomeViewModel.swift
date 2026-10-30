@@ -1,4 +1,3 @@
-import Combine
 import Domain
 import Foundation
 import Observation
@@ -36,15 +35,13 @@ public final class HomeViewModel: HomeViewModelProtocol {
     public var state: HomeState = .loading
     public var searchText = "" {
         didSet {
-            didSearchTextChanged()
-            searchSubject.send(searchText)
+            scheduleSearch(for: searchText)
         }
     }
 
     private let minSearchChars = 3
-    @ObservationIgnored private let searchSubject = PassthroughSubject<String, Never>()
-    @ObservationIgnored private var searchCancellable: AnyCancellable?
-    @ObservationIgnored nonisolated(unsafe) private var tasks = Set<Task<Void, Never>>()
+    @ObservationIgnored private var searchTask: Task<Void, Never>?
+    @ObservationIgnored private var loadTask: Task<Void, Never>?
     private let router: any RouterProtocol
     private let tracker: HomeTrackerProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
@@ -70,12 +67,11 @@ public final class HomeViewModel: HomeViewModelProtocol {
             self.getFilteredCharactersUseCase = getFilteredCharactersUseCase
             self.deleteActiveFilterUseCase = deleteActiveFilterUseCase
             self.getSearchedCharacterUseCase = getSearchedCharacterUseCase
-            setupSearchSubscription()
     }
 
     deinit {
-        tasks.forEach { $0.cancel() }
-        tasks.removeAll()
+        searchTask?.cancel()
+        loadTask?.cancel()
     }
 
     public func viewIsReady() {
@@ -96,31 +92,17 @@ public final class HomeViewModel: HomeViewModelProtocol {
     public func didTapResetButton() {
         tracker.track(event: .resetTapped)
         searchText = ""
+        searchTask?.cancel()
         loadAllCharacters()
     }
 
     public func didSearchTextChanged() {
-        guard searchText.count >= minSearchChars else {
-            loadAllCharacters()
-            return
-        }
-        tracker.track(event: .searchChanged(text: searchText))
-        let useCase = getSearchedCharacterUseCase
-        let task = Task {
-            let result = await useCase.execute(params: .init(searchText: searchText))
-            switch result {
-            case .success(let characters):
-                let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                self.state = .ready(characters: charactersUi)
-            case .failure(let error):
-                handleResultError(error)
-            }
-        }
-        tasks.insert(task)
+        scheduleSearch(for: searchText, debounce: false)
     }
 
     public func didRefreshCharacters() {
         searchText = ""
+        searchTask?.cancel()
         tracker.track(event: .refreshed)
         loadAllCharacters(forceUpdate: true)
     }
@@ -129,19 +111,56 @@ public final class HomeViewModel: HomeViewModelProtocol {
 // MARK: - Private methods
 
 private extension HomeViewModel {
-    func setupSearchSubscription() {
-        searchCancellable = searchSubject
-            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.didSearchTextChanged()
+    func scheduleSearch(for text: String, debounce: Bool = true) {
+        searchTask?.cancel()
+
+        searchTask = Task { [weak self] in
+            guard let self else { return }
+
+            if debounce {
+                do {
+                    try await Task.sleep(for: .milliseconds(300))
+                } catch {
+                    return
+                }
             }
+
+            guard !Task.isCancelled else { return }
+
+            if text.count < minSearchChars {
+                loadAllCharacters()
+            } else {
+                await searchCharacters(matching: text)
+            }
+        }
+    }
+
+    func searchCharacters(matching text: String) async {
+        guard !Task.isCancelled else { return }
+
+        loadTask?.cancel()
+        tracker.track(event: .searchChanged(text: text))
+        let result = await getSearchedCharacterUseCase.execute(params: .init(searchText: text))
+
+        guard !Task.isCancelled, text == searchText else { return }
+
+        switch result {
+        case .success(let characters):
+            let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
+            state = .ready(characters: charactersUi)
+        case .failure(let error):
+            handleResultError(error)
+        }
     }
 
     func loadCharacters() {
+        loadTask?.cancel()
         state = .loading
         let getActiveFilterUseCase = getActiveFilterUseCase
         let task = Task {
             let result = await getActiveFilterUseCase.execute()
+            guard !Task.isCancelled else { return }
+
             switch result {
             case .success(let filter):
                 if let filter = filter {
@@ -153,14 +172,17 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
-        tasks.insert(task)
+        loadTask = task
     }
 
     func loadAllCharacters(forceUpdate: Bool = false) {
+        loadTask?.cancel()
         state = .loading
         let useCase = getAllCharactersUseCase
         let task = Task {
             let result = await useCase.execute(params: .init(forceUpdate: forceUpdate))
+            guard !Task.isCancelled else { return }
+
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
@@ -174,14 +196,17 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
-        tasks.insert(task)
+        loadTask = task
     }
 
     func loadFilteredCharacters(filter: Filter) {
+        loadTask?.cancel()
         state = .loading
         let getFilteredCharactersUseCase = getFilteredCharactersUseCase
         let task = Task {
             let result = await getFilteredCharactersUseCase.execute(params: .init(filter: filter))
+            guard !Task.isCancelled else { return }
+
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
@@ -195,7 +220,7 @@ private extension HomeViewModel {
                 handleResultError(error)
             }
         }
-        tasks.insert(task)
+        loadTask = task
     }
 
     func handleResultError(_ error: Error) {
