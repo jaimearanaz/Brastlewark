@@ -23,6 +23,10 @@ final class CharactersRepository: CharactersRepositoryProtocol, @unchecked Senda
             let characterEntities = try await networkService.getCharacters()
             await cache.save(characterEntities)
             return characterEntities.map { CharacterEntityMapper.map(entity: $0) }
+        } catch NetworkErrors.noNetwork {
+            throw CharactersRepositoryError.noInternetConnection
+        } catch let error as CharactersRepositoryError {
+            throw error
         } catch {
             throw CharactersRepositoryError.unableToFetchCharacters
         }

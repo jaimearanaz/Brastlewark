@@ -46,7 +46,7 @@ final class CharactersRepositoryTests: XCTestCase {
         XCTAssertEqual(cacheMock.storedCharacters?.first?.id, entity.id)
     }
 
-    func test_given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsError() async {
+    func test_given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsUnableToFetchCharacters() async {
         // given
         cacheMock.valid = false
         networkServiceMock.error = NetworkErrors.general
@@ -55,9 +55,32 @@ final class CharactersRepositoryTests: XCTestCase {
         do {
             _ = try await sut.getAllCharacters(forceUpdate: false)
             XCTFail("Should throw error")
-        } catch {
+        } catch let error as CharactersRepositoryError {
             // then
-            XCTAssertTrue(true)
+            guard case .unableToFetchCharacters = error else {
+                return XCTFail("Expected unableToFetchCharacters, got \(error)")
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    func test_given_invalidCache_and_noNetwork_when_getAllCharacters_then_throwsNoInternetConnection() async {
+        // given
+        cacheMock.valid = false
+        networkServiceMock.error = NetworkErrors.noNetwork
+
+        // when
+        do {
+            _ = try await sut.getAllCharacters(forceUpdate: false)
+            XCTFail("Should throw error")
+        } catch let error as CharactersRepositoryError {
+            // then
+            guard case .noInternetConnection = error else {
+                return XCTFail("Expected noInternetConnection, got \(error)")
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
         }
     }
 
@@ -70,9 +93,13 @@ final class CharactersRepositoryTests: XCTestCase {
         do {
             _ = try await sut.getAllCharacters(forceUpdate: false)
             XCTFail("Should throw error")
-        } catch {
+        } catch let error as CharactersRepositoryError {
             // then
-            XCTAssertTrue(true)
+            guard case .noInternetConnection = error else {
+                return XCTFail("Expected noInternetConnection, got \(error)")
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
         }
     }
 }
