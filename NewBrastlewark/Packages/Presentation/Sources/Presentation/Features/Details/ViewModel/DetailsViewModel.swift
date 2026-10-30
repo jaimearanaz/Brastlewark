@@ -51,10 +51,12 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
 
     public func viewIsReady() {
         state = .loading
+        log("view ready, character id: \(characterId)", .viewModel, .debug)
         tracker.track(event: .screenViewed(characterId: characterId))
         let getCharacterByIdUseCase = getCharacterByIdUseCase
         let getSearchedCharacterUseCase = getSearchedCharacterUseCase
         let task = Task {
+            log("loading character", .viewModel, .debug)
             let result = await getCharacterByIdUseCase.execute(params: .init(id: characterId))
             switch result {
             case .success(let character):
@@ -64,6 +66,7 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                     return
                 }
                 var friends: [DetailsFriendUIModel] = []
+                log("resolving friends, requested: \(character.friends.count)", .viewModel, .debug)
                 for name in character.friends {
                     let result = await getSearchedCharacterUseCase.execute(params: .init(searchText: name))
                     if case .success(let characters) = result,
@@ -78,8 +81,10 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
                 }
 
                 self.state = .ready(details: mapToDetailsUIModel(character: character, friends: friends))
-            case .failure:
+                log("state changed to ready, resolved friends: \(friends.count)", .viewModel, .info)
+            case .failure(let error):
                 self.state = .error
+                log("state changed to error, type: \(String(describing: type(of: error)))", .viewModel, .error)
                 tracker.track(event: .errorScreenViewed)
             }
         }
@@ -87,11 +92,13 @@ public final class DetailsViewModel: DetailsViewModelProtocol {
     }
 
     public func didSelectCharacter(_ id: Int) {
+        log("friend selected, character id: \(id)", .interaction, .debug)
         tracker.track(event: .friendSelected(characterId: id))
         router.navigate(to: .details(characterId: id, showHome: true))
     }
 
     public func didTapHomeButton() {
+        log("home button tapped", .interaction, .debug)
         tracker.track(event: .homeTapped)
         router.navigateToRoot()
     }
@@ -109,4 +116,8 @@ private extension DetailsViewModel {
             professions: character.professions,
             friends: friends)
     }
+}
+
+extension DetailsViewModel: PresentationLoggable {
+    nonisolated static let logSource = "DetailsViewModel"
 }

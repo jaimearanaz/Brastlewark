@@ -66,6 +66,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func viewIsReady() {
+        log("view ready, loading available and active filters", .viewModel, .debug)
         let getAvailableFilterUseCase = self.getAvailableFilterUseCase
         let getActiveFilterUseCase = self.getActiveFilterUseCase
         tracker.track(event: .screenViewed)
@@ -88,6 +89,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeAge(_ age: ClosedRange<Int>) {
+        log("age changed, lower: \(age.lowerBound), upper: \(age.upperBound)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -98,6 +100,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeWeight(_ weight: ClosedRange<Int>) {
+        log("weight changed, lower: \(weight.lowerBound), upper: \(weight.upperBound)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -108,6 +111,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeHeight(_ height: ClosedRange<Int>) {
+        log("height changed, lower: \(height.lowerBound), upper: \(height.upperBound)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -118,6 +122,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeHairColor(title: String, checked: Bool) {
+        log("hair color changed, selected: \(checked), value: \(title)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -130,6 +135,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didResetHairColor() {
+        log("hair colors reset", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -142,6 +148,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeProfession(title: String, checked: Bool) {
+        log("profession changed, selected: \(checked), value: \(title)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -154,6 +161,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didResetProfession() {
+        log("professions reset", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -166,6 +174,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didChangeFriends(_ friends: ClosedRange<Int>) {
+        log("friends changed, lower: \(friends.lowerBound), upper: \(friends.upperBound)", .interaction, .debug)
         guard case .ready(var filter) = state else {
             return
         }
@@ -176,15 +185,20 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didTapApplyButton() {
+        log("apply button tapped", .interaction, .debug)
         guard hasChanges, case .ready(let filter) = state else {
             return
         }
         tracker.track(event: .applyTapped)
         let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
+        log("saving active filter", .viewModel, .debug)
         let task = Task {
             let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
-            guard !Task.isCancelled, case .success = result else {
+            guard !Task.isCancelled else {
+                return
+            }
+            guard case .success = result else {
                 return
             }
 
@@ -196,6 +210,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
     }
 
     public func didTapResetButton() {
+        log("reset button tapped", .interaction, .debug)
         guard case .ready = state else {
             return
         }
@@ -228,4 +243,8 @@ private extension FilterViewModel {
             friends: available.friends
         )
     }
+}
+
+extension FilterViewModel: PresentationLoggable {
+    nonisolated static let logSource = "FilterViewModel"
 }
