@@ -40,6 +40,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     private let minSearchChars = 3
+    @ObservationIgnored private var needsReload = true
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
     private let router: any RouterProtocol
@@ -75,6 +76,9 @@ public final class HomeViewModel: HomeViewModelProtocol {
     }
 
     public func viewIsReady() {
+        guard needsReload else { return }
+
+        needsReload = false
         tracker.track(event: .screenViewed)
         loadCharacters()
     }
@@ -232,5 +236,16 @@ private extension HomeViewModel {
             state = .error(.generalError)
             tracker.track(event: .errorScreenViewed)
         }
+    }
+}
+
+// MARK: - FilterDelegate
+
+extension HomeViewModel: FilterDelegate {
+    public func filterDidChangeAndApply() {
+        searchTask?.cancel()
+        loadTask?.cancel()
+        needsReload = true
+        state = .loading
     }
 }

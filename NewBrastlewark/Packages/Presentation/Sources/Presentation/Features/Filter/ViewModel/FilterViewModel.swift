@@ -7,6 +7,11 @@ public enum FilterState: Sendable {
 }
 
 @MainActor
+public protocol FilterDelegate: AnyObject {
+    func filterDidChangeAndApply()
+}
+
+@MainActor
 public protocol FilterViewModelProtocol: ObservableObject {
     // Outputs
     var state: FilterState { get }
@@ -28,7 +33,9 @@ public protocol FilterViewModelProtocol: ObservableObject {
 @MainActor
 public final class FilterViewModel: FilterViewModelProtocol {
     @Published public var state: FilterState = .loading
+    public weak var delegate: (any FilterDelegate)?
 
+    private var hasChanges = false
     private var tasks = Set<Task<Void, Never>>()
     private let router: any RouterProtocol
     private let tracker: FilterTrackerProtocol
@@ -43,12 +50,14 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tracker: FilterTrackerProtocol,
         getAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol,
         getActiveFilterUseCase: GetActiveFilterUseCaseProtocol,
-        saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol) {
+        saveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol,
+        delegate: (any FilterDelegate)? = nil) {
             self.router = router
             self.tracker = tracker
             self.getAvailableFilterUseCase = getAvailableFilterUseCase
             self.getActiveFilterUseCase = getActiveFilterUseCase
             self.saveActiveFilterUseCase = saveActiveFilterUseCase
+            self.delegate = delegate
         }
 
     deinit {
@@ -65,6 +74,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             async let activeResult = getActiveFilterUseCase.execute()
             let (available, active) = await (availableResult, activeResult)
 
+            hasChanges = false
             switch (available, active) {
             case (.success(let availableFilter), .success(let activeFilter)):
                 self.state = .ready(Filter.map(
@@ -82,6 +92,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tracker.track(event: .ageChanged(age: age))
         filter.age.active = age
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didChangeWeight(_ weight: ClosedRange<Int>) {
@@ -89,6 +100,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tracker.track(event: .weightChanged(weight: weight))
         filter.weight.active = weight
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didChangeHeight(_ height: ClosedRange<Int>) {
@@ -96,6 +108,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tracker.track(event: .heightChanged(height: height))
         filter.height.active = height
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didChangeHairColor(title: String, checked: Bool) {
@@ -104,6 +117,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             filter.hairColor[index].checked = checked
             tracker.track(event: .hairColorChanged(title: title, checked: checked))
             state = .ready(filter)
+            hasChanges = true
         }
     }
 
@@ -114,6 +128,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             filter.hairColor[index].checked = false
         }
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didChangeProfession(title: String, checked: Bool) {
@@ -122,6 +137,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             filter.profession[index].checked = checked
             tracker.track(event: .professionChanged(title: title, checked: checked))
             state = .ready(filter)
+            hasChanges = true
         }
     }
 
@@ -132,6 +148,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
             filter.profession[index].checked = false
         }
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didChangeFriends(_ friends: ClosedRange<Int>) {
@@ -139,15 +156,20 @@ public final class FilterViewModel: FilterViewModelProtocol {
         tracker.track(event: .friendsChanged(friends: friends))
         filter.friends.active = friends
         state = .ready(filter)
+        hasChanges = true
     }
 
     public func didTapApplyButton() {
-        guard case .ready(let filter) = state else { return }
+        guard hasChanges, case .ready(let filter) = state else { return }
         tracker.track(event: .applyTapped)
         let activeFilter = FilterUIModel.map(model: filter)
         let saveActiveFilterUseCase = saveActiveFilterUseCase
         let task = Task {
-            _ = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
+            let result = await saveActiveFilterUseCase.execute(params: .init(filter: activeFilter))
+            guard !Task.isCancelled, case .success = result else { return }
+
+            hasChanges = false
+            delegate?.filterDidChangeAndApply()
             router.navigateBack()
         }
         tasks.insert(task)
@@ -159,6 +181,7 @@ public final class FilterViewModel: FilterViewModelProtocol {
         let getAvailableFilterUseCase = self.getAvailableFilterUseCase
         let task = Task {
             let availableResult = await getAvailableFilterUseCase.execute()
+            hasChanges = true
             switch availableResult {
             case (.success(let availableFilter)):
                 self.state = .ready(Filter.map(

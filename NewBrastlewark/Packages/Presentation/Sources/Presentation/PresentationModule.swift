@@ -72,6 +72,15 @@ public struct PresentationModule {
                 getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
                 saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
         }
+        container.register(FilterViewModel.self) { (r, delegate: any FilterDelegate) in
+            FilterViewModel(
+                router: resolveOrFail(r, (any RouterProtocol).self),
+                tracker: resolveOrFail(r, FilterTrackerProtocol.self),
+                getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
+                getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
+                saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self),
+                delegate: delegate)
+        }
         container.register(DetailsViewModel.self) { r in
             DetailsViewModel(
                 router: resolveOrFail(r, (any RouterProtocol).self),

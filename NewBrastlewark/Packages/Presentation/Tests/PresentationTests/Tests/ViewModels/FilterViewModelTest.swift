@@ -14,6 +14,7 @@ struct FilterViewModelTests {
     private var getAvailableFilterUseCaseMock: GetAvailableFilterUseCaseMock!
     private var getActiveFilterUseCaseMock: GetActiveFilterUseCaseMock!
     private var saveActiveFilterUseCaseMock: SaveActiveFilterUseCaseMock!
+    private var delegateMock: FilterDelegateMock!
 
     init() {
         let container = DependencyRegistry.createFreshContainer()
@@ -23,6 +24,8 @@ struct FilterViewModelTests {
         self.getAvailableFilterUseCaseMock = (container.resolve(GetAvailableFilterUseCaseProtocol.self) as! GetAvailableFilterUseCaseMock)
         self.getActiveFilterUseCaseMock = (container.resolve(GetActiveFilterUseCaseProtocol.self) as! GetActiveFilterUseCaseMock)
         self.saveActiveFilterUseCaseMock = (container.resolve(SaveActiveFilterUseCaseProtocol.self) as! SaveActiveFilterUseCaseMock)
+        self.delegateMock = FilterDelegateMock()
+        self.sut.delegate = delegateMock
     }
 
     @Test
@@ -148,6 +151,7 @@ struct FilterViewModelTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         // then
+        #expect(delegateMock.filterDidChangeAndApplyCalled, "Delegate should be notified before navigating back")
         #expect(routerMock.didNavigateBack, "Router should navigate back after applying filter")
         let capturedParams = saveActiveFilterUseCaseMock.capturedParams
         #expect(capturedParams != nil, "Filter should have been saved")

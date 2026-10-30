@@ -7,6 +7,9 @@ import Presentation
 @main
 struct NewBrastlewarkApp: App {
     @StateObject private var router: Router
+    private let homeViewModel: HomeViewModel
+    private let filterViewModel: FilterViewModel
+    private let detailsViewModel: DetailsViewModel
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -20,37 +23,37 @@ struct NewBrastlewarkApp: App {
         }
     }()
 
-    // swiftlint:disable force_cast
     init() {
-        guard let resolvedRouter = DIContainer.shared.resolve((any RouterProtocol).self) else {
-            fatalError("Could not resolve Router from DIContainer")
+        guard let router = DIContainer.shared.resolve((any RouterProtocol).self) as? Router,
+              let homeViewModel = DIContainer.shared.resolve(HomeViewModel.self),
+              let filterViewModel = DIContainer.shared.resolve(
+                FilterViewModel.self,
+                argument: homeViewModel as any FilterDelegate),
+              let detailsViewModel = DIContainer.shared.resolve(DetailsViewModel.self) else {
+            fatalError("Could not resolve application dependencies")
         }
-        _router = StateObject(wrappedValue: resolvedRouter as! Router)
+
+        _router = StateObject(wrappedValue: router)
+        self.homeViewModel = homeViewModel
+        self.filterViewModel = filterViewModel
+        self.detailsViewModel = detailsViewModel
     }
-    // swiftlint:enable force_cast
 
     var body: some Scene {
         WindowGroup {
-            if let homeViewModel = DIContainer.shared.resolve(HomeViewModel.self),
-               let filterViewModel = DIContainer.shared.resolve(FilterViewModel.self),
-               let detailsViewModel = DIContainer.shared.resolve(DetailsViewModel.self) {
-                NavigationStack(path: $router.path) {
-                    HomeView(viewModel: homeViewModel)
-                        .navigationDestination(for: Route.self) { route in
-                            switch route {
-                            case .filter:
-                                FilterView(viewModel: filterViewModel)
-                            case .details(let characterId, let showHome):
-                                DetailsView(
-                                    characterId: characterId,
-                                    showHome: showHome,
-                                    viewModel: detailsViewModel)
-                            }
+            NavigationStack(path: $router.path) {
+                HomeView(viewModel: homeViewModel)
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .filter:
+                            FilterView(viewModel: filterViewModel)
+                        case .details(let characterId, let showHome):
+                            DetailsView(
+                                characterId: characterId,
+                                showHome: showHome,
+                                viewModel: detailsViewModel)
                         }
-                }
-            } else {
-                Text("Error initializing dependencies")
-                    .foregroundColor(.red)
+                    }
             }
         }
         .modelContainer(sharedModelContainer)

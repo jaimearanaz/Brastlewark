@@ -52,6 +52,45 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func givenLoadedHome_whenViewReappears_thenReloadsOnlyAfterFilterWasApplied() async {
+        // given
+        getActiveFilterUseCaseMock.executeResult = .success(nil)
+        getAllCharactersUseCaseMock.executeResult = .success([Character.mock(id: 42)])
+        sut.viewIsReady()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        getAllCharactersUseCaseMock.executeResult = .success([Character.mock(id: 99)])
+
+        // when returning without applying a filter
+        sut.viewIsReady()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then the existing content remains visible
+        if case let .ready(characters, _) = sut.state {
+            #expect(characters.first?.id == 42)
+        } else {
+            #expect(Bool(false), "Expected existing ready state")
+        }
+
+        // when a filter was applied and Home appears again
+        sut.filterDidChangeAndApply()
+        if case .loading = sut.state {
+            // Expected invalidated state.
+        } else {
+            #expect(Bool(false), "Expected loading state after applying filter")
+        }
+        sut.viewIsReady()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        // then Home reloads its content
+        if case let .ready(characters, _) = sut.state {
+            #expect(characters.first?.id == 99)
+        } else {
+            #expect(Bool(false), "Expected reloaded ready state")
+        }
+    }
+
+    @Test
     func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() async {
         // given
         let character = CharacterUIModel.mock(id: 42)
