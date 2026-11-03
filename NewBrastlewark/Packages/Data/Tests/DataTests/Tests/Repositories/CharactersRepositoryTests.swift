@@ -86,7 +86,7 @@ final class CharactersRepositoryTests: XCTestCase {
 
     func test_given_nilNetworkService_when_getAllCharacters_then_throwsError() async {
         // given
-        networkServiceMock = nil
+        sut = CharactersRepository(networkService: nil, cache: cacheMock)
         cacheMock.valid = false
 
         // when

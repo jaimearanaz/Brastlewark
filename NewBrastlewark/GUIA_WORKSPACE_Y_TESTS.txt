@@ -1,0 +1,190 @@
+CONFIGURAR EL WORKSPACE PARA EJECUTAR TODOS LOS TESTS
+=====================================================
+
+Objetivo
+--------
+
+Poder ejecutar desde una única ventana de Xcode:
+
+- La aplicación NewBrastlewark.
+- Los tests unitarios de Data.
+- Los tests unitarios de Domain.
+- Los tests unitarios de Presentation.
+- Los snapshot tests.
+- Todos los tests a la vez.
+
+
+1. Crear un workspace raíz
+--------------------------
+
+1. Abre Xcode.
+2. Selecciona File > New > Workspace...
+3. Escribe como nombre:
+
+   NewBrastlewark
+
+4. Guarda el workspace en la raíz del repositorio, junto a:
+
+   NewBrastlewark.xcodeproj
+   Packages/
+
+El resultado debe tener esta estructura:
+
+   NewBrastlewark/
+   ├── NewBrastlewark.xcworkspace
+   ├── NewBrastlewark.xcodeproj
+   └── Packages/
+
+Si Xcode pregunta si quieres cerrar la ventana actual, acepta.
+
+
+2. Añadir el proyecto de la aplicación
+---------------------------------------
+
+1. Con el nuevo workspace abierto, selecciona:
+
+   File > Add Files to "NewBrastlewark"...
+
+2. Selecciona NewBrastlewark.xcodeproj.
+3. Desmarca "Copy items if needed".
+4. Pulsa Add.
+
+El proyecto de la aplicación debería aparecer en el navegador de Xcode.
+
+
+3. Añadir los paquetes como miembros del workspace
+---------------------------------------------------
+
+Repite File > Add Files to "NewBrastlewark"... para estas carpetas:
+
+   Packages/Data
+   Packages/Domain
+   Packages/Presentation
+   Packages/Utils
+
+IMPORTANTE:
+
+- Selecciona la carpeta de cada paquete, la que contiene su Package.swift.
+- No selecciones únicamente el archivo Package.swift.
+- Mantén desmarcada la opción "Copy items if needed".
+- Xcode debería reconocer cada carpeta como un paquete Swift.
+
+Aunque estos paquetes ya sean dependencias locales del proyecto, añadirlos al
+workspace no crea otra copia. Xcode utilizará los paquetes locales del workspace
+para resolver esas dependencias.
+
+
+4. Resolver las dependencias
+----------------------------
+
+1. Selecciona:
+
+   File > Packages > Resolve Package Versions
+
+2. Espera a que Xcode termine de resolver dependencias e indexar el proyecto.
+3. Comprueba el Issue Navigator por si aparece algún error.
+
+Si aparecen referencias duplicadas:
+
+1. Cierra Xcode.
+2. Abre exclusivamente NewBrastlewark.xcworkspace.
+3. Vuelve a ejecutar File > Packages > Resolve Package Versions.
+
+No elimines las dependencias locales del proyecto: la aplicación sigue
+necesitando enlazar los productos Data, Domain y Presentation.
+
+
+5. Comprobar los tests de cada paquete
+--------------------------------------
+
+1. Abre el selector de schemes de la barra superior.
+2. Selecciona Presentation.
+3. Abre:
+
+   Product > Scheme > Edit Scheme...
+
+4. Selecciona Test en la columna izquierda.
+5. Comprueba que aparece PresentationTests.
+6. Cierra la ventana y pulsa Command + U.
+
+Repite la comprobación con:
+
+- Data: debe contener DataTests.
+- Domain: debe contener DomainTests.
+
+
+6. Crear un scheme para ejecutar todos los tests
+------------------------------------------------
+
+1. Selecciona:
+
+   Product > Scheme > New Scheme...
+
+2. Ponle este nombre:
+
+   AllTests
+
+3. Si Xcode exige seleccionar un target, selecciona NewBrastlewark.
+4. Abre:
+
+   Product > Scheme > Edit Scheme...
+
+5. Selecciona Test en la columna izquierda.
+6. Pulsa el botón + para añadir tests.
+7. Añade los siguientes test targets:
+
+   DataTests
+   DomainTests
+   PresentationTests
+   NewBrastlewarkSnapshotTests
+
+8. Activa todos sus checkboxes.
+9. Cierra la ventana de edición del scheme.
+
+Ahora, al seleccionar AllTests y pulsar Command + U, Xcode debería ejecutar
+todos los tests unitarios y todos los snapshot tests.
+
+
+7. Compartir el scheme AllTests
+-------------------------------
+
+1. Abre:
+
+   Product > Scheme > Manage Schemes...
+
+2. Localiza AllTests.
+3. Activa la casilla Shared.
+4. Cierra la ventana.
+
+Esto permite guardar el scheme en Git y utilizarlo en otros equipos o en CI.
+
+
+8. Guardar la configuración en Git
+----------------------------------
+
+Incluye en el repositorio:
+
+   NewBrastlewark.xcworkspace/
+   NewBrastlewark.xcodeproj/xcshareddata/xcschemes/
+
+No incluyas archivos situados dentro de directorios xcuserdata, porque contienen
+configuración específica de cada usuario.
+
+
+9. Uso diario
+-------------
+
+A partir de ahora, abre siempre:
+
+   NewBrastlewark.xcworkspace
+
+No abras NewBrastlewark.xcodeproj directamente.
+
+Uso de los schemes:
+
+- NewBrastlewark: ejecutar la aplicación y sus snapshot tests configurados.
+- Data: ejecutar únicamente DataTests con Command + U.
+- Domain: ejecutar únicamente DomainTests con Command + U.
+- Presentation: ejecutar únicamente PresentationTests con Command + U.
+- AllTests: ejecutar todos los tests con Command + U.
+

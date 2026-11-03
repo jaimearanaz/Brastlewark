@@ -39,6 +39,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6F4328A3309A691500C23EE0 /* Presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Presentation; path = Packages/Presentation; sourceTree = "<group>"; };
+		6F4328A4309A692000C23EE0 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Domain; path = Packages/Domain; sourceTree = "<group>"; };
+		6F4328A5309A692900C23EE0 /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Data; path = Packages/Data; sourceTree = "<group>"; };
+		6F4328A6309A693300C23EE0 /* Utils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Utils; path = Packages/Utils; sourceTree = "<group>"; };
 		6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewBrastlewark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -96,6 +100,10 @@
 		6F8F7E3D2DE851FF0054CD0B = {
 			isa = PBXGroup;
 			children = (
+				6F4328A3309A691500C23EE0 /* Presentation */,
+				6F4328A4309A692000C23EE0 /* Domain */,
+				6F4328A5309A692900C23EE0 /* Data */,
+				6F4328A6309A693300C23EE0 /* Utils */,
 				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
 				6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
 				6FFF0F842DEA006A00621BE5 /* Frameworks */,
