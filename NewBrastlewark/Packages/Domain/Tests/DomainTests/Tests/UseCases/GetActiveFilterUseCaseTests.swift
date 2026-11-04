@@ -24,8 +24,7 @@ final class GetActiveFilterUseCaseTests {
             hairColor: ["red"],
             profession: ["baker"],
             friends: 1...5)
-        filterRepositoryMock.getActiveFilterResult = expectedFilter
-        filterRepositoryMock.getActiveFilterError = nil
+        await filterRepositoryMock.configureActiveFilter(result: expectedFilter)
 
         // when
         let result = await sut.execute()
@@ -37,13 +36,13 @@ final class GetActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(filterRepositoryMock.getActiveFilterCalled))
+        #expect(await filterRepositoryMock.wasGetActiveFilterCalled())
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        filterRepositoryMock.getActiveFilterError = FilterRepositoryError.unableToFetchFilter
+        await filterRepositoryMock.configureActiveFilter(error: .unableToFetchFilter)
 
         // when
         let result = await sut.execute()
@@ -55,7 +54,7 @@ final class GetActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(filterRepositoryMock.getActiveFilterCalled))
+        #expect(await filterRepositoryMock.wasGetActiveFilterCalled())
     }
 }
 // swiftlint:enable force_cast force_unwrapping

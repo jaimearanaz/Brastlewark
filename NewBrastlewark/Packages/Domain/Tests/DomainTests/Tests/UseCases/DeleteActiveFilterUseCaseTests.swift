@@ -17,7 +17,7 @@ final class DeleteActiveFilterUseCaseTests {
     @Test
     func given_repositoryDeletesSuccessfully_when_execute_then_returnsSuccess() async throws {
         // given
-        filterRepositoryMock.deleteActiveFilterError = nil
+        await filterRepositoryMock.configureDeleteActiveFilter()
 
         // when
         let result = await sut.execute()
@@ -29,13 +29,13 @@ final class DeleteActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(filterRepositoryMock.deleteActiveFilterCalled))
+        #expect(await filterRepositoryMock.wasDeleteActiveFilterCalled())
     }
 
     @Test
     func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
         // given
-        filterRepositoryMock.deleteActiveFilterError = FilterRepositoryError.unableToDeleteFilter
+        await filterRepositoryMock.configureDeleteActiveFilter(error: .unableToDeleteFilter)
 
         // when
         let result = await sut.execute()
@@ -47,7 +47,7 @@ final class DeleteActiveFilterUseCaseTests {
         default:
             #expect(Bool(false))
         }
-        #expect(Bool(filterRepositoryMock.deleteActiveFilterCalled))
+        #expect(await filterRepositoryMock.wasDeleteActiveFilterCalled())
     }
 }
 // swiftlint:enable force_cast force_unwrapping

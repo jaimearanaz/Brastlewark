@@ -1,4 +1,4 @@
-public struct SaveActiveFilterUseCaseParams {
+public struct SaveActiveFilterUseCaseParams: Sendable {
     public let filter: Filter
 
     public init(filter: Filter) {
@@ -10,7 +10,7 @@ public protocol SaveActiveFilterUseCaseProtocol: Sendable {
     func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, FilterRepositoryError>
 }
 
-final class SaveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol, @unchecked Sendable {
+final class SaveActiveFilterUseCase: SaveActiveFilterUseCaseProtocol, Sendable {
     private let repository: FilterRepositoryProtocol
 
     init(repository: FilterRepositoryProtocol) {

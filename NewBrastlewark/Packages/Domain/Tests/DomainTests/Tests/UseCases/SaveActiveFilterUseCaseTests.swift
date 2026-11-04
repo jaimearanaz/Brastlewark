@@ -18,7 +18,7 @@ final class SaveActiveFilterUseCaseTests {
   @Test
   func given_repositorySavesSuccessfully_when_execute_then_returnsSuccess() async throws {
     // given
-    filterRepositoryMock.saveActiveFilterError = nil
+    await filterRepositoryMock.configureSaveActiveFilter()
     let filter = Filter(
       age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"],
       friends: 1...5)
@@ -34,14 +34,14 @@ final class SaveActiveFilterUseCaseTests {
     default:
       #expect(Bool(false))
     }
-    #expect(Bool(filterRepositoryMock.saveActiveFilterCalled))
-    #expect(filterRepositoryMock.savedActiveFilter == filter)
+    #expect(await filterRepositoryMock.wasSaveActiveFilterCalled())
+    #expect(await filterRepositoryMock.capturedActiveFilter() == filter)
   }
 
   @Test
   func given_repositoryThrowsError_when_execute_then_returnsFailure() async throws {
     // given
-    filterRepositoryMock.saveActiveFilterError = FilterRepositoryError.unableToSaveFilter
+    await filterRepositoryMock.configureSaveActiveFilter(error: .unableToSaveFilter)
     let filter = Filter(
       age: 10...20, weight: 30...50, height: 100...150, hairColor: ["red"], profession: ["baker"],
       friends: 1...5)
@@ -57,7 +57,7 @@ final class SaveActiveFilterUseCaseTests {
     default:
       #expect(Bool(false))
     }
-    #expect(Bool(filterRepositoryMock.saveActiveFilterCalled))
+    #expect(await filterRepositoryMock.wasSaveActiveFilterCalled())
   }
 }
 // swiftlint:enable force_cast force_unwrapping

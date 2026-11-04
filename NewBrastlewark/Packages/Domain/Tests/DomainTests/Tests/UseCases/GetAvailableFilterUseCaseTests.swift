@@ -27,7 +27,7 @@ final class GetAvailableFilterUseCaseTests {
       age: 10...30, weight: 60...90, height: 160...190, hairColor: ["Red", "Blue"],
       profession: ["Baker", "Tinker"], friends: 1...2)
     charactersRepositoryMock.getAllCharactersResult = expectedCharacters
-    filterRepositoryMock.getAvailableFilterResult = expectedFilter
+    await filterRepositoryMock.configureAvailableFilter(result: expectedFilter)
 
     // when
     let result = await sut.execute()
@@ -40,7 +40,7 @@ final class GetAvailableFilterUseCaseTests {
       #expect(Bool(false))
     }
     #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
-    #expect(Bool(filterRepositoryMock.getAvailableFilterCalled))
+    #expect(await filterRepositoryMock.wasGetAvailableFilterCalled())
   }
 
   @Test
@@ -60,14 +60,14 @@ final class GetAvailableFilterUseCaseTests {
       #expect(Bool(false))
     }
     #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
-    #expect(Bool(!filterRepositoryMock.getAvailableFilterCalled))
+    #expect(!(await filterRepositoryMock.wasGetAvailableFilterCalled()))
   }
 
   @Test
   func given_filterRepositoryThrowsError_when_execute_then_returnsFailure() async throws {
     // given
     charactersRepositoryMock.getAllCharactersResult = try loadCharactersFromJSON()
-    filterRepositoryMock.getAvailableFilterError = FilterRepositoryError.unableToFetchFilter
+    await filterRepositoryMock.configureAvailableFilter(error: .unableToFetchFilter)
 
     // when
     let result = await sut.execute()
@@ -80,7 +80,7 @@ final class GetAvailableFilterUseCaseTests {
       #expect(Bool(false))
     }
     #expect(Bool(charactersRepositoryMock.getAllCharactersCalled))
-    #expect(Bool(filterRepositoryMock.getAvailableFilterCalled))
+    #expect(await filterRepositoryMock.wasGetAvailableFilterCalled())
   }
 }
 // swiftlint:enable force_cast force_unwrapping

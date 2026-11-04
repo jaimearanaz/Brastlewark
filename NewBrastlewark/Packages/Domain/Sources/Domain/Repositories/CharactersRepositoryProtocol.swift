@@ -1,4 +1,4 @@
-public enum CharactersRepositoryError: Error {
+public enum CharactersRepositoryError: Error, Sendable {
     case noInternetConnection
     case unableToFetchCharacters
 }

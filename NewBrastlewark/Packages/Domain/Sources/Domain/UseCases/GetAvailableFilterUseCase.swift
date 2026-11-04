@@ -1,4 +1,4 @@
-public enum GetAvailableFilterUseCaseError: Error {
+public enum GetAvailableFilterUseCaseError: Error, Sendable {
     case noInternetConnection
     case unableToFetchCharacters
     case unableToGetAvailableFilter
@@ -8,7 +8,7 @@ public protocol GetAvailableFilterUseCaseProtocol: Sendable {
     func execute() async -> Result<Filter, GetAvailableFilterUseCaseError>
 }
 
-final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol, @unchecked Sendable {
+final class GetAvailableFilterUseCase: GetAvailableFilterUseCaseProtocol, Sendable {
     private let charactersRepository: CharactersRepositoryProtocol
     private let filterRepository: FilterRepositoryProtocol
 

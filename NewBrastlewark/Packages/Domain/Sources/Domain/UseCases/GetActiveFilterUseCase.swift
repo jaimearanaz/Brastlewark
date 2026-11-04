@@ -2,7 +2,7 @@ public protocol GetActiveFilterUseCaseProtocol: Sendable {
     func execute() async -> Result<Filter?, FilterRepositoryError>
 }
 
-final class GetActiveFilterUseCase: GetActiveFilterUseCaseProtocol, @unchecked Sendable {
+final class GetActiveFilterUseCase: GetActiveFilterUseCaseProtocol, Sendable {
     private let repository: FilterRepositoryProtocol
 
     init(repository: FilterRepositoryProtocol) {

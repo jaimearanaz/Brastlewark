@@ -1,4 +1,4 @@
-public struct GetFilteredCharactersUseCaseParams {
+public struct GetFilteredCharactersUseCaseParams: Sendable {
     let filter: Filter
 
     public init(filter: Filter) {
@@ -10,7 +10,7 @@ public protocol GetFilteredCharactersUseCaseProtocol: Sendable {
     func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], CharactersRepositoryError>
 }
 
-final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol, @unchecked Sendable {
+final class GetFilteredCharactersUseCase: GetFilteredCharactersUseCaseProtocol, Sendable {
     private let repository: CharactersRepositoryProtocol
 
     init(repository: CharactersRepositoryProtocol) {

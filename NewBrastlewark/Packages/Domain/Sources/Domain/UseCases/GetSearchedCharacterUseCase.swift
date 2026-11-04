@@ -1,4 +1,4 @@
-public struct GetSearchedCharacterUseCaseParams {
+public struct GetSearchedCharacterUseCaseParams: Sendable {
     let searchText: String
 
     public init(searchText: String) {
@@ -10,7 +10,7 @@ public protocol GetSearchedCharacterUseCaseProtocol: Sendable {
     func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<[Character], CharactersRepositoryError>
 }
 
-final class GetSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol, @unchecked Sendable {
+final class GetSearchedCharacterUseCase: GetSearchedCharacterUseCaseProtocol, Sendable {
     private let repository: CharactersRepositoryProtocol
 
     init(repository: CharactersRepositoryProtocol) {
