@@ -169,7 +169,11 @@ struct HomeViewModelTests {
     #expect(getAllCharactersUseCaseMock.executionCount == 2)
     #expect(!sut.needsReload)
   }
+}
 
+// MARK: - Navigation and Search Tests
+
+extension HomeViewModelTests {
   @Test
   func givenCharacter_whenDidSelectCharacter_thenRouterNavigatesToDetails() async {
     // given

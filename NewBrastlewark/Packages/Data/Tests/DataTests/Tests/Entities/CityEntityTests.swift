@@ -4,10 +4,7 @@ import Testing
 @testable import Data
 
 final class CityEntityTests {
-    @Test
-    func given_invalidCharacters_when_decoded_then_onlyValidCharactersAreReturned() throws {
-        // given
-        let json = """
+    private static let invalidCharactersJSON = """
         {
             "Brastlewark": [
                 {
@@ -56,7 +53,11 @@ final class CityEntityTests {
             ]
         }
         """
-        let data = try #require(json.data(using: .utf8))
+
+    @Test
+    func given_invalidCharacters_when_decoded_then_onlyValidCharactersAreReturned() throws {
+        // given
+        let data = try #require(Self.invalidCharactersJSON.data(using: .utf8))
 
         // when
         let city = try JSONDecoder().decode(CityEntity.self, from: data)
