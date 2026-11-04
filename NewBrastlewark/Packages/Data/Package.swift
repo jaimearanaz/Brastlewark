@@ -18,7 +18,8 @@ let package = Package(
     dependencies: [
         .package(path: "../Utils"),
         .package(path: "../Domain"),
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.65.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,6 +29,9 @@ let package = Package(
             dependencies: ["Utils", "Domain", "Swinject"],
             resources: [
                 .process("Resources")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]),
         .testTarget(
             name: "DataTests",
@@ -36,6 +40,9 @@ let package = Package(
                 .copy("Resources/characters.json"),
                 .copy("Resources/one_character.json"),
                 .copy("Resources/empty_professions_character.json")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]
         )
     ]

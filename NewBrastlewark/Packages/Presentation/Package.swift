@@ -18,7 +18,8 @@ let package = Package(
         .package(path: "../Utils"),
         .package(path: "../Domain"),
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
-        .package(url: "https://github.com/yonat/MultiSlider", from: "2.2.0")
+        .package(url: "https://github.com/yonat/MultiSlider", from: "2.2.0"),
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.65.1")
     ],
     targets: [
         .target(
@@ -26,10 +27,16 @@ let package = Package(
             dependencies: ["Utils", "Domain", "Swinject", "MultiSlider"],
             resources: [
                 .process("Resources")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]),
         .testTarget(
             name: "PresentationTests",
-            dependencies: ["Presentation"]
+            dependencies: ["Presentation"],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]
         )
     ]
 )

@@ -12,13 +12,22 @@ let package = Package(
             name: "Utils",
             targets: ["Utils"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.65.1")
+    ],
     targets: [
         .target(
-            name: "Utils"
+            name: "Utils",
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]
         ),
         .testTarget(
             name: "UtilsTests",
-            dependencies: ["Utils"]
+            dependencies: ["Utils"],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]
         )
     ]
 )

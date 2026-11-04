@@ -15,18 +15,25 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Utils"),
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.65.1")
     ],
     targets: [
         .target(
             name: "Domain",
-            dependencies: ["Utils", "Swinject"]),
+            dependencies: ["Utils", "Swinject"],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]),
         .testTarget(
             name: "DomainTests",
             dependencies: ["Domain"],
             resources: [
                 .copy("Resources/characters.json"),
                 .copy("Resources/one_character.json")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]
         )
     ]

@@ -1,0 +1,2 @@
+parent_config: ../../.swiftlint.yml
+baseline: .swiftlint-baseline.json
