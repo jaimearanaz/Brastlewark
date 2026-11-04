@@ -1,11 +1,12 @@
 import Foundation
+import Synchronization
 
 final class URLProtocolMock: URLProtocol, @unchecked Sendable {
-    private static let queue = DispatchQueue(label: "URLProtocolMock.queue")
-    nonisolated(unsafe) private static var _requestHandler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?
-    nonisolated(unsafe) static var requestHandler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))? {
-        get { queue.sync { _requestHandler } }
-        set { queue.sync { _requestHandler = newValue } }
+    private static let handler = Mutex<(@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?>(nil)
+
+    static var requestHandler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))? {
+        get { handler.withLock { $0 } }
+        set { handler.withLock { $0 = newValue } }
     }
 
     override static func canInit(with request: URLRequest) -> Bool {
@@ -17,11 +18,12 @@ final class URLProtocolMock: URLProtocol, @unchecked Sendable {
     }
 
     override func startLoading() {
-        guard let handler = URLProtocolMock.requestHandler else {
+        guard let requestHandler = Self.requestHandler else {
             fatalError("Handler is not set.")
         }
+
         do {
-            let (response, data) = try handler(request)
+            let (response, data) = try requestHandler(request)
             client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
             client?.urlProtocol(self, didLoad: data)
             client?.urlProtocolDidFinishLoading(self)

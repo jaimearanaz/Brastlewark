@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import Testing
 
 @testable import Data
@@ -168,11 +169,16 @@ struct NetworkServiceTests {
         // given
         let networkStatus = NetworkStatusMock()
         let session = makeMockSession()
-        class CallCounter: @unchecked Sendable {
-            private var count = 0
-            private let queue = DispatchQueue(label: "CallCounterQueue")
-            func increment() { queue.sync { count += 1 } }
-            func value() -> Int { queue.sync { count } }
+        final class CallCounter: Sendable {
+            private let count = Mutex(0)
+
+            func increment() {
+                count.withLock { $0 += 1 }
+            }
+
+            func value() -> Int {
+                count.withLock { $0 }
+            }
         }
         let callCounter = CallCounter()
         URLProtocolMock.requestHandler = { _ in

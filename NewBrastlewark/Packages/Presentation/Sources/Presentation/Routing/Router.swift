@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 public protocol RouterProtocol: ObservableObject {
     var path: NavigationPath { get set }
 
@@ -10,7 +11,8 @@ public protocol RouterProtocol: ObservableObject {
     func canNavigateBack() -> Bool
 }
 
-public class Router: RouterProtocol {
+@MainActor
+public final class Router: RouterProtocol {
     @Published public var path = NavigationPath()
 
     public init() {}
@@ -32,6 +34,6 @@ public class Router: RouterProtocol {
     }
 
     public func canNavigateBack() -> Bool {
-        return !path.isEmpty
+        !path.isEmpty
     }
 }

@@ -1,28 +1,19 @@
 import Domain
-import Foundation
+import Synchronization
 
-public final class DeleteActiveFilterUseCaseMock: DeleteActiveFilterUseCaseProtocol, @unchecked Sendable {
-    private let lock = NSLock()
-    private var _executeResult: Result<Void, FilterRepositoryError> = .success(())
+public final class DeleteActiveFilterUseCaseMock: DeleteActiveFilterUseCaseProtocol, Sendable {
+    private let state: Mutex<Result<Void, FilterRepositoryError>>
 
     public var executeResult: Result<Void, FilterRepositoryError> {
-        get {
-            lock.lock()
-            defer { lock.unlock() }
-            return _executeResult
-        }
-        set {
-            lock.lock()
-            _executeResult = newValue
-            lock.unlock()
-        }
+        get { state.withLock { $0 } }
+        set { state.withLock { $0 = newValue } }
     }
 
     public init(executeResult: Result<Void, FilterRepositoryError> = .success(())) {
-        self._executeResult = executeResult
+        state = Mutex(executeResult)
     }
 
     public func execute() async -> Result<Void, FilterRepositoryError> {
-        return executeResult
+        executeResult
     }
 }

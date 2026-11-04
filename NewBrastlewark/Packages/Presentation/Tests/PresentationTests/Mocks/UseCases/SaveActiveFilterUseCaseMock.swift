@@ -1,30 +1,33 @@
 import Domain
-import Foundation
+import Synchronization
 
-public final class SaveActiveFilterUseCaseMock: SaveActiveFilterUseCaseProtocol, @unchecked Sendable {
-    private let queue = DispatchQueue(label: "SaveActiveFilterUseCaseMock.queue")
-    private var _executeResult: Result<Void, FilterRepositoryError> = .success(())
-    private var _capturedParams: SaveActiveFilterUseCaseParams?
+public final class SaveActiveFilterUseCaseMock: SaveActiveFilterUseCaseProtocol, Sendable {
+    private struct State: Sendable {
+        var executeResult: Result<Void, FilterRepositoryError>
+        var capturedParams: SaveActiveFilterUseCaseParams?
+    }
+
+    private let state: Mutex<State>
 
     public var executeResult: Result<Void, FilterRepositoryError> {
-        get {
-            queue.sync { _executeResult }
-        }
-        set {
-            queue.sync { _executeResult = newValue }
-        }
+        get { state.withLock { $0.executeResult } }
+        set { state.withLock { $0.executeResult = newValue } }
     }
 
     public var capturedParams: SaveActiveFilterUseCaseParams? {
-        queue.sync { _capturedParams }
+        state.withLock { $0.capturedParams }
     }
 
     public init(executeResult: Result<Void, FilterRepositoryError> = .success(())) {
-        self._executeResult = executeResult
+        state = Mutex(State(executeResult: executeResult, capturedParams: nil))
     }
 
-    public func execute(params: SaveActiveFilterUseCaseParams) async -> Result<Void, FilterRepositoryError> {
-        queue.sync { _capturedParams = params }
-        return executeResult
+    public func execute(
+        params: SaveActiveFilterUseCaseParams
+    ) async -> Result<Void, FilterRepositoryError> {
+        state.withLock {
+            $0.capturedParams = params
+            return $0.executeResult
+        }
     }
 }

@@ -1,24 +1,19 @@
 import Domain
-import Foundation
+import Synchronization
 
-public final class GetAvailableFilterUseCaseMock: GetAvailableFilterUseCaseProtocol, @unchecked Sendable {
-    private let queue = DispatchQueue(label: "GetAvailableFilterUseCaseMock.queue")
-    private var _executeResult: Result<Filter, GetAvailableFilterUseCaseError> = .success(Filter())
+public final class GetAvailableFilterUseCaseMock: GetAvailableFilterUseCaseProtocol, Sendable {
+    private let state: Mutex<Result<Filter, GetAvailableFilterUseCaseError>>
 
     public var executeResult: Result<Filter, GetAvailableFilterUseCaseError> {
-        get {
-            queue.sync { _executeResult }
-        }
-        set {
-            queue.sync { _executeResult = newValue }
-        }
+        get { state.withLock { $0 } }
+        set { state.withLock { $0 = newValue } }
     }
 
     public init(executeResult: Result<Filter, GetAvailableFilterUseCaseError> = .success(Filter())) {
-        self._executeResult = executeResult
+        state = Mutex(executeResult)
     }
 
     public func execute() async -> Result<Filter, GetAvailableFilterUseCaseError> {
-        return executeResult
+        executeResult
     }
 }

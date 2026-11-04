@@ -1,83 +1,55 @@
 import Domain
-import Foundation
+import Synchronization
 
-public final class GetSearchedCharacterUseCaseMock: GetSearchedCharacterUseCaseProtocol,
-  @unchecked Sendable {
-  private let lock = NSLock()
-  private var _executeResult: Result<[Character], CharactersRepositoryError> = .success([])
-  private var _suspendFirstExecution = false
-  private var _executionCount = 0
-  private var _cancellationCount = 0
-
-  public var executeResult: Result<[Character], CharactersRepositoryError> {
-    get {
-      lock.lock()
-      defer { lock.unlock() }
-      return _executeResult
-    }
-    set {
-      lock.lock()
-      _executeResult = newValue
-      lock.unlock()
-    }
-  }
-
-  public var suspendFirstExecution: Bool {
-    get {
-      lock.lock()
-      defer { lock.unlock() }
-      return _suspendFirstExecution
-    }
-    set {
-      lock.lock()
-      _suspendFirstExecution = newValue
-      lock.unlock()
-    }
-  }
-
-  public var executionCount: Int {
-    lock.lock()
-    defer { lock.unlock() }
-    return _executionCount
-  }
-
-  public var cancellationCount: Int {
-    lock.lock()
-    defer { lock.unlock() }
-    return _cancellationCount
-  }
-
-  public init(executeResult: Result<[Character], CharactersRepositoryError> = .success([])) {
-    self._executeResult = executeResult
-  }
-
-  public func execute(params: GetSearchedCharacterUseCaseParams) async -> Result<
-    [Character], CharactersRepositoryError
-  > {
-    let shouldSuspend = registerExecution()
-
-    if shouldSuspend {
-      do {
-        try await Task.sleep(for: .seconds(60))
-      } catch {
-        registerCancellation()
-        return .failure(.unableToFetchCharacters)
-      }
+public final class GetSearchedCharacterUseCaseMock: GetSearchedCharacterUseCaseProtocol, Sendable {
+    private struct State: Sendable {
+        var executeResult: Result<[Character], CharactersRepositoryError>
+        var suspendFirstExecution = false
+        var executionCount = 0
+        var cancellationCount = 0
     }
 
-    return executeResult
-  }
+    private let state: Mutex<State>
 
-  private func registerExecution() -> Bool {
-    lock.lock()
-    defer { lock.unlock() }
-    _executionCount += 1
-    return _suspendFirstExecution && _executionCount == 1
-  }
+    public var executeResult: Result<[Character], CharactersRepositoryError> {
+        get { state.withLock { $0.executeResult } }
+        set { state.withLock { $0.executeResult = newValue } }
+    }
 
-  private func registerCancellation() {
-    lock.lock()
-    _cancellationCount += 1
-    lock.unlock()
-  }
+    public var suspendFirstExecution: Bool {
+        get { state.withLock { $0.suspendFirstExecution } }
+        set { state.withLock { $0.suspendFirstExecution = newValue } }
+    }
+
+    public var executionCount: Int {
+        state.withLock { $0.executionCount }
+    }
+
+    public var cancellationCount: Int {
+        state.withLock { $0.cancellationCount }
+    }
+
+    public init(executeResult: Result<[Character], CharactersRepositoryError> = .success([])) {
+        state = Mutex(State(executeResult: executeResult))
+    }
+
+    public func execute(
+        params: GetSearchedCharacterUseCaseParams
+    ) async -> Result<[Character], CharactersRepositoryError> {
+        let shouldSuspend = state.withLock {
+            $0.executionCount += 1
+            return $0.suspendFirstExecution && $0.executionCount == 1
+        }
+
+        if shouldSuspend {
+            do {
+                try await Task.sleep(for: .seconds(60))
+            } catch {
+                state.withLock { $0.cancellationCount += 1 }
+                return .failure(.unableToFetchCharacters)
+            }
+        }
+
+        return executeResult
+    }
 }
