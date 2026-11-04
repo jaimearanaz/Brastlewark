@@ -1,6 +1,6 @@
-import Testing
 import Domain
 @testable import Presentation
+import Testing
 
 struct CharacterUIModelMapperTests {
     @Test
@@ -17,10 +17,10 @@ struct CharacterUIModelMapperTests {
             professions: ["Blacksmith", "Warrior"],
             friends: ["FriendA", "FriendB", "FriendC"]
         )
-        
+
         // when
         let result = CharacterUIModel.map(model: uiModel)
-        
+
         // then
         #expect(result.id == 123)
         #expect(result.name == "Test UI Character")
@@ -37,7 +37,7 @@ struct CharacterUIModelMapperTests {
         #expect(result.friends.contains("FriendB"))
         #expect(result.friends.contains("FriendC"))
     }
-    
+
     @Test
     func testMappingPreservesEmptyCollections() {
         // given
@@ -52,10 +52,10 @@ struct CharacterUIModelMapperTests {
             professions: [], // Empty professions
             friends: []      // Empty friends
         )
-        
+
         // when
         let result = CharacterUIModel.map(model: uiModel)
-        
+
         // then
         #expect(result.id == 456)
         #expect(result.name == "Empty Collections")
@@ -63,7 +63,7 @@ struct CharacterUIModelMapperTests {
         #expect(result.friends.isEmpty)
         #expect(result.hairColor == "Bald")
     }
-    
+
     @Test
     func testMappingFieldTypesArePreserved() {
         // given
@@ -78,10 +78,10 @@ struct CharacterUIModelMapperTests {
             professions: ["Multiple", "Different", "Professions"],
             friends: ["One Single Friend"]
         )
-        
+
         // when
         let result = CharacterUIModel.map(model: uiModel)
-        
+
         // then
         #expect(result.id == 789)
         #expect(result.age == 1000)

@@ -1,7 +1,7 @@
-import SwiftUI
-import Domain
 import Data
+import Domain
 import Presentation
+import SwiftUI
 
 @main
 struct NewBrastlewarkApp: App {

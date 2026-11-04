@@ -5,7 +5,7 @@ struct CachedAsyncImage<Content: View>: View {
     private let scale: CGFloat
     private let content: (AsyncImagePhase) -> Content
     @State private var cachedImage: UIImage?
-    
+
     init(
         url: String,
         scale: CGFloat = 1,
@@ -15,7 +15,7 @@ struct CachedAsyncImage<Content: View>: View {
         self.scale = scale
         self.content = content
     }
-    
+
     var body: some View {
         Group {
             if let cached = cachedImage {
@@ -33,14 +33,14 @@ struct CachedAsyncImage<Content: View>: View {
             loadFromCache()
         }
     }
-    
+
     private func handlePhase(_ phase: AsyncImagePhase) -> some View {
         if case .success(let image) = phase {
             saveToCache(image)
         }
         return content(phase)
     }
-    
+
     private func loadFromCache() {
         Task {
             if let cached = await CachedImageManager.shared.get(url) {
@@ -50,12 +50,12 @@ struct CachedAsyncImage<Content: View>: View {
             }
         }
     }
-    
+
     private func saveToCache(_ image: Image) {
         guard cachedImage == nil else {
             return
         }
-        
+
         Task {
             if let uiImage = await convertToUIImage(image) {
                 await CachedImageManager.shared.add(uiImage, for: url)
@@ -65,7 +65,7 @@ struct CachedAsyncImage<Content: View>: View {
             }
         }
     }
-    
+
     private func convertToUIImage(_ image: Image) async -> UIImage? {
         let renderer = ImageRenderer(content: image)
         return renderer.uiImage

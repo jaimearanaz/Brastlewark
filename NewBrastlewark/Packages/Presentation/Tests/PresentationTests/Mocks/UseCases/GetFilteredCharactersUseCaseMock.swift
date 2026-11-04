@@ -1,28 +1,31 @@
-import Foundation
 import Domain
+import Foundation
 
-public final class GetFilteredCharactersUseCaseMock: GetFilteredCharactersUseCaseProtocol, @unchecked Sendable {
-    private let lock = NSLock()
-    private var _executeResult: Result<[Character], CharactersRepositoryError> = .success([])
-    
-    public var executeResult: Result<[Character], CharactersRepositoryError> {
-        get {
-            lock.lock()
-            defer { lock.unlock() }
-            return _executeResult
-        }
-        set {
-            lock.lock()
-            _executeResult = newValue
-            lock.unlock()
-        }
-    }
+public final class GetFilteredCharactersUseCaseMock: GetFilteredCharactersUseCaseProtocol,
+  @unchecked Sendable {
+  private let lock = NSLock()
+  private var _executeResult: Result<[Character], CharactersRepositoryError> = .success([])
 
-    public init(executeResult: Result<[Character], CharactersRepositoryError> = .success([])) {
-        self._executeResult = executeResult
+  public var executeResult: Result<[Character], CharactersRepositoryError> {
+    get {
+      lock.lock()
+      defer { lock.unlock() }
+      return _executeResult
     }
+    set {
+      lock.lock()
+      _executeResult = newValue
+      lock.unlock()
+    }
+  }
 
-    public func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<[Character], CharactersRepositoryError> {
-        return executeResult
-    }
+  public init(executeResult: Result<[Character], CharactersRepositoryError> = .success([])) {
+    self._executeResult = executeResult
+  }
+
+  public func execute(params: GetFilteredCharactersUseCaseParams) async -> Result<
+    [Character], CharactersRepositoryError
+  > {
+    return executeResult
+  }
 }

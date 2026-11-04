@@ -1,5 +1,5 @@
-import Foundation
 import Domain
+import Foundation
 
 struct CharacterMapper {
     static func map(model: Character) -> CharacterUIModel {
@@ -15,7 +15,7 @@ struct CharacterMapper {
             friends: model.friends
         )
     }
-    
+
     static func map(models: [Character]) -> [CharacterUIModel] {
         models.map { map(model: $0) }
     }

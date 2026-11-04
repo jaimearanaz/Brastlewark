@@ -1,6 +1,6 @@
-import Testing
 import Domain
 @testable import Presentation
+import Testing
 
 struct CharacterMapperTests {
     @Test
@@ -17,10 +17,10 @@ struct CharacterMapperTests {
             professions: ["Baker", "Miner"],
             friends: ["Friend1", "Friend2"]
         )
-        
+
         // when
         let result = CharacterMapper.map(model: character)
-        
+
         // then
         #expect(result.id == 42)
         #expect(result.name == "Test Character")
@@ -36,7 +36,7 @@ struct CharacterMapperTests {
         #expect(result.friends.contains("Friend1"))
         #expect(result.friends.contains("Friend2"))
     }
-    
+
     @Test
     func testMapMultipleCharacters() {
         // given
@@ -64,33 +64,33 @@ struct CharacterMapperTests {
                 friends: ["Friend2", "Friend3"]
             )
         ]
-        
+
         // when
         let results = CharacterMapper.map(models: characters)
-        
+
         // then
         #expect(results.count == 2)
-        
+
         #expect(results[0].id == 1)
         #expect(results[0].name == "Character 1")
         #expect(results[0].hairColor == "Black")
         #expect(results[0].professions.count == 1)
-        
+
         #expect(results[1].id == 2)
         #expect(results[1].name == "Character 2")
         #expect(results[1].hairColor == "Red")
         #expect(results[1].professions.count == 2)
         #expect(results[1].friends.count == 2)
     }
-    
+
     @Test
     func testMapEmptyArray() {
         // given
         let characters: [Character] = []
-        
+
         // when
         let results = CharacterMapper.map(models: characters)
-        
+
         // then
         #expect(results.isEmpty)
     }

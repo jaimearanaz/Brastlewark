@@ -1,5 +1,5 @@
-import Testing
 import Domain
+import Testing
 
 @testable import Presentation
 
@@ -15,7 +15,7 @@ struct FilterMapperTests {
             profession: ["Miner", "Baker", "Woodcarver"],
             friends: 0...10
         )
-        
+
         let active = Filter(
             age: 30...70,
             weight: 50...120,
@@ -24,10 +24,10 @@ struct FilterMapperTests {
             profession: ["Baker"],
             friends: 2...8
         )
-        
+
         // when
         let result = Filter.map(available: available, active: active)
-        
+
         // then
         #expect(result.age.available == 0...100)
         #expect(result.age.active == 30...70)
@@ -48,7 +48,7 @@ struct FilterMapperTests {
         #expect(result.profession.contains { $0.title == "Miner" && !$0.checked })
         #expect(result.profession.contains { $0.title == "Woodcarver" && !$0.checked })
     }
-    
+
     @Test
     func givenAvailableFilterWithNoActiveFilter_whenMap_thenCreatesFilterUIModelWithNoCheckedItems() {
         // given
@@ -60,12 +60,12 @@ struct FilterMapperTests {
             profession: ["Miner", "Baker", "Woodcarver"],
             friends: 0...10
         )
-        
+
         let active = Filter()
-        
+
         // when
         let result = Filter.map(available: available, active: active)
-        
+
         // then
         #expect(result.age.available == 0...100)
         #expect(result.age.active == 0...0)
@@ -82,7 +82,7 @@ struct FilterMapperTests {
         #expect(result.profession.count == 3)
         #expect(result.profession.allSatisfy { !$0.checked })
     }
-    
+
     @Test
     func givenActiveFilterWithItemsNotInAvailable_whenMap_thenOnlyMapsAvailableItems() {
         // given
@@ -90,15 +90,15 @@ struct FilterMapperTests {
             hairColor: ["Red", "Black"],
             profession: ["Miner", "Baker"]
         )
-        
+
         let active = Filter(
             hairColor: ["Red", "Blue"],
             profession: ["Baker", "Carpenter"]
         )
-        
+
         // when
         let result = Filter.map(available: available, active: active)
-        
+
         // then
         #expect(result.hairColor.count == 2)
         #expect(result.hairColor.contains { $0.title == "Red" && $0.checked })
@@ -110,16 +110,16 @@ struct FilterMapperTests {
         #expect(result.profession.contains { $0.title == "Miner" && !$0.checked })
         #expect(!result.profession.contains { $0.title == "Carpenter" })
     }
-    
+
     @Test
     func givenEmptyAvailableFilter_whenMap_thenCreatesEmptyFilterUIModel() {
         // given
         let available = Filter()
         let active = Filter()
-        
+
         // when
         let result = Filter.map(available: available, active: active)
-        
+
         // then
         #expect(result.age.available == 0...0)
         #expect(result.age.active == 0...0)

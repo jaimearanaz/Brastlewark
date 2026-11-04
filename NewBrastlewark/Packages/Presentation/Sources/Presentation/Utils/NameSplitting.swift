@@ -12,7 +12,7 @@ public extension NameSplitting {
         }
         return ""
     }
-    
+
     var surname: String {
         let components = name.components(separatedBy: " ").filter { !$0.isEmpty }
         if components.count > 1 {

@@ -27,66 +27,66 @@ public struct PresentationModule {
     }
 
     private static func registerViews(inContainer container: Container) {
-        container.register(HomeView.self) { r in
-            let viewModel = resolveOrFail(r, HomeViewModel.self)
+        container.register(HomeView.self) { resolver in
+            let viewModel = resolveOrFail(resolver, HomeViewModel.self)
             return HomeView(viewModel: viewModel)
         }
-        container.register(FilterView.self) { r in
-            let viewModel = resolveOrFail(r, FilterViewModel.self)
+        container.register(FilterView.self) { resolver in
+            let viewModel = resolveOrFail(resolver, FilterViewModel.self)
             return FilterView(viewModel: viewModel)
         }
-        container.register(DetailsView.self) { r in
-            let viewModel = resolveOrFail(r, DetailsViewModel.self)
+        container.register(DetailsView.self) { resolver in
+            let viewModel = resolveOrFail(resolver, DetailsViewModel.self)
             return DetailsView(viewModel: viewModel)
         }
     }
 
     private static func registerTrackers(inContainer container: Container) {
-        container.register(HomeTrackerProtocol.self) { r in
-            HomeTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        container.register(HomeTrackerProtocol.self) { resolver in
+            HomeTracker(analytics: resolveOrFail(resolver, (any AnalyticsProtocol).self))
         }
-        container.register(FilterTrackerProtocol.self) { r in
-            FilterTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        container.register(FilterTrackerProtocol.self) { resolver in
+            FilterTracker(analytics: resolveOrFail(resolver, (any AnalyticsProtocol).self))
         }
-        container.register(DetailsTrackerProtocol.self) { r in
-            DetailsTracker(analytics: resolveOrFail(r, (any AnalyticsProtocol).self))
+        container.register(DetailsTrackerProtocol.self) { resolver in
+            DetailsTracker(analytics: resolveOrFail(resolver, (any AnalyticsProtocol).self))
         }
     }
 
     private static func registerViewModels(inContainer container: Container) {
-        container.register(HomeViewModel.self) { r in
+        container.register(HomeViewModel.self) { resolver in
             HomeViewModel(
-                router: resolveOrFail(r, (any RouterProtocol).self),
-                tracker: resolveOrFail(r, HomeTrackerProtocol.self),
-                getAllCharactersUseCase: resolveOrFail(r, GetAllCharactersUseCaseProtocol.self),
-                getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
-                getFilteredCharactersUseCase: resolveOrFail(r, GetFilteredCharactersUseCaseProtocol.self),
-                deleteActiveFilterUseCase: resolveOrFail(r, DeleteActiveFilterUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
+                router: resolveOrFail(resolver, (any RouterProtocol).self),
+                tracker: resolveOrFail(resolver, HomeTrackerProtocol.self),
+                getAllCharactersUseCase: resolveOrFail(resolver, GetAllCharactersUseCaseProtocol.self),
+                getActiveFilterUseCase: resolveOrFail(resolver, GetActiveFilterUseCaseProtocol.self),
+                getFilteredCharactersUseCase: resolveOrFail(resolver, GetFilteredCharactersUseCaseProtocol.self),
+                deleteActiveFilterUseCase: resolveOrFail(resolver, DeleteActiveFilterUseCaseProtocol.self),
+                getSearchedCharacterUseCase: resolveOrFail(resolver, GetSearchedCharacterUseCaseProtocol.self))
         }
-        container.register(FilterViewModel.self) { r in
+        container.register(FilterViewModel.self) { resolver in
             FilterViewModel(
-                router: resolveOrFail(r, (any RouterProtocol).self),
-                tracker: resolveOrFail(r, FilterTrackerProtocol.self),
-                getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
-                getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
-                saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self))
+                router: resolveOrFail(resolver, (any RouterProtocol).self),
+                tracker: resolveOrFail(resolver, FilterTrackerProtocol.self),
+                getAvailableFilterUseCase: resolveOrFail(resolver, GetAvailableFilterUseCaseProtocol.self),
+                getActiveFilterUseCase: resolveOrFail(resolver, GetActiveFilterUseCaseProtocol.self),
+                saveActiveFilterUseCase: resolveOrFail(resolver, SaveActiveFilterUseCaseProtocol.self))
         }
-        container.register(FilterViewModel.self) { (r, delegate: any FilterDelegate) in
+        container.register(FilterViewModel.self) { (resolver, delegate: any FilterDelegate) in
             FilterViewModel(
-                router: resolveOrFail(r, (any RouterProtocol).self),
-                tracker: resolveOrFail(r, FilterTrackerProtocol.self),
-                getAvailableFilterUseCase: resolveOrFail(r, GetAvailableFilterUseCaseProtocol.self),
-                getActiveFilterUseCase: resolveOrFail(r, GetActiveFilterUseCaseProtocol.self),
-                saveActiveFilterUseCase: resolveOrFail(r, SaveActiveFilterUseCaseProtocol.self),
+                router: resolveOrFail(resolver, (any RouterProtocol).self),
+                tracker: resolveOrFail(resolver, FilterTrackerProtocol.self),
+                getAvailableFilterUseCase: resolveOrFail(resolver, GetAvailableFilterUseCaseProtocol.self),
+                getActiveFilterUseCase: resolveOrFail(resolver, GetActiveFilterUseCaseProtocol.self),
+                saveActiveFilterUseCase: resolveOrFail(resolver, SaveActiveFilterUseCaseProtocol.self),
                 delegate: delegate)
         }
-        container.register(DetailsViewModel.self) { r in
+        container.register(DetailsViewModel.self) { resolver in
             DetailsViewModel(
-                router: resolveOrFail(r, (any RouterProtocol).self),
-                tracker: resolveOrFail(r, DetailsTrackerProtocol.self),
-                getCharacterByIdUseCase: resolveOrFail(r, GetCharacterByIdUseCaseProtocol.self),
-                getSearchedCharacterUseCase: resolveOrFail(r, GetSearchedCharacterUseCaseProtocol.self))
+                router: resolveOrFail(resolver, (any RouterProtocol).self),
+                tracker: resolveOrFail(resolver, DetailsTrackerProtocol.self),
+                getCharacterByIdUseCase: resolveOrFail(resolver, GetCharacterByIdUseCaseProtocol.self),
+                getSearchedCharacterUseCase: resolveOrFail(resolver, GetSearchedCharacterUseCaseProtocol.self))
         }
     }
 

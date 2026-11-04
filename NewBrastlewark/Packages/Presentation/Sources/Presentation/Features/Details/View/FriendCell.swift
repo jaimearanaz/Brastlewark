@@ -59,8 +59,7 @@ private extension FriendCell {
 
     func successImage(_ image: Image) -> some View {
         image
-            .resizable()
-            .aspectRatio(contentMode: .fill)
+            .resizable().scaledToFill()
             .clipShape(Circle())
     }
 

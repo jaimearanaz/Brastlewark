@@ -1,5 +1,5 @@
-import Testing
 import Domain
+import Testing
 
 @testable import Presentation
 
@@ -23,27 +23,27 @@ struct FilterUIModelMapperTests {
             ],
             friends: .init(available: 0...10, active: 2...8)
         )
-        
+
         // when
         let result = FilterUIModel.map(model: model)
-        
+
         // then
         #expect(result.age == 20...80)
         #expect(result.weight == 50...120)
         #expect(result.height == 130...180)
         #expect(result.friends == 2...8)
-        
+
         #expect(result.hairColor.count == 2)
         #expect(result.hairColor.contains("Red"))
         #expect(result.hairColor.contains("Black"))
         #expect(!result.hairColor.contains("Brown"))
-        
+
         #expect(result.profession.count == 1)
         #expect(result.profession.contains("Baker"))
         #expect(!result.profession.contains("Miner"))
         #expect(!result.profession.contains("Woodcarver"))
     }
-    
+
     @Test
     func givenFilterUIModelWithNoCheckedItems_whenMap_thenCreatesFilterWithEmptyCollections() {
         // given
@@ -63,28 +63,28 @@ struct FilterUIModelMapperTests {
             ],
             friends: .init(available: 0...10, active: 0...10)
         )
-        
+
         // when
         let result = FilterUIModel.map(model: model)
-        
+
         // then
         #expect(result.age == 0...100)
         #expect(result.weight == 20...150)
         #expect(result.height == 100...200)
         #expect(result.friends == 0...10)
-        
+
         #expect(result.hairColor.isEmpty)
         #expect(result.profession.isEmpty)
     }
-    
+
     @Test
     func givenEmptyFilterUIModel_whenMap_thenCreatesEmptyFilter() {
         // given
         let model = FilterUIModel()
-        
+
         // when
         let result = FilterUIModel.map(model: model)
-        
+
         // then
         #expect(result.age == 0...0)
         #expect(result.weight == 0...0)
@@ -93,7 +93,7 @@ struct FilterUIModelMapperTests {
         #expect(result.hairColor.isEmpty)
         #expect(result.profession.isEmpty)
     }
-    
+
     @Test
     func givenFilterUIModelWithAllItemsChecked_whenMap_thenCreatesFilterWithAllCollections() {
         // given
@@ -109,16 +109,16 @@ struct FilterUIModelMapperTests {
                 .init(title: "Woodcarver", checked: true)
             ]
         )
-        
+
         // when
         let result = FilterUIModel.map(model: model)
-        
+
         // then
         #expect(result.hairColor.count == 3)
         #expect(result.hairColor.contains("Red"))
         #expect(result.hairColor.contains("Black"))
         #expect(result.hairColor.contains("Brown"))
-        
+
         #expect(result.profession.count == 3)
         #expect(result.profession.contains("Miner"))
         #expect(result.profession.contains("Baker"))

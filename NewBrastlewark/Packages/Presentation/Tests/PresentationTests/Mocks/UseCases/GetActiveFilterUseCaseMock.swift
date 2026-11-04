@@ -1,10 +1,10 @@
-import Foundation
 import Domain
+import Foundation
 
 public final class GetActiveFilterUseCaseMock: GetActiveFilterUseCaseProtocol, @unchecked Sendable {
     private let lock = NSLock()
     private var _executeResult: Result<Filter?, FilterRepositoryError> = .success(nil)
-    
+
     public var executeResult: Result<Filter?, FilterRepositoryError> {
         get {
             lock.lock()

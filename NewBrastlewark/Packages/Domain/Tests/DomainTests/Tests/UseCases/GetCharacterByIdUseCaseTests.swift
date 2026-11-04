@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 import Swinject
+import Testing
 
 @testable import Domain
 

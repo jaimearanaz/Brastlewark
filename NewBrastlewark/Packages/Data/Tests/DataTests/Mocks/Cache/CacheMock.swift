@@ -1,5 +1,5 @@
-import Foundation
 @testable import Data
+import Foundation
 
 final class CacheMock: CharactersCacheProtocol {
     var storedCharacters: [CharacterEntity]?

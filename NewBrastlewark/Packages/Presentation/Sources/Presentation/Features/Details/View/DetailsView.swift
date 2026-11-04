@@ -1,5 +1,5 @@
-import SwiftUI
 import MultiSlider
+import SwiftUI
 import Utils
 
 public struct DetailsView<ViewModel: DetailsViewModelProtocol>: View {
@@ -104,8 +104,7 @@ private extension DetailsView {
                         .accessibilityIdentifier(accessibilityIds.characterImageLoading)
                 case .success(let image):
                     image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .resizable().scaledToFill()
                         .accessibilityIdentifier(accessibilityIds.characterImageSuccess)
                 case .failure:
                     fallbackImage()
@@ -152,11 +151,11 @@ private extension DetailsView {
     // swiftlint:disable large_tuple
     func detailsRows(forDetails details: DetailsUIModel) -> [(String, String, String)] {
         [(localizables.age, "\(details.age)", accessibilityIds.ageRow),
-        (localizables.weight, String(format: "%.1f", details.weight), accessibilityIds.weightRow),
-        (localizables.height, String(format: "%.1f", details.height), accessibilityIds.heightRow),
-        (localizables.hairColor, details.hairColor, accessibilityIds.hairColorRow),
-        (localizables.professions, details.professions.joined(separator: ", "), accessibilityIds.professionsRow),
-        (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "", accessibilityIds.friendsRow)]
+         (localizables.weight, String(format: "%.1f", details.weight), accessibilityIds.weightRow),
+         (localizables.height, String(format: "%.1f", details.height), accessibilityIds.heightRow),
+         (localizables.hairColor, details.hairColor, accessibilityIds.hairColorRow),
+         (localizables.professions, details.professions.joined(separator: ", "), accessibilityIds.professionsRow),
+         (localizables.friends, details.friends.isEmpty ? localizables.noFriends : "", accessibilityIds.friendsRow)]
     }
     // swiftlint:enable large_tuple
 

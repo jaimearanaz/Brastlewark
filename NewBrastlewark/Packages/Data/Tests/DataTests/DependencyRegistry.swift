@@ -1,5 +1,5 @@
-import Swinject
 import Foundation
+import Swinject
 
 @testable import Domain
 

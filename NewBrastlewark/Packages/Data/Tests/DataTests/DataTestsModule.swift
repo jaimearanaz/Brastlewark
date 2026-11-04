@@ -1,6 +1,6 @@
+@testable import Data
 import Domain
 import Swinject
-@testable import Data
 
 public struct DataTestsModule {
     public static func registerDependencies(inContainer container: Container) {
@@ -9,10 +9,10 @@ public struct DataTestsModule {
     }
 
     private static func registerRepositories(in container: Container) {
-        container.register(CharactersRepositoryProtocol.self) { r in
+        container.register(CharactersRepositoryProtocol.self) { resolver in
             CharactersRepository(
-                networkService: resolveOrFail(r, NetworkServiceProtocol.self),
-                cache: resolveOrFail(r, CharactersCacheProtocol.self))
+                networkService: resolveOrFail(resolver, NetworkServiceProtocol.self),
+                cache: resolveOrFail(resolver, CharactersCacheProtocol.self))
         }
         .inObjectScope(.container)
         container.register(FilterRepositoryProtocol.self) { _ in

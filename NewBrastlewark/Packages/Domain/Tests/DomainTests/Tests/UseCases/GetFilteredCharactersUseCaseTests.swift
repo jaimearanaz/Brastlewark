@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 import Swinject
+import Testing
 
 @testable import Domain
 
@@ -8,7 +8,7 @@ import Swinject
 final class GetFilteredCharactersUseCaseTests {
     var sut: GetFilteredCharactersUseCaseProtocol!
     var charactersRepositoryMock: CharactersRepositoryMock!
-    
+
     init() {
         let container = DependencyRegistry.createFreshContainer()
         sut = container.resolve(GetFilteredCharactersUseCaseProtocol.self)!
@@ -176,8 +176,8 @@ final class GetFilteredCharactersUseCaseTests {
         switch result {
         case .success(let filtered):
             #expect(!filtered.isEmpty)
-            #expect(filtered.allSatisfy { 
-                $0.professions.contains("Baker") || $0.professions.contains("Metalworker") 
+            #expect(filtered.allSatisfy {
+                $0.professions.contains("Baker") || $0.professions.contains("Metalworker")
             })
         default:
             #expect(Bool(false))

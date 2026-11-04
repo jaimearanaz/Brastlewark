@@ -1,6 +1,6 @@
-import XCTest
-import SwiftUI
 import SnapshotTesting
+import SwiftUI
+import XCTest
 
 @testable import Presentation
 
@@ -23,7 +23,7 @@ final class DetailsViewSnapshotTests: XCTestCase {
         // When & Then
         assertSnapshot(view: view, test: #function)
     }
-    
+
     func testDetailsViewWithHomeButtonSnapshot() {
         // Given
         let view = DetailsView(showHome: true, viewModel: DetailsViewModelPreview.ready)

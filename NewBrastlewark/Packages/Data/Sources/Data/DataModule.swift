@@ -16,10 +16,10 @@ public struct DataModule {
     }
 
     private static func registerRepositories(in container: Container) {
-        container.register(CharactersRepositoryProtocol.self) { r in
+        container.register(CharactersRepositoryProtocol.self) { resolver in
             CharactersRepository(
-                networkService: resolveOrFail(r, NetworkServiceProtocol.self),
-                cache: resolveOrFail(r, CharactersCacheProtocol.self))
+                networkService: resolveOrFail(resolver, NetworkServiceProtocol.self),
+                cache: resolveOrFail(resolver, CharactersCacheProtocol.self))
         }
         .inObjectScope(.container)
         container.register(FilterRepositoryProtocol.self) { _ in
@@ -30,12 +30,12 @@ public struct DataModule {
 
     private static func registerOthers(in container: Container, source: Source) {
         container.register(NetworkStatusProtocol.self) { _ in NetworkStatus() }
-        container.register(NetworkServiceProtocol.self) { r in
+        container.register(NetworkServiceProtocol.self) { resolver in
             switch source {
             case .remote:
                 NetworkService(
                     baseUrl: "https://raw.githubusercontent.com/jaimearanaz/Brastlewark/refs/heads/main/data/brastlewark.json",
-                    networkStatus: resolveOrFail(r, NetworkStatusProtocol.self))
+                    networkStatus: resolveOrFail(resolver, NetworkStatusProtocol.self))
             case .local:
                 LocalService()
             }

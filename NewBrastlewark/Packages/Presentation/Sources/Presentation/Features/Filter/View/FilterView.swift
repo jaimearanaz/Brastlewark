@@ -1,5 +1,5 @@
-import SwiftUI
 import MultiSlider
+import SwiftUI
 import Utils
 
 public struct FilterView<ViewModel: FilterViewModelProtocol & ObservableObject>: View {

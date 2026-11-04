@@ -1,5 +1,5 @@
-import Foundation
 import Domain
+import Foundation
 
 public final class GetAllCharactersUseCaseMock: GetAllCharactersUseCaseProtocol, @unchecked Sendable {
     private let queue = DispatchQueue(label: "GetAllCharactersUseCaseMock.queue")

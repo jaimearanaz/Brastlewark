@@ -7,7 +7,7 @@ import Testing
 // swiftlint:disable force_cast force_unwrapping
 struct FilterRepositoryTests {
     private var sut: FilterRepositoryProtocol!
-    
+
     init() {
         let container = DependencyRegistry.createFreshContainer()
         sut = container.resolve(FilterRepositoryProtocol.self)! as! FilterRepository

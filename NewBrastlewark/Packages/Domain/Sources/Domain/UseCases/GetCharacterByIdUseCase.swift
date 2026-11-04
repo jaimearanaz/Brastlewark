@@ -20,7 +20,7 @@ final class GetCharacterByIdUseCase: GetCharacterByIdUseCaseProtocol, @unchecked
     func execute(params: GetCharacterByIdUseCaseParams) async -> Result<Character?, CharactersRepositoryError> {
         do {
             let characters = try await repository.getAllCharacters(forceUpdate: false)
-            return .success(characters.filter { $0.id == params.id }.first)
+            return .success(characters.first { $0.id == params.id })
         } catch let error as CharactersRepositoryError {
             return .failure(error)
         } catch {

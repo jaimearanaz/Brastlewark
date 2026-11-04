@@ -7,35 +7,35 @@ public struct DomainModule {
     }
 
     private static func registerCharacterUseCases(in container: Container) {
-        container.register(GetAllCharactersUseCaseProtocol.self) { r in
-            GetAllCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        container.register(GetAllCharactersUseCaseProtocol.self) { resolver in
+            GetAllCharactersUseCase(repository: resolveOrFail(resolver, CharactersRepositoryProtocol.self))
         }
-        container.register(GetFilteredCharactersUseCaseProtocol.self) { r in
-            GetFilteredCharactersUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        container.register(GetFilteredCharactersUseCaseProtocol.self) { resolver in
+            GetFilteredCharactersUseCase(repository: resolveOrFail(resolver, CharactersRepositoryProtocol.self))
         }
-        container.register(GetSearchedCharacterUseCaseProtocol.self) { r in
-            GetSearchedCharacterUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        container.register(GetSearchedCharacterUseCaseProtocol.self) { resolver in
+            GetSearchedCharacterUseCase(repository: resolveOrFail(resolver, CharactersRepositoryProtocol.self))
         }
-        container.register(GetCharacterByIdUseCaseProtocol.self) { r in
-            GetCharacterByIdUseCase(repository: resolveOrFail(r, CharactersRepositoryProtocol.self))
+        container.register(GetCharacterByIdUseCaseProtocol.self) { resolver in
+            GetCharacterByIdUseCase(repository: resolveOrFail(resolver, CharactersRepositoryProtocol.self))
         }
     }
 
     private static func registerFilterUseCases(in container: Container) {
-        container.register(GetAvailableFilterUseCaseProtocol.self) { r in
+        container.register(GetAvailableFilterUseCaseProtocol.self) { resolver in
             GetAvailableFilterUseCase(
-                charactersRepository: resolveOrFail(r, CharactersRepositoryProtocol.self),
-                filterRepository: resolveOrFail(r, FilterRepositoryProtocol.self)
+                charactersRepository: resolveOrFail(resolver, CharactersRepositoryProtocol.self),
+                filterRepository: resolveOrFail(resolver, FilterRepositoryProtocol.self)
             )
         }
-        container.register(SaveActiveFilterUseCaseProtocol.self) { r in
-            SaveActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        container.register(SaveActiveFilterUseCaseProtocol.self) { resolver in
+            SaveActiveFilterUseCase(repository: resolveOrFail(resolver, FilterRepositoryProtocol.self))
         }
-        container.register(GetActiveFilterUseCaseProtocol.self) { r in
-            GetActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        container.register(GetActiveFilterUseCaseProtocol.self) { resolver in
+            GetActiveFilterUseCase(repository: resolveOrFail(resolver, FilterRepositoryProtocol.self))
         }
-        container.register(DeleteActiveFilterUseCaseProtocol.self) { r in
-            DeleteActiveFilterUseCase(repository: resolveOrFail(r, FilterRepositoryProtocol.self))
+        container.register(DeleteActiveFilterUseCaseProtocol.self) { resolver in
+            DeleteActiveFilterUseCase(repository: resolveOrFail(resolver, FilterRepositoryProtocol.self))
         }
     }
 
