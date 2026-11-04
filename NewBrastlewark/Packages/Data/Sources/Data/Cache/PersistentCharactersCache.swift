@@ -1,14 +1,14 @@
 import Foundation
 import SwiftData
 
-protocol CharactersCacheProtocol {
+protocol CharactersCacheProtocol: Sendable {
     func get() async -> [CharacterEntity]?
     func save(_ characters: [CharacterEntity]) async
     func isValid() async -> Bool
     func clearCache() async
 }
 
-final class PersistentCharactersCache: CharactersCacheProtocol {
+final actor PersistentCharactersCache: CharactersCacheProtocol {
     private let modelContainer: ModelContainer
     private let cacheValidity: TimeInterval
     private var timestamp: Date? {

@@ -19,8 +19,7 @@ final class CharactersRepositoryTests: XCTestCase {
   func test_given_validCache_when_getAllCharacters_then_returnsCachedCharacters() async throws {
     // given
     let entity = try loadOneCharacterFromJSON()
-    cacheMock.storedCharacters = [entity]
-    cacheMock.valid = true
+    await cacheMock.configure(storedCharacters: [entity], valid: true)
 
     // when
     let result = try await sut.getAllCharacters(forceUpdate: false)
@@ -34,8 +33,8 @@ final class CharactersRepositoryTests: XCTestCase {
     async throws {
     // given
     let entity = try loadOneCharacterFromJSON()
-    networkServiceMock.result = [entity]
-    cacheMock.valid = false
+    await networkServiceMock.configure(result: [entity])
+    await cacheMock.configure(valid: false)
 
     // when
     let result = try await sut.getAllCharacters(forceUpdate: false)
@@ -43,15 +42,17 @@ final class CharactersRepositoryTests: XCTestCase {
     // then
     XCTAssertEqual(result.count, 1)
     XCTAssertEqual(result.first?.id, entity.id)
-    XCTAssertTrue(cacheMock.saveCalled)
-    XCTAssertEqual(cacheMock.storedCharacters?.first?.id, entity.id)
+    let saveCalled = await cacheMock.wasSaveCalled()
+    let savedCharacters = await cacheMock.savedCharacters()
+    XCTAssertTrue(saveCalled)
+    XCTAssertEqual(savedCharacters?.first?.id, entity.id)
   }
 
   func test_given_invalidCache_and_networkFailure_when_getAllCharacters_then_throwsUnableToFetchCharacters()
     async {
     // given
-    cacheMock.valid = false
-    networkServiceMock.error = NetworkErrors.general
+    await cacheMock.configure(valid: false)
+    await networkServiceMock.configure(error: .general)
 
     // when
     do {
@@ -70,8 +71,8 @@ final class CharactersRepositoryTests: XCTestCase {
   func test_given_invalidCache_and_noNetwork_when_getAllCharacters_then_throwsNoInternetConnection()
     async {
     // given
-    cacheMock.valid = false
-    networkServiceMock.error = NetworkErrors.noNetwork
+    await cacheMock.configure(valid: false)
+    await networkServiceMock.configure(error: .noNetwork)
 
     // when
     do {
@@ -90,7 +91,7 @@ final class CharactersRepositoryTests: XCTestCase {
   func test_given_nilNetworkService_when_getAllCharacters_then_throwsError() async {
     // given
     sut = CharactersRepository(networkService: nil, cache: cacheMock)
-    cacheMock.valid = false
+    await cacheMock.configure(valid: false)
 
     // when
     do {

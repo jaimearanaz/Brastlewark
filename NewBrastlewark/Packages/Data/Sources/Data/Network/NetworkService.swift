@@ -1,14 +1,14 @@
 import Foundation
 
-protocol NetworkServiceProtocol {
+protocol NetworkServiceProtocol: Sendable {
     func getCharacters() async throws -> [CharacterEntity]
 }
 
-class NetworkService: NetworkServiceProtocol {
-    var url: String
-    var retries: Int
-    var networkStatus: NetworkStatusProtocol
-    var urlSession: URLSession
+final class NetworkService: NetworkServiceProtocol, Sendable {
+    private let url: String
+    private let retries: Int
+    private let networkStatus: any NetworkStatusProtocol
+    private let urlSession: URLSession
 
     init(baseUrl: String,
          retries: Int = 3,
@@ -21,7 +21,7 @@ class NetworkService: NetworkServiceProtocol {
     }
 
     func getCharacters() async throws -> [CharacterEntity] {
-        guard networkStatus.isInternetAvailable() else {
+        guard await networkStatus.isInternetAvailable() else {
             throw NetworkErrors.noNetwork
         }
         guard url.isValidNetworkURL, let url = URL(string: url) else {

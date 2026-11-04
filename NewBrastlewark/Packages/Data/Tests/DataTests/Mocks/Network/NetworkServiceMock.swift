@@ -1,21 +1,22 @@
-import Combine
-
 @testable import Data
 
-class NetworkServiceMock: NetworkServiceProtocol {
-    var error: NetworkErrors?
-    var result: [CharacterEntity]?
+actor NetworkServiceMock: NetworkServiceProtocol {
+    private var error: NetworkErrors?
+    private var result: [CharacterEntity]?
 
-    // swiftlint:disable force_unwrapping
+    func configure(error: NetworkErrors? = nil, result: [CharacterEntity]? = nil) {
+        self.error = error
+        self.result = result
+    }
+
     func getCharacters() async throws -> [CharacterEntity] {
-        guard error == nil else {
-            throw error!
+        if let error {
+            throw error
         }
 
-        guard let result = result else {
+        guard let result else {
             throw NetworkErrors.general
         }
         return result
     }
-    // swiftlint:enable force_unwrapping
 }

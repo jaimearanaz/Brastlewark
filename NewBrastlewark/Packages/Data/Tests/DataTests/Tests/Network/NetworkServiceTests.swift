@@ -9,7 +9,7 @@ struct NetworkServiceTests {
     func given_noInternet_when_getCharacters_then_returnsNoNetworkError() async {
         // given
         let networkStatus = NetworkStatusMock()
-        networkStatus.isInternetAvailableReturnValue = false
+        await networkStatus.setInternetAvailable(false)
         let sut = NetworkService(baseUrl: "https://test.com", networkStatus: networkStatus)
 
         // when

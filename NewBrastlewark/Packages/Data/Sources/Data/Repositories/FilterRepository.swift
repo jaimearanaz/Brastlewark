@@ -1,6 +1,6 @@
 import Domain
 
-final class FilterRepository: FilterRepositoryProtocol {
+final actor FilterRepository: FilterRepositoryProtocol {
     private var activeFilter: Filter?
 
     func getAvailableFilter(fromCharacters characters: [Character]) async throws -> Filter {

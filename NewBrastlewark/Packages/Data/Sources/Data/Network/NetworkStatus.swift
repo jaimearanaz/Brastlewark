@@ -1,13 +1,13 @@
 import CoreTelephony
 import SystemConfiguration
 
-protocol NetworkStatusProtocol {
-    func isInternetAvailable() -> Bool
+protocol NetworkStatusProtocol: Sendable {
+    func isInternetAvailable() async -> Bool
 }
 
-class NetworkStatus: NetworkStatusProtocol {
+final class NetworkStatus: NetworkStatusProtocol, Sendable {
     // swiftlint:disable force_unwrapping
-    func isInternetAvailable() -> Bool {
+    func isInternetAvailable() async -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
         zeroAddress.sin_family = sa_family_t(AF_INET)

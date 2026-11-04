@@ -2,9 +2,14 @@ import Foundation
 
 @testable import Data
 
-class NetworkStatusMock: NetworkStatusProtocol {
-    var isInternetAvailableReturnValue = true
+actor NetworkStatusMock: NetworkStatusProtocol {
+    private var isInternetAvailableReturnValue = true
+
+    func setInternetAvailable(_ isAvailable: Bool) {
+        isInternetAvailableReturnValue = isAvailable
+    }
+
     func isInternetAvailable() -> Bool {
-        return isInternetAvailableReturnValue
+        isInternetAvailableReturnValue
     }
 }

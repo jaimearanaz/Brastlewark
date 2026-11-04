@@ -1,14 +1,26 @@
 @testable import Data
-import Foundation
 
-final class CacheMock: CharactersCacheProtocol {
-    var storedCharacters: [CharacterEntity]?
-    var valid = false
-    var clearCalled = false
-    var saveCalled = false
+actor CacheMock: CharactersCacheProtocol {
+    private var storedCharacters: [CharacterEntity]?
+    private var valid = false
+    private var clearCalled = false
+    private var saveCalled = false
+
+    func configure(storedCharacters: [CharacterEntity]? = nil, valid: Bool = false) {
+        self.storedCharacters = storedCharacters
+        self.valid = valid
+    }
+
+    func savedCharacters() -> [CharacterEntity]? {
+        storedCharacters
+    }
+
+    func wasSaveCalled() -> Bool {
+        saveCalled
+    }
 
     func get() async -> [CharacterEntity]? {
-        return storedCharacters
+        storedCharacters
     }
 
     func save(_ characters: [CharacterEntity]) async {
@@ -17,7 +29,7 @@ final class CacheMock: CharactersCacheProtocol {
     }
 
     func isValid() async -> Bool {
-        return valid
+        valid
     }
 
     func clearCache() async {

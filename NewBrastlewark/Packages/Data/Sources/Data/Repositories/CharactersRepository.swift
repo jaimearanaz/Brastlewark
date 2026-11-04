@@ -1,7 +1,7 @@
 import Domain
 import Foundation
 
-final class CharactersRepository: CharactersRepositoryProtocol, @unchecked Sendable {
+final class CharactersRepository: CharactersRepositoryProtocol, Sendable {
     private let networkService: NetworkServiceProtocol?
     private let cache: CharactersCacheProtocol
 
