@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PROJECT: NewBrastlewark/NewBrastlewark.xcodeproj
+  APP_SCHEME: NewBrastlewark
+  SIMULATOR: platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-26
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Build application
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project "$PROJECT" \
+            -scheme "$APP_SCHEME" \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/BuildDerivedData" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO
+
+  unit-tests:
+    name: Unit tests
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run package tests
+        run: |
+          set -o pipefail
+
+          for package in Utils Domain Data Presentation; do
+            (
+              cd "NewBrastlewark/Packages/$package"
+              xcodebuild test \
+                -scheme "$package" \
+                -destination "$SIMULATOR" \
+                -derivedDataPath "$RUNNER_TEMP/UnitTestsDerivedData/$package" \
+                -skipPackagePluginValidation \
+                CODE_SIGNING_ALLOWED=NO
+            )
+          done
+
+  snapshot-tests:
+    name: Snapshot tests
+    runs-on: xcode-27
+    timeout-minutes: 30
+    env:
+      SIMULATOR: platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run snapshot tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project "$PROJECT" \
+            -scheme "$APP_SCHEME" \
+            -destination "$SIMULATOR" \
+            -testLanguage en \
+            -testRegion US \
+            -only-testing:NewBrastlewarkSnapshotTests \
+            -resultBundlePath "$RUNNER_TEMP/SnapshotTests.xcresult" \
+            -derivedDataPath "$RUNNER_TEMP/SnapshotTestsDerivedData" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload snapshot test results
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshot-test-results
+          path: ${{ runner.temp }}/SnapshotTests.xcresult
+          retention-days: 7
+          if-no-files-found: ignore

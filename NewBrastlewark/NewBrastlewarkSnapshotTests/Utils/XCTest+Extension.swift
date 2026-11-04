@@ -12,7 +12,7 @@ extension XCTestCase {
     SnapshotTesting.assertSnapshot(
       of: hostingController,
       as: .image(on: .iPhone13Pro),
-      record: isRecording ? .all : .missing,
+      record: isRecording,
       file: folder,
       testName: test
     )

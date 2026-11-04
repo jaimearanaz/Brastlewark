@@ -4,6 +4,7 @@ import Testing
 
 @testable import Data
 
+@Suite(.serialized)
 struct PersistentCharactersCacheTests {
     private var sut: CharactersCacheProtocol!
 
