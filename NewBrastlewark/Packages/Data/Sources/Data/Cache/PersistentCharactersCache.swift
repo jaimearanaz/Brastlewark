@@ -8,9 +8,9 @@ protocol CharactersCacheProtocol: Sendable {
     func clearCache() async
 }
 
+@ModelActor
 final actor PersistentCharactersCache: CharactersCacheProtocol {
-    private let modelContainer: ModelContainer
-    private let cacheValidity: TimeInterval
+    private var cacheValidity: TimeInterval = 10
     private var timestamp: Date? {
         get { UserDefaults.standard.object(forKey: "characters_cache_timestamp") as? Date }
         set { UserDefaults.standard.set(newValue, forKey: "characters_cache_timestamp") }
@@ -18,37 +18,57 @@ final actor PersistentCharactersCache: CharactersCacheProtocol {
 
     init?(cacheValidityInSeconds: TimeInterval = 10, modelContainer: ModelContainer? = nil) {
         self.cacheValidity = cacheValidityInSeconds
+        let container: ModelContainer
         if let modelContainer = modelContainer {
-            self.modelContainer = modelContainer
+            container = modelContainer
         } else {
             do {
-                self.modelContainer = try ModelContainer(for: CharacterModel.self)
+                container = try ModelContainer(for: CharacterModel.self)
             } catch {
                 return nil
             }
         }
+        self.modelContainer = container
+        let modelContext = ModelContext(container)
+        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
     }
 
     func get() async -> [CharacterEntity]? {
-        await MainActor.run { [weak modelContainer] in
-            let context = modelContainer?.mainContext
-            let fetchDescriptor = FetchDescriptor<CharacterModel>()
-            guard let persistentCharacters = try? context?.fetch(fetchDescriptor), !persistentCharacters.isEmpty else {
-                return nil
-            }
-            return persistentCharacters.map { $0.toCharacterEntity() }
+        let fetchDescriptor = FetchDescriptor<CharacterModel>()
+        guard let persistentCharacters = try? modelContext.fetch(fetchDescriptor), !persistentCharacters.isEmpty else {
+            return nil
         }
+        return persistentCharacters.map { $0.toCharacterEntity() }
     }
 
     func save(_ characters: [CharacterEntity]) async {
-        await MainActor.run { [weak modelContainer] in
-            let context = modelContainer?.mainContext
+        guard replaceCachedCharacters(with: characters) else { return }
+        timestamp = Date()
+    }
 
-            let fetchDescriptor = FetchDescriptor<CharacterModel>()
-            if let old = try? context?.fetch(fetchDescriptor) {
-                for obj in old {
-                    context?.delete(obj)
-                }
+    func isValid() async -> Bool {
+        guard let timestamp = timestamp,
+              Date().timeIntervalSince(timestamp) < cacheValidity else {
+            return false
+        }
+        let fetchDescriptor = FetchDescriptor<CharacterModel>()
+        guard let persistentCharacters = try? modelContext.fetch(fetchDescriptor) else {
+            return false
+        }
+        return !persistentCharacters.isEmpty
+    }
+
+    func clearCache() async {
+        guard replaceCachedCharacters(with: []) else { return }
+        timestamp = nil
+    }
+
+    private func replaceCachedCharacters(with characters: [CharacterEntity]) -> Bool {
+        let fetchDescriptor = FetchDescriptor<CharacterModel>()
+        do {
+            let oldCharacters = try modelContext.fetch(fetchDescriptor)
+            for character in oldCharacters {
+                modelContext.delete(character)
             }
 
             for entity in characters {
@@ -63,28 +83,13 @@ final actor PersistentCharactersCache: CharactersCacheProtocol {
                     professions: entity.professions,
                     friends: entity.friends
                 )
-                context?.insert(persistent)
+                modelContext.insert(persistent)
             }
-            try? context?.save()
-        }
-        timestamp = Date()
-    }
-
-    func isValid() async -> Bool {
-        guard let timestamp = timestamp else { return false }
-        let isTimeValid = Date().timeIntervalSince(timestamp) < cacheValidity
-        return await MainActor.run { [weak modelContainer] in
-            let context = modelContainer?.mainContext
-            let fetchDescriptor = FetchDescriptor<CharacterModel>()
-            if let persistentCharacters = try? context?.fetch(fetchDescriptor) {
-                return isTimeValid && !persistentCharacters.isEmpty
-            }
+            try modelContext.save()
+            return true
+        } catch {
+            modelContext.rollback()
             return false
         }
-    }
-
-    func clearCache() async {
-        await save([])
-        UserDefaults.standard.removeObject(forKey: "characters_cache_timestamp")
     }
 }
