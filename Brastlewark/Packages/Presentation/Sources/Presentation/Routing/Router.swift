@@ -1,7 +1,8 @@
+import Observation
 import SwiftUI
 
 @MainActor
-public protocol RouterProtocol: ObservableObject {
+public protocol RouterProtocol: AnyObject {
     var path: NavigationPath { get set }
 
     func navigate(to route: Route)
@@ -12,8 +13,9 @@ public protocol RouterProtocol: ObservableObject {
 }
 
 @MainActor
+@Observable
 public final class Router: RouterProtocol {
-    @Published public var path = NavigationPath()
+    public var path = NavigationPath()
 
     public init() {}
 

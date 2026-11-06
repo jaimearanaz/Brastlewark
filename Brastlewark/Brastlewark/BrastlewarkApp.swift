@@ -5,7 +5,7 @@ import SwiftUI
 
 @main
 struct BrastlewarkApp: App {
-    @StateObject private var router: Router
+    @State private var router: Router
     private let homeViewModel: HomeViewModel
     private let filterViewModel: FilterViewModel
     private let detailsViewModel: DetailsViewModel
@@ -20,7 +20,7 @@ struct BrastlewarkApp: App {
             fatalError("Could not resolve application dependencies")
         }
 
-        _router = StateObject(wrappedValue: router)
+        _router = State(initialValue: router)
         self.homeViewModel = homeViewModel
         self.filterViewModel = filterViewModel
         self.detailsViewModel = detailsViewModel
@@ -28,6 +28,8 @@ struct BrastlewarkApp: App {
 
     var body: some Scene {
         WindowGroup {
+            @Bindable var router = router
+
             NavigationStack(path: $router.path) {
                 HomeView(viewModel: homeViewModel)
                     .navigationDestination(for: Route.self) { route in

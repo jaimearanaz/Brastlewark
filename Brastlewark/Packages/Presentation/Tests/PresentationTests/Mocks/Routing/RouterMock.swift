@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 public final class RouterMock: RouterProtocol {
-    @Published public var path = NavigationPath()
+    public var path = NavigationPath()
 
     public private(set) var didNavigateToRoute: (called: Bool, route: Route?) = (false, nil)
     public private(set) var didNavigateBack = false
