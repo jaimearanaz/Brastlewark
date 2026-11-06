@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "2700"
+   LastUpgradeVersion = "1630"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,8 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6F8F7E452DE851FF0054CD0B"
-               BuildableName = "NewBrastlewark.app"
-               ReferencedContainer = "container:NewBrastlewark.xcodeproj">
+               BuildableName = "Brastlewark.app"
+               BlueprintName = "Brastlewark"
+               ReferencedContainer = "container:Brastlewark.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -26,13 +27,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:../AllTests.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-      </TestPlans>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -40,8 +36,20 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6F8F7E542DE852000054CD0B"
-               BuildableName = "NewBrastlewarkSnapshotTests.xctest"
-               ReferencedContainer = "container:NewBrastlewark.xcodeproj">
+               BuildableName = "BrastlewarkSnapshotTests.xctest"
+               BlueprintName = "BrastlewarkSnapshotTests"
+               ReferencedContainer = "container:Brastlewark.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6F8F7E5E2DE852000054CD0B"
+               BuildableName = "BrastlewarkUITests.xctest"
+               BlueprintName = "BrastlewarkUITests"
+               ReferencedContainer = "container:Brastlewark.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,15 +63,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES"
-      queueDebuggingEnabled = "No">
+      allowLocationSimulation = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6F8F7E452DE851FF0054CD0B"
-            BuildableName = "NewBrastlewark.app"
-            ReferencedContainer = "container:NewBrastlewark.xcodeproj">
+            BuildableName = "Brastlewark.app"
+            BlueprintName = "Brastlewark"
+            ReferencedContainer = "container:Brastlewark.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -78,8 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6F8F7E452DE851FF0054CD0B"
-            BuildableName = "NewBrastlewark.app"
-            ReferencedContainer = "container:NewBrastlewark.xcodeproj">
+            BuildableName = "Brastlewark.app"
+            BlueprintName = "Brastlewark"
+            ReferencedContainer = "container:Brastlewark.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

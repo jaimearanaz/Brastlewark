@@ -11,9 +11,9 @@
   "defaultOptions" : {
     "performanceAntipatternCheckerEnabled" : true,
     "targetForVariableExpansion" : {
-      "containerPath" : "container:NewBrastlewark.xcodeproj",
+      "containerPath" : "container:Brastlewark.xcodeproj",
       "identifier" : "6F8F7E452DE851FF0054CD0B",
-      "name" : "NewBrastlewark"
+      "name" : "Brastlewark"
     },
     "testInteropMode" : "complete"
   },
@@ -21,9 +21,9 @@
     {
       "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:NewBrastlewark.xcodeproj",
+        "containerPath" : "container:Brastlewark.xcodeproj",
         "identifier" : "6F8F7E542DE852000054CD0B",
-        "name" : "NewBrastlewarkSnapshotTests"
+        "name" : "BrastlewarkSnapshotTests"
       }
     },
     {

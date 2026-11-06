@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 env:
-  PROJECT: NewBrastlewark/NewBrastlewark.xcodeproj
-  APP_SCHEME: NewBrastlewark
+  PROJECT: Brastlewark/Brastlewark.xcodeproj
+  APP_SCHEME: Brastlewark
   SIMULATOR: platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5
 
 jobs:
@@ -59,7 +59,7 @@ jobs:
 
           for package in Utils Domain Data Presentation; do
             (
-              cd "NewBrastlewark/Packages/$package"
+              cd "Brastlewark/Packages/$package"
               xcodebuild test \
                 -scheme "$package" \
                 -destination "$SIMULATOR" \
@@ -91,7 +91,7 @@ jobs:
             -destination "$SIMULATOR" \
             -testLanguage en \
             -testRegion US \
-            -only-testing:NewBrastlewarkSnapshotTests \
+            -only-testing:BrastlewarkSnapshotTests \
             -resultBundlePath "$RUNNER_TEMP/SnapshotTests.xcresult" \
             -derivedDataPath "$RUNNER_TEMP/SnapshotTestsDerivedData" \
             -skipPackagePluginValidation \
