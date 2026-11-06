@@ -4,7 +4,7 @@ import Presentation
 import SwiftUI
 
 @main
-struct NewBrastlewarkApp: App {
+struct BrastlewarkApp: App {
     @StateObject private var router: Router
     private let homeViewModel: HomeViewModel
     private let filterViewModel: FilterViewModel

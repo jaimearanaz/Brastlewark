@@ -1,9 +1,9 @@
 included:
-  - NewBrastlewark/NewBrastlewark
-  - NewBrastlewark/Packages/Data
-  - NewBrastlewark/Packages/Domain
-  - NewBrastlewark/Packages/Presentation
-  - NewBrastlewark/Packages/Utils
+  - Brastlewark/Brastlewark
+  - Brastlewark/Packages/Data
+  - Brastlewark/Packages/Domain
+  - Brastlewark/Packages/Presentation
+  - Brastlewark/Packages/Utils
 
 excluded:
   - Pods
@@ -12,11 +12,11 @@ excluded:
   - fastlane
   - DerivedData
   - .swiftpm
-  - NewBrastlewark/SourcePackages
-  - NewBrastlewark/.build
-  - NewBrastlewark/Packages/**/.build
-  - NewBrastlewark/Packages/**/.swiftpm
-  - NewBrastlewark/Packages/**/Checkouts
+  - Brastlewark/SourcePackages
+  - Brastlewark/.build
+  - Brastlewark/Packages/**/.build
+  - Brastlewark/Packages/**/.swiftpm
+  - Brastlewark/Packages/**/Checkouts
 
 opt_in_rules:
   - attributes

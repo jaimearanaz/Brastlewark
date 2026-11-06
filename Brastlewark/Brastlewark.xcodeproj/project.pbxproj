@@ -21,7 +21,7 @@
 			containerPortal = 6F8F7E3E2DE851FF0054CD0B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6F8F7E452DE851FF0054CD0B;
-			remoteInfo = NewBrastlewark;
+			remoteInfo = Brastlewark;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -43,32 +43,32 @@
 		6F4328A4309A692000C23EE0 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Domain; path = Packages/Domain; sourceTree = "<group>"; };
 		6F4328A5309A692900C23EE0 /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Data; path = Packages/Data; sourceTree = "<group>"; };
 		6F4328A6309A693300C23EE0 /* Utils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Utils; path = Packages/Utils; sourceTree = "<group>"; };
-		6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewBrastlewark.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewBrastlewarkSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F8F7E462DE851FF0054CD0B /* Brastlewark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Brastlewark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F8F7E552DE852000054CD0B /* BrastlewarkSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrastlewarkSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6FF34C172E0456500005C6E4 /* Exceptions for "NewBrastlewark" folder in "NewBrastlewark" target */ = {
+		6FF34C172E0456500005C6E4 /* Exceptions for "Brastlewark" folder in "Brastlewark" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 6F8F7E452DE851FF0054CD0B /* NewBrastlewark */;
+			target = 6F8F7E452DE851FF0054CD0B /* Brastlewark */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6F8F7E482DE851FF0054CD0B /* NewBrastlewark */ = {
+		6F8F7E482DE851FF0054CD0B /* Brastlewark */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				6FF34C172E0456500005C6E4 /* Exceptions for "NewBrastlewark" folder in "NewBrastlewark" target */,
+				6FF34C172E0456500005C6E4 /* Exceptions for "Brastlewark" folder in "Brastlewark" target */,
 			);
-			path = NewBrastlewark;
+			path = Brastlewark;
 			sourceTree = "<group>";
 		};
-		6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */ = {
+		6F8F7E582DE852000054CD0B /* BrastlewarkSnapshotTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NewBrastlewarkSnapshotTests;
+			path = BrastlewarkSnapshotTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -104,8 +104,8 @@
 				6F4328A4309A692000C23EE0 /* Domain */,
 				6F4328A5309A692900C23EE0 /* Data */,
 				6F4328A6309A693300C23EE0 /* Utils */,
-				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
-				6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
+				6F8F7E482DE851FF0054CD0B /* Brastlewark */,
+				6F8F7E582DE852000054CD0B /* BrastlewarkSnapshotTests */,
 				6FFF0F842DEA006A00621BE5 /* Frameworks */,
 				6F8F7E472DE851FF0054CD0B /* Products */,
 			);
@@ -114,8 +114,8 @@
 		6F8F7E472DE851FF0054CD0B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */,
-				6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */,
+				6F8F7E462DE851FF0054CD0B /* Brastlewark.app */,
+				6F8F7E552DE852000054CD0B /* BrastlewarkSnapshotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,9 +130,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F8F7E452DE851FF0054CD0B /* NewBrastlewark */ = {
+		6F8F7E452DE851FF0054CD0B /* Brastlewark */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F8F7E692DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewark" */;
+			buildConfigurationList = 6F8F7E692DE852000054CD0B /* Build configuration list for PBXNativeTarget "Brastlewark" */;
 			buildPhases = (
 				6F8F7E422DE851FF0054CD0B /* Sources */,
 				6F8F7E432DE851FF0054CD0B /* Frameworks */,
@@ -145,21 +145,21 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6F8F7E482DE851FF0054CD0B /* NewBrastlewark */,
+				6F8F7E482DE851FF0054CD0B /* Brastlewark */,
 			);
-			name = NewBrastlewark;
+			name = Brastlewark;
 			packageProductDependencies = (
 				6FD0231D2E0320660088CAB8 /* Domain */,
 				6FD023202E0320740088CAB8 /* Data */,
 				6FD023232E0320800088CAB8 /* Presentation */,
 			);
-			productName = NewBrastlewark;
-			productReference = 6F8F7E462DE851FF0054CD0B /* NewBrastlewark.app */;
+			productName = Brastlewark;
+			productReference = 6F8F7E462DE851FF0054CD0B /* Brastlewark.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6F8F7E542DE852000054CD0B /* NewBrastlewarkSnapshotTests */ = {
+		6F8F7E542DE852000054CD0B /* BrastlewarkSnapshotTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkSnapshotTests" */;
+			buildConfigurationList = 6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "BrastlewarkSnapshotTests" */;
 			buildPhases = (
 				6F8F7E512DE852000054CD0B /* Sources */,
 				6F8F7E522DE852000054CD0B /* Frameworks */,
@@ -171,16 +171,16 @@
 				6F8F7E572DE852000054CD0B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				6F8F7E582DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
+				6F8F7E582DE852000054CD0B /* BrastlewarkSnapshotTests */,
 			);
-			name = NewBrastlewarkSnapshotTests;
+			name = BrastlewarkSnapshotTests;
 			packageProductDependencies = (
 				6F312EC62E14586800BEA3B9 /* InlineSnapshotTesting */,
 				6F312EC82E14586800BEA3B9 /* SnapshotTesting */,
 				6F312ECA2E14586800BEA3B9 /* SnapshotTestingCustomDump */,
 			);
-			productName = NewBrastlewarkTests;
-			productReference = 6F8F7E552DE852000054CD0B /* NewBrastlewarkSnapshotTests.xctest */;
+			productName = BrastlewarkTests;
+			productReference = 6F8F7E552DE852000054CD0B /* BrastlewarkSnapshotTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -202,7 +202,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6F8F7E412DE851FF0054CD0B /* Build configuration list for PBXProject "NewBrastlewark" */;
+			buildConfigurationList = 6F8F7E412DE851FF0054CD0B /* Build configuration list for PBXProject "Brastlewark" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -222,8 +222,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6F8F7E452DE851FF0054CD0B /* NewBrastlewark */,
-				6F8F7E542DE852000054CD0B /* NewBrastlewarkSnapshotTests */,
+				6F8F7E452DE851FF0054CD0B /* Brastlewark */,
+				6F8F7E542DE852000054CD0B /* BrastlewarkSnapshotTests */,
 			);
 		};
 /* End PBXProject section */
@@ -286,7 +286,7 @@
 /* Begin PBXTargetDependency section */
 		6F8F7E572DE852000054CD0B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6F8F7E452DE851FF0054CD0B /* NewBrastlewark */;
+			target = 6F8F7E452DE851FF0054CD0B /* Brastlewark */;
 			targetProxy = 6F8F7E562DE852000054CD0B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -422,7 +422,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NewBrastlewark/Info.plist;
+				INFOPLIST_FILE = Brastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -434,7 +434,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewark;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.Brastlewark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -453,7 +453,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NewBrastlewark/Info.plist;
+				INFOPLIST_FILE = Brastlewark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -465,7 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewark;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.Brastlewark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -482,12 +482,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewarkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.BrastlewarkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewBrastlewark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewBrastlewark";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Brastlewark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Brastlewark";
 			};
 			name = Debug;
 		};
@@ -500,19 +500,19 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.NewBrastlewarkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaimearanaz.BrastlewarkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewBrastlewark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewBrastlewark";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Brastlewark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Brastlewark";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F8F7E412DE851FF0054CD0B /* Build configuration list for PBXProject "NewBrastlewark" */ = {
+		6F8F7E412DE851FF0054CD0B /* Build configuration list for PBXProject "Brastlewark" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F8F7E672DE852000054CD0B /* Debug */,
@@ -521,7 +521,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F8F7E692DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewark" */ = {
+		6F8F7E692DE852000054CD0B /* Build configuration list for PBXNativeTarget "Brastlewark" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F8F7E6A2DE852000054CD0B /* Debug */,
@@ -530,7 +530,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "NewBrastlewarkSnapshotTests" */ = {
+		6F8F7E6C2DE852000054CD0B /* Build configuration list for PBXNativeTarget "BrastlewarkSnapshotTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F8F7E6D2DE852000054CD0B /* Debug */,
