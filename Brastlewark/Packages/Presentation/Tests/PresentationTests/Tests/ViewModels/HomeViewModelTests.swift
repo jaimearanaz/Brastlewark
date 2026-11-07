@@ -286,6 +286,65 @@ extension HomeViewModelTests {
   }
 
   @Test
+  func givenActiveFilter_whenSearching_thenSearchIsLimitedToFilteredCharacters() async {
+    // given
+    getActiveFilterUseCaseMock.executeResult = .success(Filter.mock(age: 20...30))
+    getFilteredCharactersUseCaseMock.executeResult = .success([
+      Character.mock(id: 201, name: "Filtered Wizard", age: 25, professions: ["Wizard"])
+    ])
+    sut.viewIsReady()
+    await waitUntil {
+      if case .ready(let characters, _) = self.sut.state {
+        return characters.map(\.id) == [201]
+      }
+      return false
+    }
+
+    getSearchedCharacterUseCaseMock.executeResult = .success([
+      Character.mock(id: 201, name: "Filtered Wizard", age: 25, professions: ["Wizard"]),
+      Character.mock(id: 202, name: "Unfiltered Wizard", age: 40, professions: ["Wizard"])
+    ])
+
+    // when
+    sut.searchText = "wiz"
+    sut.didSearchTextChanged()
+    await waitUntil {
+      self.getSearchedCharacterUseCaseMock.executionCount == 1
+        && {
+          if case .ready(let characters, _) = self.sut.state {
+            return characters.map(\.id) == [201]
+          }
+          return false
+        }()
+    }
+
+    // then
+    if case .ready(let characters, _) = sut.state {
+      #expect(characters.map(\.id) == [201])
+    } else {
+      #expect(Bool(false), "Expected search results constrained by the active filter")
+    }
+
+    // when
+    sut.searchText = ""
+    sut.didSearchTextChanged()
+    await waitUntil {
+      if case .ready(_, let reset) = self.sut.state {
+        return reset
+      }
+      return false
+    }
+
+    // then
+    if case .ready(let characters, let reset) = sut.state {
+      #expect(characters.map(\.id) == [201])
+      #expect(reset)
+    } else {
+      #expect(Bool(false), "Expected filtered characters after clearing the search")
+    }
+  }
+
+  @Test
   func givenCharacters_whenDidRefreshCharacters_thenSearchTextIsClearedAndAllCharactersLoadedWithForceUpdate()
     async {
     // given

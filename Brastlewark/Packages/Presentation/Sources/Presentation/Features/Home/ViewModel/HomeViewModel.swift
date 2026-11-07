@@ -45,6 +45,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
     @ObservationIgnored private(set) var needsReload = true
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
+    @ObservationIgnored private var filteredCharacters: [CharacterUIModel] = []
     private let router: any RouterProtocol
     private let tracker: HomeTrackerProtocol
     private let getAllCharactersUseCase: GetAllCharactersUseCaseProtocol
@@ -132,6 +133,7 @@ private extension HomeViewModel {
             switch result {
             case .success:
                 isFilterActive = false
+                filteredCharacters = []
                 loadAllCharacters()
             case .failure(let error):
                 handleResultError(error)
@@ -161,7 +163,11 @@ private extension HomeViewModel {
             }
 
             if text.count < minSearchChars {
-                loadAllCharacters()
+                if isFilterActive {
+                    updateState(with: filteredCharacters, reset: true)
+                } else {
+                    loadAllCharacters()
+                }
             } else {
                 await searchCharacters(matching: text)
             }
@@ -183,8 +189,12 @@ private extension HomeViewModel {
 
         switch result {
         case .success(let characters):
-            let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-            state = .ready(characters: charactersUi)
+            var charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
+            if isFilterActive {
+                let filteredCharacterIds = Set(filteredCharacters.map(\.id))
+                charactersUi = charactersUi.filter { filteredCharacterIds.contains($0.id) }
+            }
+            updateState(with: charactersUi)
         case .failure(let error):
             handleResultError(error)
         }
@@ -207,6 +217,7 @@ private extension HomeViewModel {
                     loadFilteredCharacters(filter: filter)
                 } else {
                     isFilterActive = false
+                    filteredCharacters = []
                     loadAllCharacters()
                 }
             case .failure(let error):
@@ -229,12 +240,7 @@ private extension HomeViewModel {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                if charactersUi.isEmpty {
-                    self.state = .empty
-                    tracker.track(event: .emptyScreenViewed)
-                } else {
-                    self.state = .ready(characters: charactersUi)
-                }
+                updateState(with: charactersUi)
             case .failure(let error):
                 handleResultError(error)
             }
@@ -255,17 +261,22 @@ private extension HomeViewModel {
             switch result {
             case .success(let characters):
                 let charactersUi = CharacterMapper.map(models: characters).sorted { $0.id < $1.id }
-                if charactersUi.isEmpty {
-                    self.state = .empty
-                    tracker.track(event: .emptyScreenViewed)
-                } else {
-                    self.state = .ready(characters: charactersUi, reset: true)
-                }
+                filteredCharacters = charactersUi
+                updateState(with: charactersUi, reset: true)
             case .failure(let error):
                 handleResultError(error)
             }
         }
         loadTask = task
+    }
+
+    func updateState(with characters: [CharacterUIModel], reset: Bool = false) {
+        if characters.isEmpty {
+            state = .empty
+            tracker.track(event: .emptyScreenViewed)
+        } else {
+            state = .ready(characters: characters, reset: reset)
+        }
     }
 
     func handleResultError(_ error: Error) {
