@@ -5,6 +5,7 @@ final class HomeViewModelMock: HomeViewModelProtocol {
     // Outputs
     var state: HomeState
     var searchText: String
+    var isFilterActive: Bool
 
     // Input callbacks
     var didOnAppearCallback: (() -> Void)?
@@ -17,6 +18,7 @@ final class HomeViewModelMock: HomeViewModelProtocol {
     init(
         state: HomeState = .loading,
         searchText: String = "",
+        isFilterActive: Bool = false,
         didOnAppearCallback: (() -> Void)? = nil,
         didSelectCharacterCallback: ((CharacterUIModel) -> Void)? = nil,
         didTapFilterButtonCallback: (() -> Void)? = nil,
@@ -26,6 +28,7 @@ final class HomeViewModelMock: HomeViewModelProtocol {
     ) {
         self.state = state
         self.searchText = searchText
+        self.isFilterActive = isFilterActive
         self.didOnAppearCallback = didOnAppearCallback
         self.didSelectCharacterCallback = didSelectCharacterCallback
         self.didTapFilterButtonCallback = didTapFilterButtonCallback

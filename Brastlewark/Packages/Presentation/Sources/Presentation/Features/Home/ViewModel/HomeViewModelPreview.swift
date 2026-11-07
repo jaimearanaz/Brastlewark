@@ -14,7 +14,10 @@ enum HomeViewModelPreview {
     }
 
     static var filtered: some HomeViewModelProtocol {
-        HomeViewModelMock(state: .ready(characters: getCharacters(), reset: true))
+        HomeViewModelMock(
+            state: .ready(characters: getCharacters(), reset: true),
+            isFilterActive: true
+        )
     }
 
     static var loading: some HomeViewModelProtocol {

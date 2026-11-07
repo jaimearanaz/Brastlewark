@@ -204,12 +204,7 @@ private extension HomeView {
     }
 
     var isResetDisabled: Bool {
-        switch viewModel.state {
-        case .loading, .empty, .error:
-            return true
-        case .ready(_, let reset):
-            return !reset
-        }
+        !viewModel.isFilterActive
     }
 }
 

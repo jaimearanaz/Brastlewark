@@ -216,6 +216,7 @@ extension HomeViewModelTests {
     getAllCharactersUseCaseMock.executeResult = .success(expectedCharacters)
 
     sut.searchText = "abc"
+    sut.filterDidChangeAndApply()
 
     // when
     sut.didTapResetButton()
@@ -224,6 +225,7 @@ extension HomeViewModelTests {
     // then
     let searchText = sut.searchText
     #expect(searchText.isEmpty)
+    #expect(!sut.isFilterActive)
 
     let state = sut.state
     if case .ready(let characters, _) = state {
@@ -338,6 +340,7 @@ extension HomeViewModelTests {
       #expect(characters[1].name == "Young Character 2")
       #expect(characters[1].age == 28)
       #expect(reset == true, "reset should be true when filter is applied")
+      #expect(sut.isFilterActive)
     } else {
       #expect(Bool(false), "Expected .ready state but got \(state)")
     }

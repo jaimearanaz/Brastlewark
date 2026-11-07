@@ -19,6 +19,7 @@ public protocol HomeViewModelProtocol: AnyObject, Observable {
     // Outputs
     var state: HomeState { get }
     var searchText: String { get set }
+    var isFilterActive: Bool { get }
 
     // Inputs
     func viewIsReady()
@@ -38,6 +39,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
             scheduleSearch(for: searchText)
         }
     }
+    public private(set) var isFilterActive = false
 
     private let minSearchChars = 3
     @ObservationIgnored private(set) var needsReload = true
@@ -99,7 +101,7 @@ public final class HomeViewModel: HomeViewModelProtocol {
         tracker.track(event: .resetTapped)
         searchText = ""
         searchTask?.cancel()
-        loadAllCharacters()
+        resetActiveFilter()
     }
 
     public func didSearchTextChanged() {
@@ -117,6 +119,27 @@ public final class HomeViewModel: HomeViewModelProtocol {
 // MARK: - Private methods
 
 private extension HomeViewModel {
+    func resetActiveFilter() {
+        loadTask?.cancel()
+        state = .loading
+        let deleteActiveFilterUseCase = deleteActiveFilterUseCase
+        let task = Task {
+            let result = await deleteActiveFilterUseCase.execute()
+            guard !Task.isCancelled else {
+                return
+            }
+
+            switch result {
+            case .success:
+                isFilterActive = false
+                loadAllCharacters()
+            case .failure(let error):
+                handleResultError(error)
+            }
+        }
+        loadTask = task
+    }
+
     func scheduleSearch(for text: String, debounce: Bool = true) {
         searchTask?.cancel()
 
@@ -180,8 +203,10 @@ private extension HomeViewModel {
             switch result {
             case .success(let filter):
                 if let filter = filter {
+                    isFilterActive = true
                     loadFilteredCharacters(filter: filter)
                 } else {
+                    isFilterActive = false
                     loadAllCharacters()
                 }
             case .failure(let error):
@@ -262,6 +287,7 @@ extension HomeViewModel: FilterDelegate {
         searchTask?.cancel()
         loadTask?.cancel()
         needsReload = true
+        isFilterActive = true
         state = .loading
     }
 }
