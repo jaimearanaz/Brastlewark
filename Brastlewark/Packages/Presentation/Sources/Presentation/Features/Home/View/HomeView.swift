@@ -204,7 +204,7 @@ private extension HomeView {
     }
 
     var isResetDisabled: Bool {
-        !viewModel.isFilterActive
+        !viewModel.isFilterActive && viewModel.searchText.isEmpty
     }
 }
 

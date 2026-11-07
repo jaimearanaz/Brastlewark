@@ -102,7 +102,12 @@ public final class HomeViewModel: HomeViewModelProtocol {
         tracker.track(event: .resetTapped)
         searchText = ""
         searchTask?.cancel()
-        resetActiveFilter()
+
+        if isFilterActive {
+            resetActiveFilter()
+        } else {
+            loadAllCharacters()
+        }
     }
 
     public func didSearchTextChanged() {
