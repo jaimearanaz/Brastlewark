@@ -5,7 +5,7 @@
 The app was originally built as a technical assessment for a Senior iOS Software Engineer position. It was designed following production-level engineering practices, with a focus on scalable architecture, testability, maintainability, and a clean user experience.
 
 <p align="center">
-  <img src="Brastlewark.gif" alt="Brastlewark app demonstration" width="300" />
+  <img src="docs/Brastlewark.gif" alt="Brastlewark app demonstration" width="300" />
 </p>
 
 ## Table of Contents
@@ -27,15 +27,42 @@ The app was originally built as a technical assessment for a Senior iOS Software
 
 This project is based on a set of fundamental technical decisions and principles that guided the development of the app:
 
-- **Clean Architecture**: the application is divided into three main layers with strict boundaries and responsibilities — Data, Domain, and Presentation — promoting a clear separation of concerns and long-term maintainability.
-- **MVVM Pattern**: views react to state changes, while view models hold state and handle user interactions. The app is entirely built with SwiftUI and uses Apple’s Observation framework, with view models adopting the `@Observable` macro.
-- **SOLID Principles**: a set of key software engineering principles followed throughout the codebase — single responsibility, open/closed principle, protocol-oriented communication, and concise, clear interfaces.
-- **Dependency Injection**: all components receive their required dependencies fully constructed and ready to use at initialization. This improves decoupling, configurability, and testability.
-- **Layer-Specific Models**: each layer owns its own data models, tailored specifically to its needs. Mappers are used to translate models between layers, ensuring clarity and separation of concerns.
-- **Concurrency**: asynchronous work is handled using Swift Concurrency to keep the user interface responsive and safely coordinate work across isolation boundaries. The project uses `async/await`, `Task`, actors, `@MainActor`, and `Sendable` where appropriate.
-- **Error Handling**: errors are caught and handled appropriately, offering recovery or retry options whenever possible. Each layer defines its own error types according to its role and purpose.
-- **Protocols**: Swift protocols are extensively used to define clear, focused interfaces. This hides implementation details, encourages abstraction, and keeps layers decoupled, modular, and testable.
-- **Testing**: the project includes both unit and snapshot tests to verify business logic, data transformations, presentation behavior, and visual output. This helps prevent regressions and supports safe refactoring as the application evolves.
+- **Clean Architecture**
+
+The application is divided into three main layers with strict boundaries and responsibilities — Data, Domain, and Presentation — promoting a clear separation of concerns and long-term maintainability.
+
+- **MVVM Pattern**
+
+Views react to state changes, while view models hold state and handle user interactions. The app is entirely built with SwiftUI and uses Apple’s Observation framework, with view models adopting the `@Observable` macro.
+
+- **SOLID Principles**
+
+A set of key software engineering principles followed throughout the codebase — single responsibility, open/closed principle, protocol-oriented communication, and concise, clear interfaces.
+
+- **Dependency Injection**
+
+All components receive their required dependencies fully constructed and ready to use at initialization. This improves decoupling, configurability, and testability.
+
+- **Layer-Specific Models**
+
+Each layer owns its own data models, tailored specifically to its needs. Mappers are used to translate models between layers, ensuring clarity and separation of concerns.
+
+- **Concurrency**
+
+Asynchronous work is handled using Swift Concurrency to keep the user interface responsive and safely coordinate work across isolation boundaries. The project uses `async/await`, `Task`, actors, `@MainActor`, and `Sendable` where appropriate.
+
+- **Error Handling**
+
+Errors are caught and handled appropriately, offering recovery or retry options whenever possible. Each layer 
+defines its own error types according to its role and purpose.
+
+- **Protocols**
+
+Swift protocols are extensively used to define clear, focused interfaces. This hides implementation details, encourages abstraction, and keeps layers decoupled, modular, and testable.
+
+- **Testing**
+
+The project includes both unit and snapshot tests to verify business logic, data transformations, presentation behavior, and visual output. This helps prevent regressions and supports safe refactoring as the application evolves.
 
 ## Project overview 🗂
 
@@ -437,11 +464,9 @@ The Brastlewark app uses the following third-party libraries through Swift Packa
 ## About me 🙋♂
 
 **Jaime Aranaz**  
-*Freelance iOS developer*  
+*Freelance Senior iOS developer*  
 jaime.aranaz@gmail.com  
 📍 Madrid, Spain  
-
-You can find me here:
 
 - [LinkedIn](https://www.linkedin.com/in/jaimearanaztudela/)
 - [X](https://x.com/JaimeAranaz)
