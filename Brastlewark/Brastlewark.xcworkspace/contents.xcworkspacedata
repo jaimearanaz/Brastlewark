@@ -5,6 +5,6 @@
       location = "group:Brastlewark.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../AllTests.xctestplan">
+      location = "group:AllTests.xctestplan">
    </FileRef>
 </Workspace>

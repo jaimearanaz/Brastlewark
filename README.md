@@ -13,18 +13,12 @@ The app was originally built as a technical assessment for a Senior iOS Software
 - [Architecture and principles](#architecture-and-principles)
 - [Project overview](#project-overview)
 - [Layer separation](#layer-separation)
-  - [Domain](#domain)
-  - [Data](#data)
-  - [Presentation](#presentation)
-  - [App target](#app-target)
 - [Navigation](#navigation)
 - [Dependency Injection](#dependency-injection)
 - [Accessibility](#accessibility)
 - [Events tracking](#events-tracking)
 - [Logging](#logging)
 - [Testing](#testing)
-  - [Unit tests](#unit-tests)
-  - [Snapshot tests](#snapshot-tests)
 - [CI/CD](#cicd)
 - [Third-party libraries](#third-party-libraries)
 - [About me](#about-me)
@@ -49,6 +43,7 @@ The repository contains the following main directories:
 
 - **`Brastlewark`** contains the Xcode project and the application source code.
 - **`data`** contains the JSON resources and images downloaded remotely by the application.
+- **`docs`** contains related documentation to this technical test and README.
 - **`.github/workflows`** contains the GitHub Actions workflows used for continuous integration.
 
 Open `Brastlewark.xcworkspace` instead of the individual `.xcodeproj` file to load the complete project and all its dependencies. The workspace includes the following:
